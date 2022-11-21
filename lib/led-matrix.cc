@@ -34,15 +34,6 @@
 #include "framebuffer-internal.h"
 #include "multiplex-mappers-internal.h"
 
-// Leave this in here for a while. Setting things from old defines.
-#if defined(ADAFRUIT_RGBMATRIX_HAT)
-#  error "ADAFRUIT_RGBMATRIX_HAT has long been deprecated. Please use the Options struct or --led-gpio-mapping=adafruit-hat commandline flag"
-#endif
-
-#if defined(ADAFRUIT_RGBMATRIX_HAT_PWM)
-#  error "ADAFRUIT_RGBMATRIX_HAT_PWM has long been deprecated. Please use the Options struct or --led-gpio-mapping=adafruit-hat-pwm commandline flag"
-#endif
-
 namespace rgb_matrix {
 // Implementation details of RGBmatrix.
 class RGBMatrix::Impl {
@@ -556,8 +547,7 @@ bool RGBMatrix::Impl::ApplyPixelMapper(const PixelMapper *mapper) {
   if (!mapper->GetSizeMapping(old_width, old_height, &new_width, &new_height)) {
     return false;
   }
-  PixelDesignatorMap *new_mapper = new PixelDesignatorMap(
-    new_width, new_height, shared_pixel_mapper_->GetFillColorBits());
+  PixelDesignatorMap *new_mapper = new PixelDesignatorMap(new_width, new_height);
   for (int y = 0; y < new_height; ++y) {
     for (int x = 0; x < new_width; ++x) {
       int orig_x = -1, orig_y = -1;
@@ -581,34 +571,6 @@ bool RGBMatrix::Impl::ApplyPixelMapper(const PixelMapper *mapper) {
 
 // -- Public interface of RGBMatrix. Delegate everything to impl_
 
-static bool drop_privs(const char *priv_user, const char *priv_group) {
-  uid_t ruid, euid, suid;
-  if (getresuid(&ruid, &euid, &suid) >= 0) {
-    if (euid != 0)   // not root anyway. No priv dropping.
-      return true;
-  }
-
-  struct group *g = getgrnam(priv_group);
-  if (g == NULL) {
-    perror("group lookup.");
-    return false;
-  }
-  if (setresgid(g->gr_gid, g->gr_gid, g->gr_gid) != 0) {
-    perror("setresgid()");
-    return false;
-  }
-  struct passwd *p = getpwnam(priv_user);
-  if (p == NULL) {
-    perror("user lookup.");
-    return false;
-  }
-  if (setresuid(p->pw_uid, p->pw_uid, p->pw_uid) != 0) {
-    perror("setresuid()");
-    return false;
-  }
-  return true;
-}
-
 RGBMatrix *RGBMatrix::CreateFromOptions(const RGBMatrix::Options &options,
                                         const RuntimeOptions &runtime_options) {
   std::string error;
@@ -625,30 +587,13 @@ RGBMatrix *RGBMatrix::CreateFromOptions(const RGBMatrix::Options &options,
   }
 
   static GPIO io;  // This static var is a little bit icky.
-  if (runtime_options.do_gpio_init
-      && !io.Init(runtime_options.gpio_slowdown)) {
-    fprintf(stderr, "Must run as root to be able to access /dev/mem\n"
-            "Prepend 'sudo' to the command\n");
+  if (runtime_options.do_gpio_init && !io.Init(runtime_options.gpio_slowdown)) {
     return NULL;
   }
 
-  if (runtime_options.daemon > 0 && daemon(1, 0) != 0) {
-    perror("Failed to become daemon");
-  }
-
   RGBMatrix::Impl *result = new RGBMatrix::Impl(NULL, options);
-  // Allowing daemon also means we are allowed to start the thread now.
-  const bool allow_daemon = !(runtime_options.daemon < 0);
   if (runtime_options.do_gpio_init)
-    result->SetGPIO(&io, allow_daemon);
-
-  // TODO(hzeller): if we disallow daemon, then we might also disallow
-  // drop privileges: we can't drop privileges until we have created the
-  // realtime thread that usually requires root to be established.
-  // Double check and document.
-  if (runtime_options.drop_privileges > 0) {
-    drop_privs("daemon", "daemon");
-  }
+    result->SetGPIO(&io, true);
 
   return new RGBMatrix(result);
 }
@@ -738,6 +683,8 @@ void FrameCanvas::SetPixel(int x, int y,
   frame_->SetPixel(x, y, red, green, blue);
 }
 void FrameCanvas::Clear() { return frame_->Clear(); }
+
+// TODO: Fix this
 void FrameCanvas::Fill(uint8_t red, uint8_t green, uint8_t blue) {
   frame_->Fill(red, green, blue);
 }
