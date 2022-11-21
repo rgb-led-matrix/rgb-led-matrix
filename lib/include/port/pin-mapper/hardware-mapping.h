@@ -26,11 +26,10 @@ struct HardwareMapping {
   const char *name;
   int max_parallel_chains;
 
-  gpio_bits_t output_enable;
+  gpio_bits_t trigger;
+  gpio_bits_t response;   // Input signal
   gpio_bits_t clock;
   gpio_bits_t strobe;
-
-  gpio_bits_t a, b, c, d, e;
 
   gpio_bits_t p0_r1, p0_g1, p0_b1;
   gpio_bits_t p0_r2, p0_g2, p0_b2;
