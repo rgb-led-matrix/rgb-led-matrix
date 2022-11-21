@@ -18,6 +18,7 @@
 // to manipulate the content.
 
 #include "framebuffer-internal.h"
+#include "pin-pulser.h"
 
 #include <assert.h>
 #include <ctype.h>
@@ -197,12 +198,8 @@ Framebuffer::~Framebuffer() {
 
   const int double_rows = rows / SUB_PANELS_;
 
-  // Adafruit HAT identified by the same prefix.
-  const bool is_some_adafruit_hat = (0 == strncmp(h.name, "adafruit-hat",
-                                                  strlen("adafruit-hat")));
   // Initialize outputs, make sure that all of these are supported bits.
-  const gpio_bits_t result = io->InitOutputs(all_used_bits,
-                                             is_some_adafruit_hat);
+  const gpio_bits_t result = io->InitOutputs(all_used_bits);
   assert(result == all_used_bits);  // Impl: all bits declared in gpio.cc ?
 
   std::vector<int> bitplane_timings;
@@ -211,7 +208,8 @@ Framebuffer::~Framebuffer() {
     bitplane_timings.push_back(timing_ns);
     if (b >= dither_bits) timing_ns *= 2;
   }
-  sOutputEnablePulser = PinPulser::Create(io, h.trigger | h.response, bitplane_timings);
+
+  sOutputEnablePulser = PinPulser::Create(io, h.trigger,  h.response, bitplane_timings);
 }
 
 // NOTE: first version for panel initialization sequence, need to refine
@@ -440,11 +438,13 @@ void Framebuffer::InitDefaultDesignator(int x, int y, const char *seq,
   d->mask = ~(d->r_bit | d->g_bit | d->b_bit);
 }
 
+// TODO: Fix this
 void Framebuffer::Serialize(const char **data, size_t *len) const {
   *data = reinterpret_cast<const char*>(bitplane_buffer_);
   *len = buffer_size_;
 }
 
+// TODO: Fix this
 bool Framebuffer::Deserialize(const char *data, size_t len) {
   if (len != buffer_size_) return false;
   memcpy(bitplane_buffer_, data, len);
@@ -502,7 +502,7 @@ void Framebuffer::DumpToMatrix(GPIO *io, int pwm_low_bit) {
       sOutputEnablePulser->WaitPulseFinished();
 
       // Now switch on for the sleep time necessary for that bit-plane.
-      sOutputEnablePulser->SendPulse(b);
+      sOutputEnablePulser->SendPulse();
     }
 
     // Rows can't be switched very quickly without ghosting, so we do the
@@ -525,7 +525,7 @@ void Framebuffer::DumpToMatrix(GPIO *io, int pwm_low_bit) {
       io->ClearBits(h.strobe);
 
       // Now switch on for the sleep time necessary for that bit-plane.
-      sOutputEnablePulser->SendPulse(b);
+      sOutputEnablePulser->SendPulse();
     }
   }
 }
