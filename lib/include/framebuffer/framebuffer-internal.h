@@ -24,7 +24,6 @@ namespace rgb_matrix {
 class GPIO;
 class PinPulser;
 namespace internal {
-class RowAddressSetter;
 
 // An opaque type used within the framebuffer that can be used
 // to copy between PixelMappers.
@@ -39,7 +38,7 @@ struct PixelDesignator {
 
 class PixelDesignatorMap {
 public:
-  PixelDesignatorMap(int width, int height, const PixelDesignator &fill_bits);
+  PixelDesignatorMap(int width, int height);
   ~PixelDesignatorMap();
 
   // Get a writable version of the PixelDesignator. Outside Framebuffer used
@@ -49,13 +48,9 @@ public:
   inline int width() const { return width_; }
   inline int height() const { return height_; }
 
-  // All bits that set red/green/blue pixels; used for Fill().
-  const PixelDesignator &GetFillColorBits() { return fill_bits_; }
-
 private:
   const int width_;
   const int height_;
-  const PixelDesignator fill_bits_;  // Precalculated for fill.
   PixelDesignator *const buffer_;
 };
 
@@ -127,11 +122,9 @@ public:
   int height() const;
   void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
   void Clear();
-  void Fill(uint8_t red, uint8_t green, uint8_t blue);
 
 private:
   static const struct HardwareMapping *hardware_mapping_;
-  static RowAddressSetter *row_setter_;
 
   // This returns the gpio-bit for given color (one of 'R', 'G', 'B'). This is
   // returning the right value in case "led_sequence" is _not_ "RGB"
