@@ -31,8 +31,9 @@
 
 #include "gpio.h"
 #include "thread.h"
-#include "framebuffer-internal.h"
+#include "framebuffer.h"
 #include "multiplex-mappers-internal.h"
+#include "framecanvas.h"
 
 namespace rgb_matrix {
 // Implementation details of RGBmatrix.
@@ -67,24 +68,6 @@ public:
   FrameCanvas *SwapOnVSync(FrameCanvas *other, unsigned framerate_fraction);
   bool ApplyPixelMapper(const PixelMapper *mapper);
 
-  bool SetPWMBits(uint8_t value);
-  uint8_t pwmbits();   // return the pwm-bits of the currently active buffer.
-
-  void set_luminance_correct(bool on);
-  bool luminance_correct() const;
-
-  // Set brightness in percent for all created FrameCanvas. 1%..100%.
-  // This will only affect newly set pixels.
-  void SetBrightness(uint8_t brightness);
-  uint8_t brightness();
-
-  uint64_t RequestInputs(uint64_t);
-  uint64_t AwaitInputChange(int timeout_ms);
-
-  uint64_t RequestOutputs(uint64_t output_bits);
-  void OutputGPIO(uint64_t output_bits);
-
-  void Clear();
 private:
   friend class RGBMatrix;
 
@@ -102,7 +85,7 @@ private:
   Mutex active_frame_sync_;
   UpdateThread *updater_;
   std::vector<FrameCanvas*> created_frames_;
-  internal::PixelDesignatorMap *shared_pixel_mapper_;
+  PixelDesignatorMap *shared_pixel_mapper_;
   uint64_t user_output_bits_;
 };
 
@@ -264,7 +247,7 @@ RGBMatrix::Options::Options() :
 #endif
 
   rows(32), cols(32), chain_length(1), parallel(1),
-  pwm_bits(internal::Framebuffer::kDefaultBitPlanes),
+  pwm_bits(Framebuffer::kDefaultBitPlanes),
 
 #ifdef LSB_PWM_NANOSECONDS
     pwm_lsb_nanoseconds(LSB_PWM_NANOSECONDS),
@@ -275,35 +258,10 @@ RGBMatrix::Options::Options() :
   pwm_dither_bits(0),
   brightness(100),
 
-#ifdef RGB_SCAN_INTERLACED
-    scan_mode(1),
-#else
-    scan_mode(0),
-#endif
-
   row_address_type(0),
   multiplexing(0),
 
-#ifdef DISABLE_HARDWARE_PULSES
-    disable_hardware_pulsing(true),
-#else
-    disable_hardware_pulsing(false),
-#endif
-
-#ifdef SHOW_REFRESH_RATE
-    show_refresh_rate(true),
-#else
-    show_refresh_rate(false),
-#endif
-
-#ifdef INVERSE_RGB_DISPLAY_COLORS
-    inverse_colors(true),
-#else
-    inverse_colors(false),
-#endif
-  led_rgb_sequence("RGB"),
   pixel_mapper_config(NULL),
-  panel_type(NULL),
 #ifdef FIXED_FRAME_MICROSECONDS
   limit_refresh_rate_hz(1e6 / FIXED_FRAME_MICROSECONDS)
 #else
@@ -313,45 +271,16 @@ RGBMatrix::Options::Options() :
   // Nothing to see here.
 }
 
-#define DEBUG_MATRIX_OPTIONS 0
-
-#if DEBUG_MATRIX_OPTIONS
-static void PrintOptions(const RGBMatrix::Options &o) {
-#define P_INT(val) fprintf(stderr, "%s : %d\n", #val, o.val)
-#define P_STR(val) fprintf(stderr, "%s : %s\n", #val, o.val)
-#define P_BOOL(val) fprintf(stderr, "%s : %s\n", #val, o.val ? "true":"false")
-  P_STR(hardware_mapping);
-  P_INT(rows);
-  P_INT(cols);
-  P_INT(chain_length);
-  P_INT(parallel);
-  P_INT(pwm_bits);
-  P_INT(pwm_lsb_nanoseconds);
-  P_INT(pwm_dither_bits);
-  P_INT(brightness);
-  P_INT(scan_mode);
-  P_INT(row_address_type);
-  P_INT(multiplexing);
-  P_BOOL(disable_hardware_pulsing);
-  P_BOOL(show_refresh_rate);
-  P_BOOL(inverse_colors);
-  P_STR(led_rgb_sequence);
-  P_STR(pixel_mapper_config);
-  P_STR(panel_type);
-  P_INT(limit_refresh_rate_hz);
-#undef P_INT
-#undef P_STR
-#undef P_BOOL
+RuntimeOptions::RuntimeOptions() :
+  gpio_slowdown(1),
+  do_gpio_init(true)
+{
+  // Nothing to see here.
 }
-#endif  // DEBUG_MATRIX_OPTIONS
 
 RGBMatrix::Impl::Impl(GPIO *io, const Options &options)
   : params_(options), io_(NULL), updater_(NULL), shared_pixel_mapper_(NULL),
     user_output_bits_(0) {
-  assert(params_.Validate(NULL));
-#if DEBUG_MATRIX_OPTIONS
-  PrintOptions(params_);
-#endif
   const MultiplexMapper *multiplex_mapper = NULL;
   if (params_.multiplexing > 0) {
     const MuxMapperList &multiplexers = GetRegisteredMultiplexMappers();
@@ -402,20 +331,6 @@ RGBMatrix::~RGBMatrix() {
   delete impl_;
 }
 
-uint64_t RGBMatrix::Impl::RequestInputs(uint64_t bits) {
-  return io_->RequestInputs(bits);
-}
-
-uint64_t RGBMatrix::Impl::RequestOutputs(uint64_t output_bits) {
-  uint64_t success_bits = io_->InitOutputs(output_bits);
-  user_output_bits_ |= success_bits;
-  return success_bits;
-}
-
-void RGBMatrix::Impl::OutputGPIO(uint64_t output_bits) {
-  io_->WriteMaskedBits(output_bits, user_output_bits_);
-}
-
 void RGBMatrix::Impl::ApplyNamedPixelMappers(const char *pixel_mapper_config,
                                              int chain, int parallel) {
   if (pixel_mapper_config == NULL || strlen(pixel_mapper_config) == 0)
@@ -444,12 +359,7 @@ void RGBMatrix::Impl::ApplyNamedPixelMappers(const char *pixel_mapper_config,
 void RGBMatrix::Impl::SetGPIO(GPIO *io, bool start_thread) {
   if (io != NULL && io_ == NULL) {
     io_ = io;
-    Framebuffer::InitGPIO(io_, params_.rows, params_.parallel,
-                          !params_.disable_hardware_pulsing,
-                          params_.pwm_lsb_nanoseconds, params_.pwm_dither_bits,
-                          params_.row_address_type);
-    Framebuffer::InitializePanels(io_, params_.panel_type,
-                                  params_.cols * params_.chain_length);
+    Framebuffer::InitGPIO(io_, params_.rows, params_.parallel, params_.row_address_type, params_.limit_refresh_rate_hz);
   }
   if (start_thread) {
     StartRefresh();
@@ -464,10 +374,6 @@ bool RGBMatrix::Impl::StartRefresh() {
     // If we have multiple processors, the kernel
     // jumps around between these, creating some global flicker.
     // So let's tie it to the last CPU available.
-    // The Raspberry Pi2 has 4 cores, our attempt to bind it to
-    //   core #3 will succeed.
-    // The Raspberry Pi1 only has one core, so this affinity
-    //   call will simply fail and we keep using the only core.
     updater_->Start(99, (1<<3));  // Prio: high. Also: put on last CPU.
   }
   return updater_ != NULL;
@@ -475,13 +381,7 @@ bool RGBMatrix::Impl::StartRefresh() {
 
 FrameCanvas *RGBMatrix::Impl::CreateFrameCanvas() {
   FrameCanvas *result =
-    new FrameCanvas(new Framebuffer(params_.rows,
-                                    params_.cols * params_.chain_length,
-                                    params_.parallel,
-                                    params_.scan_mode,
-                                    params_.led_rgb_sequence,
-                                    params_.inverse_colors,
-                                    &shared_pixel_mapper_));
+    new FrameCanvas(new Framebuffer(params_.rows, params_.cols * params_.chain_length, params_.parallel, &shared_pixel_mapper_));
   if (created_frames_.empty()) {
     // First time. Get defaults from initial Framebuffer.
     do_luminance_correct_ = result->framebuffer()->luminance_correct();
@@ -504,43 +404,8 @@ FrameCanvas *RGBMatrix::Impl::SwapOnVSync(FrameCanvas *other,
   return previous;
 }
 
-uint64_t RGBMatrix::Impl::AwaitInputChange(int timeout_ms) {
-  if (!updater_) return 0;
-  return updater_->AwaitInputChange(timeout_ms);
-}
-
-bool RGBMatrix::Impl::SetPWMBits(uint8_t value) {
-  const bool success = active_->framebuffer()->SetPWMBits(value);
-  if (success) {
-    params_.pwm_bits = value;
-  }
-  return success;
-}
-uint8_t RGBMatrix::Impl::pwmbits() { return params_.pwm_bits; }
-
-// Map brightness of output linearly to input with CIE1931 profile.
-void RGBMatrix::Impl::set_luminance_correct(bool on) {
-  active_->framebuffer()->set_luminance_correct(on);
-  do_luminance_correct_ = on;
-}
-bool RGBMatrix::Impl::luminance_correct() const {
-  return do_luminance_correct_;
-}
-
-void RGBMatrix::Impl::SetBrightness(uint8_t brightness) {
-  for (size_t i = 0; i < created_frames_.size(); ++i) {
-    created_frames_[i]->framebuffer()->SetBrightness(brightness);
-  }
-  params_.brightness = brightness;
-}
-
-uint8_t RGBMatrix::Impl::brightness() {
-  return params_.brightness;
-}
-
 bool RGBMatrix::Impl::ApplyPixelMapper(const PixelMapper *mapper) {
   if (mapper == NULL) return true;
-  using internal::PixelDesignatorMap;
   const int old_width = shared_pixel_mapper_->width();
   const int old_height = shared_pixel_mapper_->height();
   int new_width, new_height;
@@ -559,7 +424,7 @@ bool RGBMatrix::Impl::ApplyPixelMapper(const PixelMapper *mapper) {
                 "%dx%d]\n", x, y, orig_x, orig_y, old_width, old_height);
         continue;
       }
-      const internal::PixelDesignator *orig_designator;
+      const PixelDesignator *orig_designator;
       orig_designator = shared_pixel_mapper_->get(orig_x, orig_y);
       *new_mapper->get(x, y) = *orig_designator;
     }
@@ -571,13 +436,7 @@ bool RGBMatrix::Impl::ApplyPixelMapper(const PixelMapper *mapper) {
 
 // -- Public interface of RGBMatrix. Delegate everything to impl_
 
-RGBMatrix *RGBMatrix::CreateFromOptions(const RGBMatrix::Options &options,
-                                        const RuntimeOptions &runtime_options) {
-  std::string error;
-  if (!options.Validate(&error)) {
-    fprintf(stderr, "%s\n", error.c_str());
-    return NULL;
-  }
+RGBMatrix *RGBMatrix::CreateFromOptions(const RGBMatrix::Options &options, const RuntimeOptions &runtime_options) {
 
   // For the Pi4, we might need 2, maybe up to 4. Let's open up to 5.
   if (runtime_options.gpio_slowdown < 0 || runtime_options.gpio_slowdown > 5) {
@@ -598,22 +457,6 @@ RGBMatrix *RGBMatrix::CreateFromOptions(const RGBMatrix::Options &options,
   return new RGBMatrix(result);
 }
 
-// Public interface.
-RGBMatrix *RGBMatrix::CreateFromFlags(int *argc, char ***argv,
-                                      RGBMatrix::Options *m_opt_in,
-                                      RuntimeOptions *rt_opt_in,
-                                      bool remove_consumed_options) {
-  RGBMatrix::Options scratch_matrix;
-  RGBMatrix::Options *mopt = (m_opt_in != NULL) ? m_opt_in : &scratch_matrix;
-
-  RuntimeOptions scratch_rt;
-  RuntimeOptions *ropt = (rt_opt_in != NULL) ? rt_opt_in : &scratch_rt;
-
-  if (!ParseOptionsFromFlags(argc, argv, mopt, ropt, remove_consumed_options))
-    return NULL;
-  return CreateFromOptions(*mopt, *ropt);
-}
-
 FrameCanvas *RGBMatrix::CreateFrameCanvas() {
   return impl_->CreateFrameCanvas();
 }
@@ -624,87 +467,6 @@ FrameCanvas *RGBMatrix::SwapOnVSync(FrameCanvas *other,
 bool RGBMatrix::ApplyPixelMapper(const PixelMapper *mapper) {
   return impl_->ApplyPixelMapper(mapper);
 }
-bool RGBMatrix::SetPWMBits(uint8_t value) { return impl_->SetPWMBits(value); }
-uint8_t RGBMatrix::pwmbits() { return impl_->pwmbits(); }
-
-void RGBMatrix::set_luminance_correct(bool on) {
-  return impl_->set_luminance_correct(on);
-}
-bool RGBMatrix::luminance_correct() const { return impl_->luminance_correct(); }
-
-void RGBMatrix::SetBrightness(uint8_t brightness) {
-  impl_->SetBrightness(brightness);
-}
-uint8_t RGBMatrix::brightness() { return impl_->brightness(); }
-
-uint64_t RGBMatrix::RequestInputs(uint64_t all_interested_bits) {
-  return impl_->RequestInputs(all_interested_bits);
-}
-uint64_t RGBMatrix::AwaitInputChange(int timeout_ms) {
-  return impl_->AwaitInputChange(timeout_ms);
-}
-
-uint64_t RGBMatrix::RequestOutputs(uint64_t all_interested_bits) {
-  return impl_->RequestOutputs(all_interested_bits);
-}
-void RGBMatrix::OutputGPIO(uint64_t output_bits) {
-  impl_->OutputGPIO(output_bits);
-}
 
 bool RGBMatrix::StartRefresh() { return impl_->StartRefresh(); }
-
-// -- Implementation of RGBMatrix Canvas: delegation to ContentBuffer
-int RGBMatrix::width() const {
-  return impl_->active_->width();
-}
-
-int RGBMatrix::height() const {
-  return impl_->active_->height();
-}
-
-void RGBMatrix::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
-  impl_->active_->SetPixel(x, y, red, green, blue);
-}
-
-void RGBMatrix::Clear() {
-  impl_->active_->Clear();
-}
-
-void RGBMatrix::Fill(uint8_t red, uint8_t green, uint8_t blue) {
-  impl_->active_->Fill(red, green, blue);
-}
-
-// FrameCanvas implementation of Canvas
-FrameCanvas::~FrameCanvas() { delete frame_; }
-int FrameCanvas::width() const { return frame_->width(); }
-int FrameCanvas::height() const { return frame_->height(); }
-void FrameCanvas::SetPixel(int x, int y,
-                         uint8_t red, uint8_t green, uint8_t blue) {
-  frame_->SetPixel(x, y, red, green, blue);
-}
-void FrameCanvas::Clear() { return frame_->Clear(); }
-
-// TODO: Fix this
-void FrameCanvas::Fill(uint8_t red, uint8_t green, uint8_t blue) {
-  frame_->Fill(red, green, blue);
-}
-bool FrameCanvas::SetPWMBits(uint8_t value) { return frame_->SetPWMBits(value); }
-uint8_t FrameCanvas::pwmbits() { return frame_->pwmbits(); }
-
-// Map brightness of output linearly to input with CIE1931 profile.
-void FrameCanvas::set_luminance_correct(bool on) { frame_->set_luminance_correct(on); }
-bool FrameCanvas::luminance_correct() const { return frame_->luminance_correct(); }
-
-void FrameCanvas::SetBrightness(uint8_t brightness) { frame_->SetBrightness(brightness); }
-uint8_t FrameCanvas::brightness() { return frame_->brightness(); }
-
-void FrameCanvas::Serialize(const char **data, size_t *len) const {
-  frame_->Serialize(data, len);
-}
-bool FrameCanvas::Deserialize(const char *data, size_t len) {
-  return frame_->Deserialize(data, len);
-}
-void FrameCanvas::CopyFrom(const FrameCanvas &other) {
-  frame_->CopyFrom(other.frame_);
-}
 }  // end namespace rgb_matrix

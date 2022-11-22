@@ -22,7 +22,6 @@
 namespace rgb_matrix {
 class GPIO;
 class PinPulser;
-namespace internal {
 
 // An opaque type used within the framebuffer that can be used
 // to copy between PixelMappers.
@@ -81,8 +80,8 @@ public:
   ~Framebuffer();
 
   // Initialize GPIO bits for output. Only call once.
-  virtual void InitHardwareMapping(const char *named_hardware);
-  virtual void InitGPIO(GPIO *io, int rows, int parallel, int dither_bits, int row_address_type, int refresh);
+  static void InitHardwareMapping(const char *named_hardware);
+  static void InitGPIO(GPIO *io, int rows, int parallel, int row_address_type, int refresh);
 
   // Set PWM bits used for output. Default is 11, but if you only deal with
   // simple comic-colors, 1 might be sufficient. Lower require less CPU.
@@ -144,6 +143,5 @@ private:
   gpio_bits_t *bitplane_buffer_;
   inline gpio_bits_t *ValueAt(int double_row, int column, int bit);
 };
-}  // namespace internal
 }  // namespace rgb_matrix
 #endif // RPI_RGBMATRIX_FRAMEBUFFER_INTERNAL_H
