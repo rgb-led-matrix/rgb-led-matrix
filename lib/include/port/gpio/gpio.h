@@ -18,8 +18,6 @@
 
 #include "gpio-bits.h"
 
-#include <vector>
-
 // Putting this in our namespace to not collide with other things called like
 // this.
 namespace rgb_matrix {
@@ -69,9 +67,6 @@ public:
   }
 
   inline gpio_bits_t Read() const { return ReadRegisters() & input_bits_; }
-
-  // Return if this is appears to be a Pi4
-  static bool IsPi4();
 
 private:
   inline gpio_bits_t ReadRegisters() const {

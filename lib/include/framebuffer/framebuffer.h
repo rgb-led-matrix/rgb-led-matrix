@@ -78,26 +78,18 @@ public:
   static constexpr int kBitPlanes = 11;
   static constexpr int kDefaultBitPlanes = 11;
 
-  Framebuffer(int rows, int columns, int parallel,
-              int scan_mode,
-              const char* led_sequence, bool inverse_color,
-              PixelDesignatorMap **mapper);
+  Framebuffer(int rows, int columns, int parallel, PixelDesignatorMap **mapper);
   ~Framebuffer();
 
   // Initialize GPIO bits for output. Only call once.
-  static void InitHardwareMapping(const char *named_hardware);
-  static void InitGPIO(GPIO *io, int rows, int parallel,
-                       bool allow_hardware_pulsing,
-                       int pwm_lsb_nanoseconds,
-                       int dither_bits,
-                       int row_address_type);
-  static void InitializePanels(GPIO *io, const char *panel_type, int columns);
+  virtual void InitHardwareMapping(const char *named_hardware);
+  virtual void InitGPIO(GPIO *io, int rows, int parallel, int dither_bits, int row_address_type, int refresh);
 
   // Set PWM bits used for output. Default is 11, but if you only deal with
   // simple comic-colors, 1 might be sufficient. Lower require less CPU.
   // Returns boolean to signify if value was within range.
-  bool SetPWMBits(uint8_t value);
-  uint8_t pwmbits() { return pwm_bits_; }
+  virtual bool SetPWMBits(uint8_t value);
+  virtual uint8_t pwmbits() { return pwm_bits_; }
 
   // Map brightness of output linearly to input with CIE1931 profile.
   void set_luminance_correct(bool on) { do_luminance_correct_ = on; }
@@ -110,40 +102,23 @@ public:
   }
   uint8_t brightness() { return brightness_; }
 
-  void DumpToMatrix(GPIO *io, int pwm_bits_to_show);
+  virtual void DumpToMatrix(GPIO *io, int pwm_bits_to_show);
 
-  void Serialize(const char **data, size_t *len) const;
-  bool Deserialize(const char *data, size_t len);
-  void CopyFrom(const Framebuffer *other);
+  virtual void Serialize(const char **data, size_t *len) const;
+  virtual bool Deserialize(const char *data, size_t len);
+  virtual void CopyFrom(const Framebuffer *other);
 
   // Canvas-inspired methods, but we're not implementing this interface to not
   // have an unnecessary vtable.
-  int width() const;
-  int height() const;
-  void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
-  void Clear();
+  virtual int width() const;
+  virtual int height() const;
+  virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
 
-private:
-  static const struct HardwareMapping *hardware_mapping_;
-
-  // This returns the gpio-bit for given color (one of 'R', 'G', 'B'). This is
-  // returning the right value in case "led_sequence" is _not_ "RGB"
-  static gpio_bits_t GetGpioFromLedSequence(char col, const char *led_sequence,
-                                            gpio_bits_t default_r,
-                                            gpio_bits_t default_g,
-                                            gpio_bits_t default_b);
-
-  void InitDefaultDesignator(int x, int y, const char *led_sequence,
-                             PixelDesignator *designator);
-  inline void  MapColors(uint8_t r, uint8_t g, uint8_t b,
-                         uint16_t *red, uint16_t *green, uint16_t *blue);
+protected:
   const int rows_;     // Number of rows. 16 or 32.
   const int parallel_; // Parallel rows of chains. 1 or 2.
   const int height_;   // rows * parallel
   const int columns_;  // Number of columns. Number of chained boards * 32.
-
-  const int scan_mode_;
-  const bool inverse_color_;
 
   uint8_t pwm_bits_;   // PWM bits to display.
   bool do_luminance_correct_;
@@ -151,6 +126,15 @@ private:
 
   const int double_rows_;
   const size_t buffer_size_;
+
+  static const struct HardwareMapping *hardware_mapping_;
+
+  PixelDesignatorMap **shared_mapper_;  // Storage in RGBMatrix.
+
+private:
+  void InitDefaultDesignator(int x, int y, PixelDesignator *designator);
+  inline void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue);
+
 
   // The frame-buffer is organized in bitplanes.
   // Highest level (slowest to cycle through) are double rows.
@@ -160,8 +144,6 @@ private:
   // but it allows easy access in the critical section.
   gpio_bits_t *bitplane_buffer_;
   inline gpio_bits_t *ValueAt(int double_row, int column, int bit);
-
-  PixelDesignatorMap **shared_mapper_;  // Storage in RGBMatrix.
 };
 }  // namespace internal
 }  // namespace rgb_matrix

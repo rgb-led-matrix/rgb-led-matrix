@@ -254,10 +254,6 @@ bool GPIO::Init(int slowdown) {
   return true;
 }
 
-bool GPIO::IsPi4() {
-  return GetPiModel() == PI_MODEL_4;
-}
-
 // For external use, e.g. in the matrix for extra time.
 uint32_t GetMicrosecondCounter() {
   struct timespec ts;

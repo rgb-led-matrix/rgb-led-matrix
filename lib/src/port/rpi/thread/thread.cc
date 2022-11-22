@@ -97,4 +97,30 @@ bool Mutex::WaitOn(pthread_cond_t *cond, long timeout_ms) {
     return pthread_cond_timedwait(cond, &mutex_, &t) == 0;
   }
 }
+
+Mutex::Mutex() {
+  pthread_mutex_init(&mutex_, NULL);
+}
+
+~Mutex::Mutex() {
+  pthread_mutex_destroy(&mutex_);
+}
+
+// Non-recursive Mutex.
+class Mutex {
+public:
+  Mutex() {  }
+  ~Mutex() {  }
+  void Lock() { pthread_mutex_lock(&mutex_); }
+  void Unlock() { pthread_mutex_unlock(&mutex_); }
+
+  // Wait on condition. If "timeout_ms" is < 0, it waits forever, otherwise
+  // until timeout is reached.
+  // Returns 'true' if condition is met, 'false', if wait timed out.
+  bool WaitOn(pthread_cond_t *cond, long timeout_ms = -1);
+
+private:
+  pthread_mutex_t mutex_;
+};
+
 }  // namespace rgb_matrix

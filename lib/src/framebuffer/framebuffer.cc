@@ -13,13 +13,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
 
-// The framebuffer is the workhorse: it represents the frame in some internal
-// format that is friendly to be dumped to the matrix quickly. Provides methods
-// to manipulate the content.
-
-#include "framebuffer-internal.h"
-#include "pin-pulser.h"
-
 #include <assert.h>
 #include <ctype.h>
 #include <math.h>
@@ -27,9 +20,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <algorithm>
 
+#include "framebuffer.h"
+#include "pin-pulser.h"
 #include "gpio.h"
 
 namespace rgb_matrix {
@@ -61,16 +55,11 @@ PixelDesignatorMap::~PixelDesignatorMap() {
 
 const struct HardwareMapping *Framebuffer::hardware_mapping_ = NULL;
 
-Framebuffer::Framebuffer(int rows, int columns, int parallel,
-                         int scan_mode,
-                         const char *led_sequence, bool inverse_color,
-                         PixelDesignatorMap **mapper)
+Framebuffer::Framebuffer(int rows, int columns, int parallel, PixelDesignatorMap **mapper)
   : rows_(rows),
     parallel_(parallel),
     height_(rows * parallel),
     columns_(columns),
-    scan_mode_(scan_mode),
-    inverse_color_(inverse_color),
     pwm_bits_(kBitPlanes), do_luminance_correct_(true), brightness_(100),
     double_rows_(rows / SUB_PANELS_),
     buffer_size_(double_rows_ * columns_ * kBitPlanes * sizeof(gpio_bits_t)),
@@ -108,12 +97,10 @@ Framebuffer::Framebuffer(int rows, int columns, int parallel,
     *shared_mapper_ = new PixelDesignatorMap(columns_, height_);
     for (int y = 0; y < height_; ++y) {
       for (int x = 0; x < columns_; ++x) {
-        InitDefaultDesignator(x, y, led_sequence, (*shared_mapper_)->get(x, y));
+        InitDefaultDesignator(x, y, (*shared_mapper_)->get(x, y));
       }
     }
   }
-
-  Clear();
 }
 
 Framebuffer::~Framebuffer() {
@@ -165,36 +152,24 @@ Framebuffer::~Framebuffer() {
   hardware_mapping_ = mapping;
 }
 
-/* static */ void Framebuffer::InitGPIO(GPIO *io, int rows, int parallel,
-                                        bool allow_hardware_pulsing,
-                                        int pwm_lsb_nanoseconds,
-                                        int dither_bits,
-                                        int row_address_type) {
+/* static */ void Framebuffer::InitGPIO(GPIO *io, int rows, int parallel, int dither_bits, int row_address_type, int refresh) {
   if (sOutputEnablePulser != NULL)
     return;  // already initialized.
 
   const struct HardwareMapping &h = *hardware_mapping_;
-  // Tell GPIO about all bits we intend to use.
   gpio_bits_t all_used_bits = 0;
-
   all_used_bits |= h.trigger | h.response | h.clock | h.strobe;
-
   all_used_bits |= h.p0_r1 | h.p0_g1 | h.p0_b1 | h.p0_r2 | h.p0_g2 | h.p0_b2;
-  if (parallel >= 2) {
+  if (parallel >= 2)
     all_used_bits |= h.p1_r1 | h.p1_g1 | h.p1_b1 | h.p1_r2 | h.p1_g2 | h.p1_b2;
-  }
-  if (parallel >= 3) {
+  if (parallel >= 3)
     all_used_bits |= h.p2_r1 | h.p2_g1 | h.p2_b1 | h.p2_r2 | h.p2_g2 | h.p2_b2;
-  }
-  if (parallel >= 4) {
+  if (parallel >= 4)
     all_used_bits |= h.p3_r1 | h.p3_g1 | h.p3_b1 | h.p3_r2 | h.p3_g2 | h.p3_b2;
-  }
-  if (parallel >= 5) {
+  if (parallel >= 5) 
     all_used_bits |= h.p4_r1 | h.p4_g1 | h.p4_b1 | h.p4_r2 | h.p4_g2 | h.p4_b2;
-  }
-  if (parallel >= 6) {
+  if (parallel >= 6)
     all_used_bits |= h.p5_r1 | h.p5_g1 | h.p5_b1 | h.p5_r2 | h.p5_g2 | h.p5_b2;
-  }
 
   const int double_rows = rows / SUB_PANELS_;
 
@@ -202,115 +177,7 @@ Framebuffer::~Framebuffer() {
   const gpio_bits_t result = io->InitOutputs(all_used_bits);
   assert(result == all_used_bits);  // Impl: all bits declared in gpio.cc ?
 
-  std::vector<int> bitplane_timings;
-  uint32_t timing_ns = pwm_lsb_nanoseconds;
-  for (int b = 0; b < kBitPlanes; ++b) {
-    bitplane_timings.push_back(timing_ns);
-    if (b >= dither_bits) timing_ns *= 2;
-  }
-
-  sOutputEnablePulser = PinPulser::Create(io, h.trigger,  h.response, bitplane_timings);
-}
-
-// NOTE: first version for panel initialization sequence, need to refine
-// until it is more clear how different panel types are initialized to be
-// able to abstract this more.
-
-static void InitFM6126(GPIO *io, const struct HardwareMapping &h, int columns) {
-  const gpio_bits_t bits_on
-    = h.p0_r1 | h.p0_g1 | h.p0_b1 | h.p0_r2 | h.p0_g2 | h.p0_b2
-    | h.p1_r1 | h.p1_g1 | h.p1_b1 | h.p1_r2 | h.p1_g2 | h.p1_b2
-    | h.p2_r1 | h.p2_g1 | h.p2_b1 | h.p2_r2 | h.p2_g2 | h.p2_b2
-    | h.p3_r1 | h.p3_g1 | h.p3_b1 | h.p3_r2 | h.p3_g2 | h.p3_b2
-    | h.p4_r1 | h.p4_g1 | h.p4_b1 | h.p4_r2 | h.p4_g2 | h.p4_b2
-    | h.p5_r1 | h.p5_g1 | h.p5_b1 | h.p5_r2 | h.p5_g2 | h.p5_b2
-    | h.a;  // Address bit 'A' is always on.
-  const gpio_bits_t bits_off = h.a;
-  const gpio_bits_t mask = bits_on | h.strobe;
-
-  // Init bits. TODO: customize, as we can do things such as brightness here,
-  // which would allow more higher quality output.
-  static const char* init_b12 = "0111111111111111";  // full bright
-  static const char* init_b13 = "0000000001000000";  // panel on.
-
-  io->ClearBits(h.clock | h.strobe);
-
-  for (int i = 0; i < columns; ++i) {
-    gpio_bits_t value = init_b12[i % 16] == '0' ? bits_off : bits_on;
-    if (i > columns - 12) value |= h.strobe;
-    io->WriteMaskedBits(value, mask);
-    io->SetBits(h.clock);
-    io->ClearBits(h.clock);
-  }
-  io->ClearBits(h.strobe);
-
-  for (int i = 0; i < columns; ++i) {
-    gpio_bits_t value = init_b13[i % 16] == '0' ? bits_off : bits_on;
-    if (i > columns - 13) value |= h.strobe;
-    io->WriteMaskedBits(value, mask);
-    io->SetBits(h.clock);
-    io->ClearBits(h.clock);
-  }
-  io->ClearBits(h.strobe);
-}
-
-// The FM6217 is very similar to the FM6216.
-// FM6217 adds Register 3 to allow for automatic bad pixel supression.
-static void InitFM6127(GPIO *io, const struct HardwareMapping &h, int columns) {
-  const gpio_bits_t bits_r_on= h.p0_r1 | h.p0_r2;
-  const gpio_bits_t bits_g_on= h.p0_g1 | h.p0_g2;
-  const gpio_bits_t bits_b_on= h.p0_b1 | h.p0_b2;
-  const gpio_bits_t bits_on= bits_r_on | bits_g_on | bits_b_on;
-  const gpio_bits_t bits_off = 0;
-
-  const gpio_bits_t mask = bits_on | h.strobe;
-
-  static const char* init_b12 = "1111111111001110";  // register 1
-  static const char* init_b13 = "1110000001100010";  // register 2.
-  static const char* init_b11 = "0101111100000000";  // register 3.
-  io->ClearBits(h.clock | h.strobe);
-  for (int i = 0; i < columns; ++i) {
-    gpio_bits_t value = init_b12[i % 16] == '0' ? bits_off : bits_on;
-    if (i > columns - 12) value |= h.strobe;
-    io->WriteMaskedBits(value, mask);
-    io->SetBits(h.clock);
-    io->ClearBits(h.clock);
-  }
-  io->ClearBits(h.strobe);
-
-  for (int i = 0; i < columns; ++i) {
-    gpio_bits_t value = init_b13[i % 16] == '0' ? bits_off : bits_on;
-    if (i > columns - 13) value |= h.strobe;
-    io->WriteMaskedBits(value, mask);
-    io->SetBits(h.clock);
-    io->ClearBits(h.clock);
-  }
-  io->ClearBits(h.strobe);
-
-  for (int i = 0; i < columns; ++i) {
-    gpio_bits_t value = init_b11[i % 16] == '0' ? bits_off : bits_on;
-    if (i > columns - 11) value |= h.strobe;
-    io->WriteMaskedBits(value, mask);
-    io->SetBits(h.clock);
-    io->ClearBits(h.clock);
-  }
-  io->ClearBits(h.strobe);
-}
-
-/*static*/ void Framebuffer::InitializePanels(GPIO *io,
-                                              const char *panel_type,
-                                              int columns) {
-  if (!panel_type || panel_type[0] == '\0') return;
-  if (strncasecmp(panel_type, "fm6126", 6) == 0) {
-    InitFM6126(io, *hardware_mapping_, columns);
-  }
-  else if (strncasecmp(panel_type, "fm6127", 6) == 0) {
-    InitFM6127(io, *hardware_mapping_, columns);
-  }
-  // else if (strncasecmp(...))  // more init types
-  else {
-    fprintf(stderr, "Unknown panel type '%s'; typo ?\n", panel_type);
-  }
+  sOutputEnablePulser = PinPulser::Create(io, h.trigger,  h.response, refresh, row_address_type);
 }
 
 bool Framebuffer::SetPWMBits(uint8_t value) {
@@ -324,10 +191,6 @@ inline gpio_bits_t *Framebuffer::ValueAt(int double_row, int column, int bit) {
   return &bitplane_buffer_[ double_row * (columns_ * kBitPlanes)
                             + bit * columns_
                             + column ];
-}
-
-void Framebuffer::Clear() {
-  memset(bitplane_buffer_, 0, sizeof(*bitplane_buffer_) * double_rows_ * columns_ * kBitPlanes);
 }
 
 // Do CIE1931 luminance correction and scale to output bitplanes
@@ -414,8 +277,7 @@ void Framebuffer::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
   }
 }
 
-void Framebuffer::InitDefaultDesignator(int x, int y, const char *seq,
-                                        PixelDesignator *d) {
+void Framebuffer::InitDefaultDesignator(int x, int y, PixelDesignator *d) {
   const struct HardwareMapping &h = *hardware_mapping_;
   gpio_bits_t *bits = ValueAt(y % double_rows_, x, 0);
   d->gpio_word = bits - bitplane_buffer_;
@@ -460,41 +322,23 @@ void Framebuffer::DumpToMatrix(GPIO *io, int pwm_low_bit) {
   const struct HardwareMapping &h = *hardware_mapping_;
   gpio_bits_t color_clk_mask = 0;  // Mask of bits while clocking in.
   color_clk_mask |= h.p0_r1 | h.p0_g1 | h.p0_b1 | h.p0_r2 | h.p0_g2 | h.p0_b2;
-  if (parallel_ >= 2) {
+  if (parallel_ >= 2)
     color_clk_mask |= h.p1_r1 | h.p1_g1 | h.p1_b1 | h.p1_r2 | h.p1_g2 | h.p1_b2;
-  }
-  if (parallel_ >= 3) {
+  if (parallel_ >= 3)
     color_clk_mask |= h.p2_r1 | h.p2_g1 | h.p2_b1 | h.p2_r2 | h.p2_g2 | h.p2_b2;
-  }
-  if (parallel_ >= 4) {
+  if (parallel_ >= 4)
     color_clk_mask |= h.p3_r1 | h.p3_g1 | h.p3_b1 | h.p3_r2 | h.p3_g2 | h.p3_b2;
-  }
-  if (parallel_ >= 5) {
+  if (parallel_ >= 5)
     color_clk_mask |= h.p4_r1 | h.p4_g1 | h.p4_b1 | h.p4_r2 | h.p4_g2 | h.p4_b2;
-  }
-  if (parallel_ >= 6) {
+  if (parallel_ >= 6)
     color_clk_mask |= h.p5_r1 | h.p5_g1 | h.p5_b1 | h.p5_r2 | h.p5_g2 | h.p5_b2;
-  }
-
   color_clk_mask |= h.clock;
 
   // Depending if we do dithering, we might not always show the lowest bits.
   const int start_bit = std::max(pwm_low_bit, kBitPlanes - pwm_bits_);
-
   const uint8_t half_double = double_rows_/2;
   for (uint8_t row_loop = 0; row_loop < double_rows_; ++row_loop) {
-    uint8_t d_row;
-    switch (scan_mode_) {
-    case 0:  // progressive
-    default:
-      d_row = row_loop;
-      break;
-
-    case 1:  // interlaced
-      d_row = ((row_loop < half_double)
-               ? (row_loop << 1)
-               : ((row_loop - half_double) << 1) + 1);
-    }
+    uint8_t d_row = ((row_loop < half_double) ? (row_loop << 1) : ((row_loop - half_double) << 1) + 1);
 
     // TODO: Pin-Pulser will automatically hold display off during this time
     for (int b = 0; b < start_bit; ++b) {
