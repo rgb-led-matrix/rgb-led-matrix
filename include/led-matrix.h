@@ -23,13 +23,6 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#include <string>
-#include <vector>
-
-#include "canvas.h"
-#include "thread.h"
-#include "pixel-mapper.h"
-
 namespace rgb_matrix {
 class RGBMatrix;
 class FrameCanvas;   // Canvas for Double- and Multibuffering
