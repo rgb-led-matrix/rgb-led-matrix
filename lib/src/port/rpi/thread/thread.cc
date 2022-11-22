@@ -12,15 +12,14 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
-
-#include "thread.h"
-
 #include <assert.h>
 #include <limits.h>
 #include <sched.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
+#include "thread.h"
 
 namespace rgb_matrix {
 void *Thread::PthreadCallRun(void *tobject) {
@@ -81,9 +80,25 @@ void Thread::Start(int priority, uint32_t affinity_mask) {
   started_ = true;
 }
 
-bool Mutex::WaitOn(pthread_cond_t *cond, long timeout_ms) {
+Mutex::Mutex() {
+  pthread_mutex_init(&mutex_, NULL);
+}
+
+~Mutex::Mutex() {
+  pthread_mutex_destroy(&mutex_);
+}
+
+Mutex::Lock() {
+  pthread_mutex_lock(&mutex_);
+}
+
+Mutex::Unlock() {
+  pthread_mutex_unlock(&mutex_);
+}
+
+bool Mutex::WaitOn(void *cond, long timeout_ms) {
   if (timeout_ms < 0) {
-    pthread_cond_wait(cond, &mutex_);
+    pthread_cond_wait((pthread_cond_t *) cond, &mutex_);
     return true;
   }
   else {
@@ -94,33 +109,7 @@ bool Mutex::WaitOn(pthread_cond_t *cond, long timeout_ms) {
     t.tv_sec += t.tv_nsec / 1000000000;
     t.tv_nsec %= 1000000000;
     // TODO(hzeller): It doesn't seem we return with EINTR on signal. We should.
-    return pthread_cond_timedwait(cond, &mutex_, &t) == 0;
+    return pthread_cond_timedwait((pthread_cond_t *) cond, &mutex_, &t) == 0;
   }
 }
-
-Mutex::Mutex() {
-  pthread_mutex_init(&mutex_, NULL);
-}
-
-~Mutex::Mutex() {
-  pthread_mutex_destroy(&mutex_);
-}
-
-// Non-recursive Mutex.
-class Mutex {
-public:
-  Mutex() {  }
-  ~Mutex() {  }
-  void Lock() { pthread_mutex_lock(&mutex_); }
-  void Unlock() { pthread_mutex_unlock(&mutex_); }
-
-  // Wait on condition. If "timeout_ms" is < 0, it waits forever, otherwise
-  // until timeout is reached.
-  // Returns 'true' if condition is met, 'false', if wait timed out.
-  bool WaitOn(pthread_cond_t *cond, long timeout_ms = -1);
-
-private:
-  pthread_mutex_t mutex_;
-};
-
 }  // namespace rgb_matrix

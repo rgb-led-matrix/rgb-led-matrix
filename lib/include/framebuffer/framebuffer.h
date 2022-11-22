@@ -17,7 +17,6 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-
 #include "hardware-mapping.h"
 
 namespace rgb_matrix {

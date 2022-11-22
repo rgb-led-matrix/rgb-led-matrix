@@ -17,7 +17,6 @@
 #define RPI_THREAD_H
 
 #include <stdint.h>
-#include <pthread.h>
 
 namespace rgb_matrix {
 // Simple thread abstraction.
@@ -58,15 +57,15 @@ private:
 // Non-recursive Mutex.
 class Mutex {
 public:
-  Mutex() { pthread_mutex_init(&mutex_, NULL); }
-  ~Mutex() { pthread_mutex_destroy(&mutex_); }
-  void Lock() { pthread_mutex_lock(&mutex_); }
-  void Unlock() { pthread_mutex_unlock(&mutex_); }
+  Mutex();
+  ~Mutex();
+  void Lock();
+  void Unlock();
 
   // Wait on condition. If "timeout_ms" is < 0, it waits forever, otherwise
   // until timeout is reached.
   // Returns 'true' if condition is met, 'false', if wait timed out.
-  bool WaitOn(pthread_cond_t *cond, long timeout_ms = -1);
+  bool WaitOn(void *cond, long timeout_ms = -1);
 
 private:
   pthread_mutex_t mutex_;
