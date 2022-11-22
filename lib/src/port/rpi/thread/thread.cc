@@ -84,15 +84,15 @@ Mutex::Mutex() {
   pthread_mutex_init(&mutex_, NULL);
 }
 
-~Mutex::Mutex() {
+Mutex::~Mutex() {
   pthread_mutex_destroy(&mutex_);
 }
 
-Mutex::Lock() {
+void Mutex::Lock() {
   pthread_mutex_lock(&mutex_);
 }
 
-Mutex::Unlock() {
+void Mutex::Unlock() {
   pthread_mutex_unlock(&mutex_);
 }
 

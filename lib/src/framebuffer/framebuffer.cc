@@ -240,12 +240,6 @@ inline void Framebuffer::MapColors(
     *green = DirectMapColor(brightness_, g);
     *blue  = DirectMapColor(brightness_, b);
   }
-
-  if (inverse_color_) {
-    *red = ~(*red);
-    *green = ~(*green);
-    *blue = ~(*blue);
-  }
 }
 
 int Framebuffer::width() const { return (*shared_mapper_)->width(); }
