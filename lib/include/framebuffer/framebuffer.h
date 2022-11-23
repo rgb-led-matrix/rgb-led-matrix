@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "hardware-mapping.h"
+#include "canvas.h"
 
 namespace rgb_matrix {
 class GPIO;
@@ -102,9 +103,8 @@ public:
 
   virtual void DumpToMatrix(GPIO *io, int pwm_bits_to_show);
 
-  virtual void Serialize(const char **data, size_t *len) const;
-  virtual bool Deserialize(const char *data, size_t len);
-  virtual void CopyFrom(const Framebuffer *other);
+  virtual void Serialize(const char **data, size_t *len, Canvas_ID *id) const;
+  virtual bool Deserialize(const char *data, size_t len, Canvas_ID id);
 
   // Canvas-inspired methods, but we're not implementing this interface to not
   // have an unnecessary vtable.
@@ -121,6 +121,7 @@ protected:
   uint8_t pwm_bits_;   // PWM bits to display.
   bool do_luminance_correct_;
   uint8_t brightness_;
+  Canvas_ID id_;
 
   const int double_rows_;
   const size_t buffer_size_;

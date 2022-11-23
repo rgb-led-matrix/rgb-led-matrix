@@ -294,21 +294,17 @@ void Framebuffer::InitDefaultDesignator(int x, int y, PixelDesignator *d) {
 }
 
 // TODO: Fix this
-void Framebuffer::Serialize(const char **data, size_t *len) const {
+void Framebuffer::Serialize(const char **data, size_t *len, Canvas_ID *id) const {
   *data = reinterpret_cast<const char*>(bitplane_buffer_);
   *len = buffer_size_;
+  *id = id_;
 }
 
 // TODO: Fix this
-bool Framebuffer::Deserialize(const char *data, size_t len) {
-  if (len != buffer_size_) return false;
+bool Framebuffer::Deserialize(const char *data, size_t len, Canvas_ID id) {
+  if (len != buffer_size_ || id != id_) return false;
   memcpy(bitplane_buffer_, data, len);
   return true;
-}
-
-void Framebuffer::CopyFrom(const Framebuffer *other) {
-  if (other == this) return;
-  memcpy(bitplane_buffer_, other->bitplane_buffer_, buffer_size_);
 }
 
 void Framebuffer::DumpToMatrix(GPIO *io, int pwm_low_bit) {

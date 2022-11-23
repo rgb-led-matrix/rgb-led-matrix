@@ -27,13 +27,10 @@ bool FrameCanvas::luminance_correct() const { return frame_->luminance_correct()
 void FrameCanvas::SetBrightness(uint8_t brightness) { frame_->SetBrightness(brightness); }
 uint8_t FrameCanvas::brightness() { return frame_->brightness(); }
 
-void FrameCanvas::Serialize(const char **data, size_t *len) const {
-  frame_->Serialize(data, len);
+void FrameCanvas::Serialize(const char **data, size_t *len, Canvas_ID *id) const {
+  frame_->Serialize(data, len, id);
 }
-bool FrameCanvas::Deserialize(const char *data, size_t len) {
-  return frame_->Deserialize(data, len);
-}
-void FrameCanvas::CopyFrom(const FrameCanvas &other) {
-  frame_->CopyFrom(other.frame_);
+bool FrameCanvas::Deserialize(const char *data, size_t len, Canvas_ID id) {
+  return frame_->Deserialize(data, len, id);
 }
 }

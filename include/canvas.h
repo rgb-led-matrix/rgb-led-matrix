@@ -18,6 +18,10 @@
 #include <stdint.h>
 
 namespace rgb_matrix {
+enum Canvas_ID {
+  BCM = 0
+};
+
 // An interface for things a Canvas can do. The RGBMatrix implements this
 // interface, so you can use it directly wherever a canvas is needed.
 //
@@ -46,6 +50,27 @@ public:
 
   // Fill screen with given 24bpp color.
   virtual void Fill(uint8_t red, uint8_t green, uint8_t blue) = 0;
+
+    //-- Serialize()/Deserialize() are fast ways to store and re-create a canvas.
+
+  // Provides a pointer to a buffer of the internal representation to
+  // be copied out for later Deserialize().
+  //
+  // Returns a "data" pointer and the data "len" in the given out-paramters;
+  // the content can be copied from there by the caller.
+  //
+  // Note, the content is not simply RGB, it is the opaque and platform
+  // specific representation which allows to make deserialization very fast.
+  // It is also bigger than just RGB; if you want to store it somewhere,
+  // using compression is a good idea.
+  void Serialize(const char **data, size_t *len, Canvas_ID *id) const;
+
+  // Load data previously stored with Serialize(). Needs to be restored into
+  // a FrameCanvas with exactly the same settings (rows, chain, transformer,...)
+  // as serialized.
+  // Returns 'false' if size is unexpected.
+  // This method should only be called if FrameCanvas is off-screen.
+  bool Deserialize(const char *data, size_t len, Canvas_ID id);
 };
 
 }  // namespace rgb_matrix

@@ -33,17 +33,14 @@ public:
   // specific representation which allows to make deserialization very fast.
   // It is also bigger than just RGB; if you want to store it somewhere,
   // using compression is a good idea.
-  void Serialize(const char **data, size_t *len) const;
+  void Serialize(const char **data, size_t *len, Canvas_ID *id) const;
 
   // Load data previously stored with Serialize(). Needs to be restored into
   // a FrameCanvas with exactly the same settings (rows, chain, transformer,...)
   // as serialized.
   // Returns 'false' if size is unexpected.
   // This method should only be called if FrameCanvas is off-screen.
-  bool Deserialize(const char *data, size_t len);
-
-  // Copy content from other FrameCanvas owned by the same RGBMatrix.
-  void CopyFrom(const FrameCanvas &other);
+  bool Deserialize(const char *data, size_t len, Canvas_ID id);
 
   // -- Canvas interface.
   virtual int width() const;
