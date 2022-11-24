@@ -12,8 +12,8 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
-#ifndef RPI_RGBMATRIX_FRAMEBUFFER_INTERNAL_H
-#define RPI_RGBMATRIX_FRAMEBUFFER_INTERNAL_H
+#ifndef FRAMEBUFFER_H
+#define FRAMEBUFFER_H
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -101,7 +101,7 @@ public:
   }
   uint8_t brightness() { return brightness_; }
 
-  virtual void DumpToMatrix(GPIO *io, int pwm_bits_to_show);
+  virtual void DumpToMatrix(GPIO *io, int pwm_bits_to_show) = 0;
 
   virtual void Serialize(const char **data, size_t *len, Canvas_ID *id) const;
   virtual bool Deserialize(const char *data, size_t len, Canvas_ID id);
@@ -110,9 +110,11 @@ public:
   // have an unnecessary vtable.
   virtual int width() const;
   virtual int height() const;
-  virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
+  virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) = 0;
 
 protected:
+  Framebuffer();
+
   const int rows_;     // Number of rows. 16 or 32.
   const int parallel_; // Parallel rows of chains. 1 or 2.
   const int height_;   // rows * parallel
@@ -124,16 +126,11 @@ protected:
   Canvas_ID id_;
 
   const int double_rows_;
-  const size_t buffer_size_;
+  size_t buffer_size_;
 
   static const struct HardwareMapping *hardware_mapping_;
 
   PixelDesignatorMap **shared_mapper_;  // Storage in RGBMatrix.
-
-private:
-  void InitDefaultDesignator(int x, int y, PixelDesignator *designator);
-  inline void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue);
-
 
   // The frame-buffer is organized in bitplanes.
   // Highest level (slowest to cycle through) are double rows.
@@ -142,7 +139,8 @@ private:
   // Of course, that means that we store unrelated bits in the frame-buffer,
   // but it allows easy access in the critical section.
   gpio_bits_t *bitplane_buffer_;
-  inline gpio_bits_t *ValueAt(int double_row, int column, int bit);
+  virtual inline gpio_bits_t *ValueAt(int double_row, int column, int bit) = 0;
+  virtual inline void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 };
 }  // namespace rgb_matrix
 #endif // RPI_RGBMATRIX_FRAMEBUFFER_INTERNAL_H

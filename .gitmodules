@@ -1,3 +1,6 @@
 [submodule "firmware/pico-sdk"]
 	path = firmware/pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk.git
+[submodule "lib/src/framebuffer/RP2040/LED_Matrix_RP2040"]
+	path = lib/src/framebuffer/RP2040/LED_Matrix_RP2040
+	url = https://github.com/daveythacher/LED_Matrix_RP2040.git
