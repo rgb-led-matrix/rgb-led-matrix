@@ -191,11 +191,6 @@ static uint32_t *mmap_bcm_register(off_t register_offset) {
   case PI_MODEL_4: base = BCM2711_PERI_BASE; break;
   }
 
-  if (base == BCM2708_PERI_BASE) {
-    perror("GPIO error: PI_MODEL_1 is no longer supported");
-    return NULL;
-  }
-
   int mem_fd;
   if ((mem_fd = open("/dev/gpiomem", O_RDWR|O_SYNC) ) < 0) {
     return NULL;
