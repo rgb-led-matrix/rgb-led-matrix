@@ -43,7 +43,7 @@ inline gpio_bits_t *RP2040::ValueAt(int double_row, int column, int bit) {
 
 // Do CIE1931 luminance correction and scale to output bitplanes
 uint16_t RP2040::luminance_cie1931(uint8_t c, uint8_t brightness) {
-  float out_factor = ((1 << Framebuffer::kBitPlanes) - 1);
+  float out_factor = ((1 << pwm_bits_) - 1);
   float v = (float) c * brightness / 255.0;
   return roundf(out_factor * ((v <= 8) ? v / 902.3 : pow((v + 16) / 116.0, 3)));
 }

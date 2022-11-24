@@ -26,8 +26,8 @@ private:
 
   ColorLookup *luminance_lookup;
 
-  static ColorLookup *CreateLuminanceCIE1931LookupTable();
-  static uint16_t luminance_cie1931(uint8_t c, uint8_t brightness);
+  ColorLookup *CreateLuminanceCIE1931LookupTable();
+  uint16_t luminance_cie1931(uint8_t c, uint8_t brightness);
   inline uint16_t CIEMapColor(uint8_t brightness, uint8_t c);
 };
 }  // namespace rgb_matrix
