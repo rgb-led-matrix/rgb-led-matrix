@@ -22,7 +22,7 @@ Pin-pulser part of this, which for the time being is handled externally via a mi
 
 Pin-pulser could be implemented using internal logic. However this would represent a different port API.
 
-No bare metal support is planned, however in some cases this could be possible. User space logic is preferred. No support for RTLinux, Kernel Thread/Modules, etc. is planned.
+No bare metal support is planned, however in some cases this could be possible. User space logic is preferred. No support for RTLinux, Kernel Thread/Modules, etc. is planned. (No /dev/mem black magic.)
 
 These will be compiled into libraries containing the required interface implementations. These will be used by the application logic to interface with the hardware. There will be one per hardware port.
 
