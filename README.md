@@ -16,7 +16,7 @@ If in doubt use the discussion feature. I am okay with meaningful discussion in 
 Some weird conventions are used. These should be documented in LED_Matrix/README.md. This is the place for documenting technical interworkings and troubleshooting. (Outside of comments.)
 
 ## Layout
-There are three sections at this directory level. Look at lower levels for more details about each section.
+There are four sections at this directory level. Look at lower levels for more details about each section.
 
 ### external
 This is an experimental section for hardware offload modules used in rgb-led-matrix/lib/src/framebuffer. 
@@ -28,3 +28,6 @@ This is an external universal pin-pulser. Currently there is only support for RP
 
 ### rgb-led-matrix
 This is the main library source directory. The top level library includes are in rgb-led-matrix/include while the internal source is divided into rgb-led-matrix/lib which has an include and src folder. Applications do not need to worry about the internal logic, just the top level includes and the libraries.
+
+### scripts
+This is a folder containing helper scripts for setup and other things. These will be referenced by other sections.
