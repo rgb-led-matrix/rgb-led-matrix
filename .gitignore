@@ -4,3 +4,4 @@
 *.so
 firmware/RP2040_Module/build
 firmware/RP2040_Module/pico_sdk_import.cmake
+rgb-led-matrix/build

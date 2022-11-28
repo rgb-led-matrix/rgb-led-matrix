@@ -17,7 +17,7 @@
 /*
  * We do this in plain C so that we can use designated initializers.
  */
-#include "hardware-mapping.h"
+#include "port/pin-mapper/hardware-mapping.h"
 
 #define GPIO_BIT(b) ((uint64_t)1<<(b))
 
