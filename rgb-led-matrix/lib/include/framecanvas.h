@@ -2,7 +2,7 @@
 #define FRAMECANVAS_H
 
 #include "canvas.h"
-#include "framebuffer.h"
+#include "framebuffer/framebuffer.h"
 
 namespace rgb_matrix {
 class FrameCanvas : public Canvas {

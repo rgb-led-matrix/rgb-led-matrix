@@ -31,27 +31,6 @@ namespace rgb_matrix {
 // implementations depending on the context.
 static PinPulser *sOutputEnablePulser = NULL;
 
-#ifdef ONLY_SINGLE_SUB_PANEL
-#  define SUB_PANELS_ 1
-#else
-#  define SUB_PANELS_ 2
-#endif
-
-PixelDesignator *PixelDesignatorMap::get(int x, int y) {
-  if (x < 0 || y < 0 || x >= width_ || y >= height_)
-    return NULL;
-  return buffer_ + (y*width_) + x;
-}
-
-PixelDesignatorMap::PixelDesignatorMap(int width, int height)
-  : width_(width), height_(height),
-    buffer_(new PixelDesignator[width * height]) {
-}
-
-PixelDesignatorMap::~PixelDesignatorMap() {
-  delete [] buffer_;
-}
-
 BCM::BCM(int rows, int columns, int parallel, PixelDesignatorMap **mapper)
   : Framebuffer(rows, columns, parallel, mapper) {
   assert(hardware_mapping_ != NULL);   // Called InitHardwareMapping() ?

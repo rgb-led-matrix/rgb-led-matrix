@@ -22,20 +22,14 @@
 #include <string.h>
 #include <algorithm>
 
-#include "framebuffer.h"
-#include "pin-pulser.h"
-#include "gpio.h"
+#include "framebuffer/framebuffer.h"
+#include "pin-pulser/pin-pulser.h"
+#include "port/gpio/gpio.h"
 
 namespace rgb_matrix {
 // We need one global instance of a timing correct pulser. There are different
 // implementations depending on the context.
 static PinPulser *sOutputEnablePulser = NULL;
-
-#ifdef ONLY_SINGLE_SUB_PANEL
-#  define SUB_PANELS_ 1
-#else
-#  define SUB_PANELS_ 2
-#endif
 
 PixelDesignator *PixelDesignatorMap::get(int x, int y) {
   if (x < 0 || y < 0 || x >= width_ || y >= height_)

@@ -142,5 +142,12 @@ protected:
   virtual inline gpio_bits_t *ValueAt(int double_row, int column, int bit) = 0;
   virtual inline void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 };
+
+#ifdef ONLY_SINGLE_SUB_PANEL
+#  define SUB_PANELS_ 1
+#else
+#  define SUB_PANELS_ 2
+#endif
+
 }  // namespace rgb_matrix
 #endif // RPI_RGBMATRIX_FRAMEBUFFER_INTERNAL_H

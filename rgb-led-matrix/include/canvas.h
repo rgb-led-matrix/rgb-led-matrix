@@ -13,9 +13,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
 
-#ifndef RPI_CANVAS_H
-#define RPI_CANVAS_H
+#ifndef CANVAS_H
+#define CANVAS_H
+
 #include <stdint.h>
+#include <stddef.h>
 
 namespace rgb_matrix {
 enum Canvas_ID {

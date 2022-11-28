@@ -29,10 +29,10 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "gpio.h"
-#include "thread.h"
-#include "framebuffer.h"
-#include "multiplex-mappers-internal.h"
+#include "port/gpio/gpio.h"
+#include "port/thread/thread.h"
+#include "framebuffer/framebuffer.h"
+#include "mappers/multiplex/multiplex-mappers-internal.h"
 #include "framecanvas.h"
 
 namespace rgb_matrix {
@@ -380,8 +380,8 @@ bool RGBMatrix::Impl::StartRefresh() {
 }
 
 FrameCanvas *RGBMatrix::Impl::CreateFrameCanvas() {
-  FrameCanvas *result =
-    new FrameCanvas(new Framebuffer(params_.rows, params_.cols * params_.chain_length, params_.parallel, &shared_pixel_mapper_));
+  FrameCanvas *result = NULL; // TODO: Fix this
+    //new FrameCanvas(new Framebuffer(params_.rows, params_.cols * params_.chain_length, params_.parallel, &shared_pixel_mapper_));
   if (created_frames_.empty()) {
     // First time. Get defaults from initial Framebuffer.
     do_luminance_correct_ = result->framebuffer()->luminance_correct();
@@ -463,9 +463,6 @@ FrameCanvas *RGBMatrix::CreateFrameCanvas() {
 FrameCanvas *RGBMatrix::SwapOnVSync(FrameCanvas *other,
                                     unsigned framerate_fraction) {
   return impl_->SwapOnVSync(other, framerate_fraction);
-}
-bool RGBMatrix::ApplyPixelMapper(const PixelMapper *mapper) {
-  return impl_->ApplyPixelMapper(mapper);
 }
 
 bool RGBMatrix::StartRefresh() { return impl_->StartRefresh(); }

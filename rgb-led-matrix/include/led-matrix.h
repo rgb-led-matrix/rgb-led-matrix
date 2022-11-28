@@ -162,14 +162,6 @@ public:
   // time-correct animations.
   FrameCanvas *SwapOnVSync(FrameCanvas *other, unsigned framerate_fraction = 1);
 
-  // -- Setting shape and behavior of matrix.
-
-  // Apply a pixel mapper. This is used to re-map pixels according to some
-  // scheme implemented by the PixelMapper. Does _not_ take ownership of the
-  // mapper. Mapper can be NULL, in which case nothing happens.
-  // Returns a boolean indicating if this was successful.
-  bool ApplyPixelMapper(const PixelMapper *mapper);
-
   //--  Rarely needed
   // Start the refresh thread.
   // This is only needed if you chose RuntimeOptions::daemon = -1 (see below),
