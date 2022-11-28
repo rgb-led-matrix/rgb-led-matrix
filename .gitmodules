@@ -1,3 +1,6 @@
 [submodule "firmware/rgb-led-matrix-rp2040-module"]
 	path = firmware/rgb-led-matrix-rp2040-module
 	url = https://github.com/daveythacher/rgb-led-matrix-rp2040-module.git
+[submodule "external/RP2040/LED_Matrix_RP2040"]
+	path = external/RP2040/LED_Matrix_RP2040
+	url = https://github.com/daveythacher/LED_Matrix_RP2040.git
