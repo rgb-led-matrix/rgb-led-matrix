@@ -1,7 +1,7 @@
 #ifndef PIN_PULSER_H
 #define PIN_PULSER_H
 
-#include "gpio.h"
+#include "port/gpio/gpio.h"
 
 namespace rgb_matrix {
 

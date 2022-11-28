@@ -1,7 +1,7 @@
 #ifndef BCM_H
 #define BCM_H
 
-#include "framebuffer.h"
+#include "framebuffer/framebuffer.h"
 
 namespace rgb_matrix {
 class BCM : public Framebuffer {

@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 
-#include "gpio-bits.h"
+#include "port/gpio/gpio-bits.h"
 
 struct HardwareMapping {
   const char *name;

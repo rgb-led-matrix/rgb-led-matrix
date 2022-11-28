@@ -1,5 +1,5 @@
 #include <cmath>
-#include "RP2040/RP2040.h"
+#include "framebuffer/RP2040/RP2040.h"
 
 namespace rgb_matrix {
 RP2040::RP2040(int rows, int columns, int parallel, PixelDesignatorMap **mapper) {

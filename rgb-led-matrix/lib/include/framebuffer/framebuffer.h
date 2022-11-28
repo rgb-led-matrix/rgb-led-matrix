@@ -17,7 +17,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include "hardware-mapping.h"
+#include "port/pin-mapper/hardware-mapping.h"
 #include "canvas.h"
 
 namespace rgb_matrix {

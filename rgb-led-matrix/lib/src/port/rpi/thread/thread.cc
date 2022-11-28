@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
-#include "thread.h"
+#include "port/thread/thread.h"
 
 namespace rgb_matrix {
 void *Thread::PthreadCallRun(void *tobject) {
