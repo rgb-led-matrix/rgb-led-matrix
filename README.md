@@ -2,7 +2,7 @@
 This repository creates a library for top level applications and graphics. This repository will be a sub-module to that repository.
 
 ## Status
-Work in progress. Code is licensed under GPL 2. (I would like to use GPL 3, but the original is GPL 2.) The original code base was https://github.com/hzeller/rpi-rgb-led-matrix.
+Work in progress. Code is licensed under GPL 2. (I would like to use GPL 3, but the original is GPL 2.) The original code base was https://github.com/hzeller/rpi-rgb-led-matrix. This code base has diverged from this code base signifcantly, I went another direction with it. Note my changes are also protected under GPL 2.
 
 There is no warranty for this. Work is free to use according to the [GPL 2 license](COPYING). I am not responsible or liable for any damages or issues as a result of this in any way. User is responsible for all laws and regulations as required. Work is AS-IS and it is the respiblity of any user to address any shortages discovered in this code base before using it.
 
