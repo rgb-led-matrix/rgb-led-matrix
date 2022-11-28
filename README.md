@@ -16,7 +16,7 @@ If in doubt use the discussion feature. I am okay with meaningful discussion in 
 Some weird conventions are used. These should be documented in LED_Matrix/README.md. This is the place for documenting technical interworkings and troubleshooting. (Outside of comments.)
 
 ## Building
-Note this is a hack for the time being!
+Note this is a hack for now
 
 ```bash
 bash build.sh
