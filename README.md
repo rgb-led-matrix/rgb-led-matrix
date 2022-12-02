@@ -16,8 +16,10 @@ bash build.sh
 ## Layout
 There are three sections at this directory level. Look at lower levels for more details about each section.
 
-### firmware
-This is an external universal pin-pulser. Currently there is only support for RPi PICO. This is not finished.
+### external
+This is an experimental section for hardware offload modules used in rgb-led-matrix/lib/src/framebuffer. 
+
+Some framebuffers do not use offload such as BCM. External modules may have better features, however this depends on the framebuffer.
 
 ### rgb-led-matrix
 This is the main library source directory. The top level library includes are in rgb-led-matrix/include while the internal source is divided into rgb-led-matrix/lib which has an include and src folder. Applications do not need to worry about the internal logic, just the top level includes and the libraries.
