@@ -58,21 +58,6 @@ private:
 // written out.
 class Framebuffer {
 public:
-  // Maximum usable bitplanes.
-  //
-  // 11 bits seems to be a sweet spot in which we still get somewhat useful
-  // refresh rate and have good color richness. This is the default setting
-  // However, in low-light situations, we want to be able to scale down
-  // brightness more, having more bits at the bottom.
-  // TODO(hzeller): make the default 15 bit or so, but slide the use of
-  //  timing to lower bits if fewer bits requested to not affect the overall
-  //  refresh in that case.
-  //  This needs to be balanced to not create too agressive timing however.
-  //  To be explored in a separete commit.
-  //
-  // For now, if someone needs very low level of light, change this to
-  // say 13 and recompile. Run with --led-pwm-bits=13. Also, consider
-  // --led-pwm-dither-bits=2 to have the refresh rate not suffer too much.
   static constexpr int kBitPlanes = 11;
   static constexpr int kDefaultBitPlanes = 11;
 
@@ -132,15 +117,9 @@ protected:
 
   PixelDesignatorMap **shared_mapper_;  // Storage in RGBMatrix.
 
-  // The frame-buffer is organized in bitplanes.
-  // Highest level (slowest to cycle through) are double rows.
-  // For each double-row, we store pwm-bits columns of a bitplane.
-  // Each bitplane-column is pre-filled IoBits, of which the colors are set.
-  // Of course, that means that we store unrelated bits in the frame-buffer,
-  // but it allows easy access in the critical section.
   gpio_bits_t *bitplane_buffer_;
   virtual inline gpio_bits_t *ValueAt(int double_row, int column, int bit) = 0;
   virtual inline void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 };
-}  // namespace rgb_matrix
-#endif // RPI_RGBMATRIX_FRAMEBUFFER_INTERNAL_H
+}
+#endif
