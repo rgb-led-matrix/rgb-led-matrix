@@ -43,8 +43,7 @@ RGBMatrix *RGBMatrix::_ptr = nullptr;
 // TODO: Get rid of this!!!
 using namespace internal;
 
-// Some defaults. See options-initialize.cc for the command line parsing.
-RGBMatrix::Options::Options() :
+Options::Options() :
   hardware_mapping("regular"),
   rows(32),
   cols(32),
@@ -85,21 +84,15 @@ RGBMatrix *RGBMatrix::CreateFromOptions(Options &options) {
 }
 
 Canvas *RGBMatrix::CreateCanvas(Canvas_ID id) {
-  FrameCanvas *_canvas;
-
   switch (id) {
     case Canvas_ID::RP2040:
-      _canvas = new FrameCanvas(new RP2040(_options.rows, _options.cols, &shared_pixel_mapper_));
-      break;
+      return new FrameCanvas(new RP2040(_options.rows, _options.cols, &shared_pixel_mapper_));
+    default:
+      return nullptr;
   }
-
-  _canvas->framebuffer()->SetPWMBits(_options.pwm_bits);
-  _canvas->framebuffer()->SetBrightness(_options.brightness);
-
-  return _canvas;
 }
 
 void RGBMatrix::show(Canvas *c) {
-  
+  c->show();
 }
 };

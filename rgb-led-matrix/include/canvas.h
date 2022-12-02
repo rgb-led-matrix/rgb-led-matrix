@@ -22,6 +22,11 @@ namespace rgb_matrix {
 
       void Serialize(const char **data, size_t *len, Canvas_ID *id) const;
       bool Deserialize(const char *data, size_t len, Canvas_ID id);
+
+    protected:
+      friend class RGBMatrix;
+
+      virtual void show() = 0;
   };
 
 }
