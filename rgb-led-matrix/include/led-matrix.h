@@ -70,9 +70,10 @@ public:
   };
 
   static RGBMatrix *CreateFromOptions(Options &options);
-  virtual ~RGBMatrix();
+  virtual ~RGBMatrix() {}
 
   virtual Canvas *CreateCanvas(Canvas_ID id);
+  virtual void show(Canvas *c);
 
 protected:
 
