@@ -23,7 +23,6 @@
 #include <algorithm>
 
 #include "framebuffer/framebuffer.h"
-#include "pin-pulser/pin-pulser.h"
 #include "port/gpio/gpio.h"
 
 namespace rgb_matrix {

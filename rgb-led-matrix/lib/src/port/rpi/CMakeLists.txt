@@ -1,4 +1,4 @@
-add_library(rpi SHARED
+add_executable(rpi
     gpio/gpio.cc
     pin-mapper/hardware-mapping.c
     thread/thread.cc
