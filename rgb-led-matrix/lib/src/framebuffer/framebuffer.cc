@@ -25,6 +25,9 @@
 #include "framebuffer/framebuffer.h"
 #include "port/gpio/gpio.h"
 
+#include "mappers/pixel/pixel-mapper.h"
+#include "mappers/multiplex/multiplex-mappers-internal.h"
+
 namespace rgb_matrix {
 
 PixelDesignator *PixelDesignatorMap::get(int x, int y) {
@@ -127,4 +130,59 @@ bool Framebuffer::Deserialize(const char *data, size_t len, Canvas_ID id) {
   memcpy(bitplane_buffer_, data, len);
   return true;
 }
+
+void Framebuffer::ApplyNamedPixelMappers(const char *pixel_mapper_config) {
+  if (pixel_mapper_config == NULL || strlen(pixel_mapper_config) == 0)
+    return;
+  char *const writeable_copy = strdup(pixel_mapper_config);
+  const char *const end = writeable_copy + strlen(writeable_copy);
+  char *s = writeable_copy;
+  while (s < end) {
+    char *const semicolon = strchrnul(s, ';');
+    *semicolon = '\0';
+    char *optional_param_start = strchr(s, ':');
+    if (optional_param_start) {
+      *optional_param_start++ = '\0';
+    }
+    if (*s == '\0' && optional_param_start && *optional_param_start != '\0') {
+      fprintf(stderr, "Stray parameter ':%s' without mapper name ?\n", optional_param_start);
+    }
+    if (*s) {
+      ApplyPixelMapper(FindPixelMapper(s, 1, 1, optional_param_start));
+    }
+    s = semicolon + 1;
+  }
+  free(writeable_copy);
+}
+
+bool Framebuffer::ApplyPixelMapper(const PixelMapper *mapper) {
+  if (mapper == NULL) return true;
+  const int old_width = shared_pixel_mapper_->width();
+  const int old_height = shared_pixel_mapper_->height();
+  int new_width, new_height;
+  if (!mapper->GetSizeMapping(old_width, old_height, &new_width, &new_height)) {
+    return false;
+  }
+  PixelDesignatorMap *new_mapper = new PixelDesignatorMap(new_width, new_height);
+  for (int y = 0; y < new_height; ++y) {
+    for (int x = 0; x < new_width; ++x) {
+      int orig_x = -1, orig_y = -1;
+      mapper->MapVisibleToMatrix(old_width, old_height,
+                                 x, y, &orig_x, &orig_y);
+      if (orig_x < 0 || orig_y < 0 ||
+          orig_x >= old_width || orig_y >= old_height) {
+        fprintf(stderr, "Error in PixelMapper: (%d, %d) -> (%d, %d) [range: "
+                "%dx%d]\n", x, y, orig_x, orig_y, old_width, old_height);
+        continue;
+      }
+      const PixelDesignator *orig_designator;
+      orig_designator = shared_pixel_mapper_->get(orig_x, orig_y);
+      *new_mapper->get(x, y) = *orig_designator;
+    }
+  }
+  delete shared_pixel_mapper_;
+  shared_pixel_mapper_ = new_mapper;
+  return true;
+}
+
 }  // namespace rgb_matrix

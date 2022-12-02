@@ -17,13 +17,12 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include "port/pin-mapper/PinMapping.h"
 #include "canvas.h"
+#include "port/pin-mapper/PinMapping.h"
+#include "mappers/pixel/pixel-mapper.h"
+#include "mappers/multiplex/multiplex-mappers-internal.h"
 
 namespace rgb_matrix {
-class GPIO;
-class PinPulser;
-
 // An opaque type used within the framebuffer that can be used
 // to copy between PixelMappers.
 struct PixelDesignator {
@@ -82,7 +81,6 @@ public:
 
   // Initialize GPIO bits for output. Only call once.
   static void InitHardwareMapping(const char *named_hardware);
-  virtual void InitGPIO(GPIO *io) = 0;
 
   // Set PWM bits used for output. Default is 11, but if you only deal with
   // simple comic-colors, 1 might be sufficient. Lower require less CPU.
@@ -101,7 +99,7 @@ public:
   }
   uint8_t brightness() { return brightness_; }
 
-  virtual void DumpToMatrix(GPIO *io) = 0;
+  virtual void DumpToMatrix() = 0;
 
   virtual void Serialize(const char **data, size_t *len, Canvas_ID *id) const;
   virtual bool Deserialize(const char *data, size_t len, Canvas_ID id);
@@ -112,8 +110,13 @@ public:
   virtual int height() const;
   virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) = 0;
 
+  bool ApplyPixelMapper(const PixelMapper *mapper);
+  void ApplyNamedPixelMappers(const char *pixel_mapper_config);
+
 protected:
   Framebuffer();
+
+  virtual void InitGPIO() = 0;
 
   const int rows_;     // Number of rows.
   const int columns_;  // Number of columns

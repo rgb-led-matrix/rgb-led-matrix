@@ -21,7 +21,7 @@
 
 namespace rgb_matrix {
 enum Canvas_ID {
-  BCM = 0
+  RP2040 = 0
 };
 
 // An interface for things a Canvas can do. The RGBMatrix implements this

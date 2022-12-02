@@ -2,9 +2,22 @@
 
 #define GPIO_BIT(b) ((uint32_t) 1 << (b))
 
+// This is that stuff which is not allowed in C++
+#define TX(b)         GPIO_BIT(b)
+#define RX(b)         GPIO_BIT(b)
+#define reset(b)      GPIO_BIT(b)
+#define bootloader(b) GPIO_BIT(b)
+#define cs_out(b)     GPIO_BIT(b)
+#define address0(b)   GPIO_BIT(b)
+#define address1(b)   GPIO_BIT(b)
+#define address2(b)   GPIO_BIT(b)
+#define address3(b)   GPIO_BIT(b)
+
+
 struct RP2040_Pins pin_mappings[] = {
   {
-    RP2040_Pins((char *) "regular", GPIO_BIT(18), GPIO_BIT(18), GPIO_BIT(18), GPIO_BIT(18),
-      GPIO_BIT(18), GPIO_BIT(18), GPIO_BIT(18), GPIO_BIT(18), GPIO_BIT(18) )
+    // Hopefully someday this will get fixed
+    RP2040_Pins((char *) "regular", TX(18), RX(18), reset(18), bootloader(18),
+      cs_out(18), address0(18), address1(18), address2(18), address3(18) )
   },
 };
