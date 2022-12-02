@@ -104,20 +104,6 @@ public:
       requested_frame_multiple_(1) {
     pthread_cond_init(&frame_done_, NULL);
     pthread_cond_init(&input_change_, NULL);
-    switch (pwm_dither_bits) {
-    case 0:
-      start_bit_[0] = 0; start_bit_[1] = 0;
-      start_bit_[2] = 0; start_bit_[3] = 0;
-      break;
-    case 1:
-      start_bit_[0] = 0; start_bit_[1] = 1;
-      start_bit_[2] = 0; start_bit_[3] = 1;
-      break;
-    case 2:
-      start_bit_[0] = 0; start_bit_[1] = 1;
-      start_bit_[2] = 2; start_bit_[3] = 2;
-      break;
-    }
   }
 
   void Stop() {
@@ -127,7 +113,6 @@ public:
 
   virtual void Run() {
     unsigned frame_count = 0;
-    unsigned low_bit_sequence = 0;
     uint32_t largest_time = 0;
     gpio_bits_t last_gpio_bits = 0;
 
@@ -141,7 +126,7 @@ public:
       const uint32_t start_time_us = GetMicrosecondCounter();
 
       current_frame_->framebuffer()
-        ->DumpToMatrix(io_, start_bit_[low_bit_sequence % 4]);
+        ->DumpToMatrix(io_);
 
       // SwapOnVSync() exchange.
       {
@@ -170,7 +155,6 @@ public:
       }
 
       ++frame_count;
-      ++low_bit_sequence;
 
       if (target_frame_usec_) {
         while ((GetMicrosecondCounter() - start_time_us) < target_frame_usec_) {
@@ -219,7 +203,6 @@ private:
   GPIO *const io_;
   const bool show_refresh_;
   const uint32_t target_frame_usec_;
-  uint32_t start_bit_[4];
 
   Mutex running_mutex_;
   bool running_;
@@ -255,7 +238,6 @@ RGBMatrix::Options::Options() :
     pwm_lsb_nanoseconds(130),
 #endif
 
-  pwm_dither_bits(0),
   brightness(100),
 
   row_address_type(0),
@@ -319,7 +301,7 @@ RGBMatrix::Impl::~Impl() {
 
   // Make sure LEDs are off.
   active_->Clear();
-  if (io_) active_->framebuffer()->DumpToMatrix(io_, 0);
+  if (io_) active_->framebuffer()->DumpToMatrix(io_);
 
   for (size_t i = 0; i < created_frames_.size(); ++i) {
     delete created_frames_[i];

@@ -3,11 +3,14 @@ add_executable(rpi
     pin-mapper/hardware-mapping.c
     thread/thread.cc
     ../../led-matrix.cc
-    ../../framecanvas.cc)
+    ../../framecanvas.cc
+    main.cpp)
 
 set(CMAKE_C_COMPILER /opt/pi/tools/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
 set(CMAKE_CXX_COMPILER /opt/pi/tools/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++)
 
 target_link_libraries(rpi
     pixel-mapper
-    multiplex-mapper)
+    multiplex-mapper
+    framebuffer
+    pthread)

@@ -101,7 +101,7 @@ public:
   }
   uint8_t brightness() { return brightness_; }
 
-  virtual void DumpToMatrix(GPIO *io, int pwm_bits_to_show) = 0;
+  virtual void DumpToMatrix(GPIO *io) = 0;
 
   virtual void Serialize(const char **data, size_t *len, Canvas_ID *id) const;
   virtual bool Deserialize(const char *data, size_t len, Canvas_ID id);

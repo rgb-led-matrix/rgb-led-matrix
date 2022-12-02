@@ -26,9 +26,6 @@
 #include "port/gpio/gpio.h"
 
 namespace rgb_matrix {
-// We need one global instance of a timing correct pulser. There are different
-// implementations depending on the context.
-static PinPulser *sOutputEnablePulser = NULL;
 
 PixelDesignator *PixelDesignatorMap::get(int x, int y) {
   if (x < 0 || y < 0 || x >= width_ || y >= height_)
@@ -130,9 +127,6 @@ Framebuffer::~Framebuffer() {
 }
 
 /* static */ void Framebuffer::InitGPIO(GPIO *io, int rows, int parallel, int row_address_type, int refresh) {
-  if (sOutputEnablePulser != NULL)
-    return;  // already initialized.
-
   const struct HardwareMapping &h = *hardware_mapping_;
   gpio_bits_t all_used_bits = 0;
   all_used_bits |= h.trigger | h.response | h.clock | h.strobe;
@@ -153,8 +147,6 @@ Framebuffer::~Framebuffer() {
   // Initialize outputs, make sure that all of these are supported bits.
   const gpio_bits_t result = io->InitOutputs(all_used_bits);
   assert(result == all_used_bits);  // Impl: all bits declared in gpio.cc ?
-
-  sOutputEnablePulser = PinPulser::Create(io, h.trigger,  h.response, refresh, row_address_type);
 }
 
 bool Framebuffer::SetPWMBits(uint8_t value) {
