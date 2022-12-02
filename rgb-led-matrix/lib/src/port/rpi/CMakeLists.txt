@@ -1,7 +1,6 @@
 add_library(rpi SHARED
     gpio/gpio.cc
     pin-mapper/hardware-mapping.c
-    pin-pulser/pin-pulser.cpp
     thread/thread.cc
     ../../led-matrix.cc
     ../../framecanvas.cc)
