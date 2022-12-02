@@ -84,9 +84,9 @@ RGBMatrix *RGBMatrix::CreateFromOptions(Options &options) {
   return _ptr;
 }
 
-static FrameCanvas *_canvas;
-
 Canvas *RGBMatrix::CreateCanvas(Canvas_ID id) {
+  FrameCanvas *_canvas;
+
   switch (id) {
     case Canvas_ID::RP2040:
       _canvas = new FrameCanvas(new RP2040(_options.rows, _options.cols, &shared_pixel_mapper_));

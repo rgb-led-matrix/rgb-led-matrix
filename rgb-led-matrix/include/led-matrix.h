@@ -17,72 +17,42 @@
 // of a string of these, and also connecting a parallel string on newer
 // Raspberry Pis with more GPIO pins available.
 
-#ifndef RPI_RGBMATRIX_H
-#define RPI_RGBMATRIX_H
+#ifndef RGBMATRIX_H
+#define RGBMATRIX_H
 
 #include <stdint.h>
 #include <stddef.h>
 #include "canvas.h"
 
 namespace rgb_matrix {
-class RGBMatrix {
-public:
-  // Options to initialize the RGBMatrix. Also see the main README.md for
-  // detailed descriptions of the command line flags.
+
   struct Options {
-    Options();   // Creates a default option set.
+    Options();
 
-    // Name of the hardware mapping. Something like "regular" or "adafruit-hat"
     const char *hardware_mapping;
-
-    // The "rows" are the number
-    // of rows supported by the display, so 32 or 16. Default: 32.
-    // Flag: --led-rows
     int rows;
-
-    // The "cols" are the number of columns per panel. Typically something
-    // like 32, but also 64 is possible. Sometimes even 40.
-    // cols * chain_length is the total length of the display, so you can
-    // represent a 64 wide display as cols=32, chain=2 or cols=64, chain=1;
-    // same thing, but more convenient to think of.
-    // Flag: --led-cols
     int cols;
-
-    // Set PWM bits used for output. Default is 11, but if you only deal with
-    // limited comic-colors, 1 might be sufficient. Lower require less CPU and
-    // increases refresh-rate.
-    // Flag: --led-pwm-bits
     int pwm_bits;
-
-    // The initial brightness of the panel in percent. Valid range is 1..100
-    // Default: 100
-    // Flag: --led-brightness
     int brightness;
-
-    // Type of multiplexing. 0 = direct, 1 = stripe, 2 = checker,...
-    // Flag: --led-multiplexing
     int multiplexing;
-
-    // A string describing a sequence of pixel mappers that should be applied
-    // to this matrix. A semicolon-separated list of pixel-mappers with optional
-    // parameter.
-    const char *pixel_mapper_config;   // Flag: --led-pixel-mapper
+    const char *pixel_mapper_config;
   };
 
-  static RGBMatrix *CreateFromOptions(Options &options);
-  virtual ~RGBMatrix() {}
+  class RGBMatrix {
+    public:
+      virtual ~RGBMatrix() {}
+      
+      static RGBMatrix *CreateFromOptions(Options &options);
 
-  virtual Canvas *CreateCanvas(Canvas_ID id);
-  virtual void show(Canvas *c);
+      virtual Canvas *CreateCanvas(Canvas_ID id);
+      virtual void show(Canvas *c);
 
-protected:
+    protected:
+      RGBMatrix() {}
+      RGBMatrix(Options o);
 
-  Options _options;
-  static RGBMatrix *_ptr;
-
-private:
-  RGBMatrix() {}
-  RGBMatrix(Options o);
-};
-}  // end namespace rgb_matrix
-#endif  // RPI_RGBMATRIX_H
+      Options _options;
+      static RGBMatrix *_ptr;
+    };
+}
+#endif
