@@ -55,12 +55,7 @@ namespace rgb_matrix {
 
 #define GPIO_BIT(x) (1ull << x)
 
-GPIO::GPIO() : output_bits_(0), input_bits_(0), reserved_bits_(0),
-               slowdown_(1)
-#ifdef ENABLE_WIDE_GPIO_COMPUTE_MODULE
-             , uses_64_bit_(false)
-#endif
-{
+GPIO::GPIO() : output_bits_(0), input_bits_(0), reserved_bits_(0) {
 }
 
 gpio_bits_t GPIO::InitOutputs(gpio_bits_t outputs) {
@@ -71,12 +66,7 @@ gpio_bits_t GPIO::InitOutputs(gpio_bits_t outputs) {
 
   outputs &= ~(output_bits_ | input_bits_ | reserved_bits_);
 
-#ifdef ENABLE_WIDE_GPIO_COMPUTE_MODULE
-  const int kMaxAvailableBit = 45;
-  uses_64_bit_ |= (outputs >> 32) != 0;
-#else
   const int kMaxAvailableBit = 31;
-#endif
   for (int b = 0; b <= kMaxAvailableBit; ++b) {
     if (outputs & GPIO_BIT(b)) {
       INP_GPIO(b);   // for writing, we first need to set as input.
@@ -94,12 +84,7 @@ gpio_bits_t GPIO::RequestInputs(gpio_bits_t inputs) {
   }
 
   inputs &= ~(output_bits_ | input_bits_ | reserved_bits_);
-#ifdef ENABLE_WIDE_GPIO_COMPUTE_MODULE
-  const int kMaxAvailableBit = 45;
-  uses_64_bit_ |= (inputs >> 32) != 0;
-#else
   const int kMaxAvailableBit = 31;
-#endif
   for (int b = 0; b <= kMaxAvailableBit; ++b) {
     if (inputs & GPIO_BIT(b)) {
       INP_GPIO(b);
@@ -227,9 +212,7 @@ static bool mmap_all_bcm_registers_once() {
   return true;
 }
 
-bool GPIO::Init(int slowdown) {
-  slowdown_ = slowdown;
-
+bool GPIO::Init() {
   // Pre-mmap all bcm registers we need now and possibly in the future, as to
   // allow  dropping privileges after GPIO::Init() even as some of these
   // registers might be needed later.
@@ -239,12 +222,6 @@ bool GPIO::Init(int slowdown) {
   gpio_set_bits_low_ = s_GPIO_registers + (0x1C / sizeof(uint32_t));
   gpio_clr_bits_low_ = s_GPIO_registers + (0x28 / sizeof(uint32_t));
   gpio_read_bits_low_ = s_GPIO_registers + (0x34 / sizeof(uint32_t));
-
-#ifdef ENABLE_WIDE_GPIO_COMPUTE_MODULE
-  gpio_set_bits_high_ = s_GPIO_registers + (0x20 / sizeof(uint32_t));
-  gpio_clr_bits_high_ = s_GPIO_registers + (0x2C / sizeof(uint32_t));
-  gpio_read_bits_high_ = s_GPIO_registers + (0x38 / sizeof(uint32_t));
-#endif
 
   return true;
 }

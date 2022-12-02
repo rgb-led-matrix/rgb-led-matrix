@@ -17,7 +17,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include "port/pin-mapper/hardware-mapping.h"
+#include "port/pin-mapper/PinMapping.h"
 #include "canvas.h"
 
 namespace rgb_matrix {
@@ -77,12 +77,12 @@ public:
   static constexpr int kBitPlanes = 11;
   static constexpr int kDefaultBitPlanes = 11;
 
-  Framebuffer(int rows, int columns, int parallel, PixelDesignatorMap **mapper);
-  ~Framebuffer();
+  Framebuffer(int rows, int columns, PixelDesignatorMap **mapper);
+  virtual ~Framebuffer();
 
   // Initialize GPIO bits for output. Only call once.
   static void InitHardwareMapping(const char *named_hardware);
-  static void InitGPIO(GPIO *io, int rows, int parallel, int row_address_type, int refresh);
+  virtual void InitGPIO(GPIO *io) = 0;
 
   // Set PWM bits used for output. Default is 11, but if you only deal with
   // simple comic-colors, 1 might be sufficient. Lower require less CPU.
@@ -115,20 +115,17 @@ public:
 protected:
   Framebuffer();
 
-  const int rows_;     // Number of rows. 16 or 32.
-  const int parallel_; // Parallel rows of chains. 1 or 2.
-  const int height_;   // rows * parallel
-  const int columns_;  // Number of columns. Number of chained boards * 32.
+  const int rows_;     // Number of rows.
+  const int columns_;  // Number of columns
 
   uint8_t pwm_bits_;   // PWM bits to display.
   bool do_luminance_correct_;
   uint8_t brightness_;
   Canvas_ID id_;
 
-  const int double_rows_;
   size_t buffer_size_;
 
-  static const struct HardwareMapping *hardware_mapping_;
+  static const struct PinMapping *hardware_mapping_;
 
   PixelDesignatorMap **shared_mapper_;  // Storage in RGBMatrix.
 
@@ -142,12 +139,5 @@ protected:
   virtual inline gpio_bits_t *ValueAt(int double_row, int column, int bit) = 0;
   virtual inline void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 };
-
-#ifdef ONLY_SINGLE_SUB_PANEL
-#  define SUB_PANELS_ 1
-#else
-#  define SUB_PANELS_ 2
-#endif
-
 }  // namespace rgb_matrix
 #endif // RPI_RGBMATRIX_FRAMEBUFFER_INTERNAL_H

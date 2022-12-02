@@ -229,32 +229,18 @@ RGBMatrix::Options::Options() :
   hardware_mapping("regular"),
 #endif
 
-  rows(32), cols(32), chain_length(1), parallel(1),
+  rows(32), cols(32),
   pwm_bits(Framebuffer::kDefaultBitPlanes),
 
-#ifdef LSB_PWM_NANOSECONDS
-    pwm_lsb_nanoseconds(LSB_PWM_NANOSECONDS),
-#else
-    pwm_lsb_nanoseconds(130),
-#endif
-
   brightness(100),
-
-  row_address_type(0),
   multiplexing(0),
 
   pixel_mapper_config(NULL),
-#ifdef FIXED_FRAME_MICROSECONDS
-  limit_refresh_rate_hz(1e6 / FIXED_FRAME_MICROSECONDS)
-#else
-  limit_refresh_rate_hz(0)
-#endif
 {
   // Nothing to see here.
 }
 
 RuntimeOptions::RuntimeOptions() :
-  gpio_slowdown(1),
   do_gpio_init(true)
 {
   // Nothing to see here.
@@ -341,7 +327,7 @@ void RGBMatrix::Impl::ApplyNamedPixelMappers(const char *pixel_mapper_config,
 void RGBMatrix::Impl::SetGPIO(GPIO *io, bool start_thread) {
   if (io != NULL && io_ == NULL) {
     io_ = io;
-    Framebuffer::InitGPIO(io_, params_.rows, params_.parallel, params_.row_address_type, params_.limit_refresh_rate_hz);
+    InitGPIO(io_);
   }
   if (start_thread) {
     StartRefresh();

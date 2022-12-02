@@ -15,14 +15,11 @@
 
 // This file needs to compile in C and C++ context, so deliberately broken out.
 
-#ifndef RPI_GPIOBITS_H
-#define RPI_GPIOBITS_H
+#ifndef GPIOBITS_H
+#define GPIOBITS_H
 
 #include <stdint.h>
-#ifdef ENABLE_WIDE_GPIO_COMPUTE_MODULE
-typedef uint64_t gpio_bits_t;
-#else
+
 typedef uint32_t gpio_bits_t;
-#endif
 
 #endif
