@@ -34,7 +34,7 @@ namespace rgb_matrix {
   };
 
   struct Options {
-    Options();
+    Options(int rows, int cols);
 
     const char *hardware_mapping;
     DOTCorrect dot;
@@ -55,7 +55,7 @@ namespace rgb_matrix {
       virtual void show(Canvas *c);
 
     protected:
-      RGBMatrix() {}
+      RGBMatrix() : _options(Options(16, 32)) {}
       RGBMatrix(Options o);
 
       Options _options;

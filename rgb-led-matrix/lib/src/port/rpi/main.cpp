@@ -3,7 +3,7 @@
 using namespace rgb_matrix;
 
 int main(int argc, char **argv) {
-    Options options;
+    Options options(32, 32);
     RGBMatrix *matrix = RGBMatrix::CreateFromOptions(options);
     Canvas *canvas0 = matrix->CreateCanvas(Canvas_ID::RP2040_ID);
     Canvas *canvas1 = matrix->CreateCanvas(Canvas_ID::RP2040_ID);

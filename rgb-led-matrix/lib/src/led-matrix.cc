@@ -22,9 +22,9 @@ namespace rgb_matrix {
   // TODO: Get rid of this!!!
   using namespace internal;
 
-  Options::Options() :
+  Options::Options(int rows, int cols) :
     hardware_mapping("regular"),
-    dot(32, 32),
+    dot(rows, cols),
     pwm_bits(Framebuffer<PixelDesignator>::kDefaultBitPlanes),
     brightness(100),
     multiplexing(0),
