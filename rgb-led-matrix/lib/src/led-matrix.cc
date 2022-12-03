@@ -24,14 +24,50 @@ namespace rgb_matrix {
 
   Options::Options() :
     hardware_mapping("regular"),
-    rows(32),
-    cols(32),
+    dot(32, 32),
     pwm_bits(Framebuffer<PixelDesignator>::kDefaultBitPlanes),
     brightness(100),
     multiplexing(0),
     pixel_mapper_config(NULL)
   {
     // Do nothing
+  }
+
+  DOTCorrect::DOTCorrect(int r, int c) : rows(r), cols(c) {
+    table_ = new float[3 * rows * cols];
+
+    for (int y = 0; y < rows; ++y) {
+      for (int x = 0; x < cols; ++x) {
+        table_[3 * (y * cols + x)] = 1.0;
+        table_[3 * (y * cols + x) + 1] = 1.0;
+        table_[3 * (y * cols + x) + 2] = 1.0;
+      }
+    }
+  }
+
+  DOTCorrect::~DOTCorrect() {
+    delete table_;
+  }
+
+  bool DOTCorrect::set(int x, int y, float red, float green, float blue) {
+    if (check(red) || check(green) || check(blue))
+      return false;
+
+    table_[y * cols + x] = red;
+    table_[y * cols + x + 1] = green;
+    table_[y * cols + x + 2] = blue;
+
+    return true;
+  }
+
+  void DOTCorrect::get(int x, int y, float *red, float *green, float *blue) {
+    *red = table_[y * cols + x];
+    *green = table_[y * cols + x + 1];
+    *blue = table_[y * cols + x + 2];
+  }
+
+  bool DOTCorrect::check(float f) {
+    return !(f < 0.5 || f > 1.0);
   }
 
   RGBMatrix::RGBMatrix(Options o) :_options(o) {
@@ -63,7 +99,7 @@ namespace rgb_matrix {
     }
 
     if (multiplex_mapper)
-      multiplex_mapper->EditColsRows(&_options.cols, &_options.rows);
+      multiplex_mapper->EditColsRows(&_options.dot.cols, &_options.dot.rows);
 
     switch (id) {
       case Canvas_ID::RP2040_ID:

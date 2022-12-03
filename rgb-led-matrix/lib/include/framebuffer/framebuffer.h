@@ -6,6 +6,7 @@
 #include "canvas.h"
 #include "port/pin-mapper/PinMapping.h"
 #include "mappers/multiplex/multiplex-mappers-internal.h"
+#include "led-matrix.h"
 
 namespace rgb_matrix {
   class Options;
@@ -42,7 +43,7 @@ namespace rgb_matrix {
       static constexpr int kBitPlanes = 11;
       static constexpr int kDefaultBitPlanes = 11;
 
-      Framebuffer(int rows, int columns);
+      Framebuffer(DOTCorrect dot);
       virtual ~Framebuffer() {}
 
       static void InitHardwareMapping(const char *named_hardware);
@@ -75,9 +76,12 @@ namespace rgb_matrix {
 
       const int rows_;  
       const int columns_;
+      DOTCorrect dot_;
       uint8_t pwm_bits_; 
       uint8_t brightness_;
       Canvas_ID id_;
+
+      // TODO: Remove double pointer
       PixelDesignatorMap<T> **shared_mapper_;
   };
 }

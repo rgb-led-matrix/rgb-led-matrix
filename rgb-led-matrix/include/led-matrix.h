@@ -7,12 +7,29 @@
 
 namespace rgb_matrix {
 
+  struct DOTCorrect {
+    public:
+      DOTCorrect(int rows, int cols);
+      ~DOTCorrect();
+
+      bool set(int x, int y, float red, float green, float blue);
+      void get(int x, int y, float *red, float *green, float *blue);
+
+      // TODO: Limit access
+      int rows;
+      int cols;
+    
+    private:
+      bool check(float f);
+
+      float *table_;
+  };
+
   struct Options {
     Options();
 
     const char *hardware_mapping;
-    int rows;
-    int cols;
+    struct DOTCorrect dot;
     int pwm_bits;
     int brightness;
     int multiplexing;

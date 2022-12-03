@@ -7,7 +7,7 @@
 namespace rgb_matrix {
 template <typename T> class RP2040 : public Framebuffer<T> {
     public:
-        RP2040(int rows, int columns);
+        RP2040(DOTCorrect dot);
 
         virtual void DumpToMatrix();
 

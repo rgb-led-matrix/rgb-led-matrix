@@ -12,7 +12,6 @@
 #include "port/gpio/gpio.h"
 #include "mappers/pixel/pixel-mapper.h"
 #include "port/pin-mapper/PinMapping.h"
-#include "led-matrix.h"
 
 namespace rgb_matrix {
 
@@ -45,17 +44,19 @@ namespace rgb_matrix {
   template <typename T> Framebuffer<T>::Framebuffer()
     : rows_(16),
       columns_(32),
+      dot_(rows_, columns_),
       pwm_bits_(kBitPlanes), brightness_(100),
       shared_mapper_(NULL) {
     assert(shared_mapper_ != NULL);
   }
 
-  template <typename T> Framebuffer<T>::Framebuffer(int rows, int columns)
-    : rows_(rows),
-      columns_(columns),
+  template <typename T> Framebuffer<T>::Framebuffer(DOTCorrect dot)
+    : rows_(dot.rows),
+      columns_(dot.cols),
+      dot_(dot),
       pwm_bits_(kBitPlanes), brightness_(100) {
     assert(hardware_mapping_ != NULL);   // Called InitHardwareMapping() ?
-    *shared_mapper_ = new PixelDesignatorMap<T>(columns, rows);
+    *shared_mapper_ = new PixelDesignatorMap<T>(dot.cols, dot.rows);
   }
 
   template <typename T> void Framebuffer<T>::InitHardwareMapping(const char *named_hardware) {
@@ -163,7 +164,7 @@ namespace rgb_matrix {
   template <typename T> Framebuffer<T> *Framebuffer<T>::CreateFramebuffer(Canvas_ID id, Options options, const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
     switch (id) {
       case Canvas_ID::RP2040_ID:
-        Framebuffer<T> *buf = new RP2040<T>(options.rows, options.cols);
+        Framebuffer<T> *buf = new RP2040<T>(options.dot);
         buf->InitSharedMapper(multiplex_mapper, options.pixel_mapper_config);
         buf->SetBrightness(options.brightness);
         buf->SetPWMBits(options.pwm_bits);
