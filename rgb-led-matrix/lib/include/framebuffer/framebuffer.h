@@ -19,7 +19,7 @@ namespace rgb_matrix {
     uint16_t b_bit;
   };
 
-  template <typename T> class PixelDesignatorMap {
+  template <typename T> struct PixelDesignatorMap {
     public:
       PixelDesignatorMap(int width, int height);
       ~PixelDesignatorMap();
