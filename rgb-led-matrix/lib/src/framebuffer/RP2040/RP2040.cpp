@@ -5,18 +5,18 @@
 namespace rgb_matrix {
     extern struct PinMapping *hardware_mapping_;
 
-    template <typename T> RP2040<T>::RP2040(DOTCorrect dot) 
-        : Framebuffer<T>(dot) {
+    template <typename T> RP2040<T>::RP2040(DOTCorrect dot, GAMMA gamma) 
+        : Framebuffer<T>(dot, gamma) {
             io = new GPIO();
             InitGPIO();
     }
     
     template <typename T> void RP2040<T>::DumpToMatrix() {
-
+        // TODO: Send buffer to RP2040 external hardware module
     }
 
     template <typename T> inline void  RP2040<T>::MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
-
+        // TODO: RGB Gamma, Brightness, Dot correction, CIE1931, etc.
     }
 
     template <typename T> void RP2040<T>::InitGPIO() {

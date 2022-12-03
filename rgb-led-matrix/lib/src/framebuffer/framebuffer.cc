@@ -50,10 +50,10 @@ namespace rgb_matrix {
     assert(shared_mapper_ != NULL);
   }
 
-  template <typename T> Framebuffer<T>::Framebuffer(DOTCorrect dot)
+  template <typename T> Framebuffer<T>::Framebuffer(DOTCorrect dot, GAMMA gamma)
     : rows_(dot.rows),
       columns_(dot.cols),
-      dot_(dot),
+      dot_(dot), gamma_(gamma),
       pwm_bits_(kBitPlanes), brightness_(100) {
     assert(hardware_mapping_ != NULL);   // Called InitHardwareMapping() ?
     *shared_mapper_ = new PixelDesignatorMap<T>(dot.cols, dot.rows);
@@ -164,7 +164,7 @@ namespace rgb_matrix {
   template <typename T> Framebuffer<T> *Framebuffer<T>::CreateFramebuffer(Canvas_ID id, Options options, const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
     switch (id) {
       case Canvas_ID::RP2040_ID:
-        Framebuffer<T> *buf = new RP2040<T>(options.dot);
+        Framebuffer<T> *buf = new RP2040<T>(options.dot, options.gamma);
         buf->InitSharedMapper(multiplex_mapper, options.pixel_mapper_config);
         buf->SetBrightness(options.brightness);
         buf->SetPWMBits(options.pwm_bits);

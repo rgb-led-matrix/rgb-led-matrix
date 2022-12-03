@@ -43,7 +43,7 @@ namespace rgb_matrix {
       static constexpr int kBitPlanes = 11;
       static constexpr int kDefaultBitPlanes = 11;
 
-      Framebuffer(DOTCorrect dot);
+      Framebuffer(DOTCorrect dot, GAMMA gamma);
       virtual ~Framebuffer() {}
 
       static void InitHardwareMapping(const char *named_hardware);
@@ -77,6 +77,7 @@ namespace rgb_matrix {
       const int rows_;  
       const int columns_;
       DOTCorrect dot_;
+      GAMMA gamma_;
       uint8_t pwm_bits_; 
       uint8_t brightness_;
       Canvas_ID id_;

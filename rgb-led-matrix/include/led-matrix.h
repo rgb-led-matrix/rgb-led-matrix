@@ -7,6 +7,14 @@
 
 namespace rgb_matrix {
 
+  struct GAMMA {
+    GAMMA() : red(2.2), green(2.2), blue (2.2) {}
+
+    float red;
+    float green;
+    float blue;
+  };
+
   struct DOTCorrect {
     public:
       DOTCorrect(int rows, int cols);
@@ -29,7 +37,8 @@ namespace rgb_matrix {
     Options();
 
     const char *hardware_mapping;
-    struct DOTCorrect dot;
+    DOTCorrect dot;
+    GAMMA gamma;
     int pwm_bits;
     int brightness;
     int multiplexing;
@@ -44,8 +53,6 @@ namespace rgb_matrix {
 
       virtual Canvas *CreateCanvas(Canvas_ID id);
       virtual void show(Canvas *c);
-
-      // TODO: RGB Gamma, Brightness, Dot correction, CIE1931, etc.
 
     protected:
       RGBMatrix() {}
