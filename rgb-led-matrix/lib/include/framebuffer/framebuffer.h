@@ -19,6 +19,14 @@ namespace rgb_matrix {
     uint16_t b_bit;
   };
 
+  struct PixelDesignator_HUB75 {
+    PixelDesignator_HUB75() : r_bit(0), g_bit(0), b_bit(0) {}
+
+    uint16_t r_bit;
+    uint16_t g_bit;
+    uint16_t b_bit;
+  };
+
   template <typename T> struct PixelDesignatorMap {
     public:
       PixelDesignatorMap(int width, int height);
@@ -70,8 +78,8 @@ namespace rgb_matrix {
 
     protected:
       Framebuffer();
-      
-      virtual inline void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
+
+      virtual void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 
       const int rows_;  
       const int columns_;

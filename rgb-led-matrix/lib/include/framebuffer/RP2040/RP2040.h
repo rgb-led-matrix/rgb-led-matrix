@@ -12,7 +12,7 @@ namespace rgb_matrix {
             virtual void DumpToMatrix();
 
         protected:
-            virtual inline void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue);
+            virtual void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue);
 
             GPIO *io;
         

@@ -7,8 +7,8 @@
 #include <string.h>
 #include <algorithm>
 
-#include "framebuffer/framebuffer.h"
 #include "framebuffer/RP2040/RP2040.h"
+#include "framebuffer/BCM/BCM.h"
 #include "port/gpio/gpio.h"
 #include "mappers/pixel/pixel-mapper.h"
 #include "port/pin-mapper/PinMapping.h"
@@ -161,10 +161,23 @@ namespace rgb_matrix {
     ApplyNamedPixelMappers(pixel_mapper_config);
   }
 
-  template <typename T> Framebuffer<T> *Framebuffer<T>::CreateFramebuffer(Canvas_ID id, Options options, const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
+  template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Canvas_ID id, Options options, const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
     switch (id) {
       case Canvas_ID::RP2040_ID:
-        Framebuffer<T> *buf = new RP2040<T>(options.dot, options.gamma);
+        Framebuffer<PixelDesignator> *buf = new RP2040<PixelDesignator>(options.dot, options.gamma);
+        buf->InitSharedMapper(multiplex_mapper, options.pixel_mapper_config);
+        buf->SetBrightness(options.brightness);
+        buf->SetPWMBits(options.pwm_bits);
+        return buf;
+    }
+
+    return nullptr;
+  }
+
+  template <> Framebuffer<PixelDesignator_HUB75> *Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(Canvas_ID id, Options options, const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
+    switch (id) {
+      case Canvas_ID::BCM_ID:
+        Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.dot, options.gamma);
         buf->InitSharedMapper(multiplex_mapper, options.pixel_mapper_config);
         buf->SetBrightness(options.brightness);
         buf->SetPWMBits(options.pwm_bits);
@@ -196,5 +209,7 @@ namespace rgb_matrix {
 
   template class Framebuffer<PixelDesignator>;
   template class PixelDesignatorMap<PixelDesignator>;
+  template class Framebuffer<PixelDesignator_HUB75>;
+  template class PixelDesignatorMap<PixelDesignator_HUB75>;
 
 }  // namespace rgb_matrix

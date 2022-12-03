@@ -104,6 +104,8 @@ namespace rgb_matrix {
     switch (id) {
       case Canvas_ID::RP2040_ID:
         return new FrameCanvas<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(id, _options, multiplex_mapper, _options.pixel_mapper_config));
+      case Canvas_ID::BCM_ID:
+        return new FrameCanvas<PixelDesignator_HUB75>(Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(id, _options, multiplex_mapper, _options.pixel_mapper_config));
       default:
         return nullptr;
     }

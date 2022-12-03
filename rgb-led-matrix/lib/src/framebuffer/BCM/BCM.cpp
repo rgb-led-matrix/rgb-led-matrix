@@ -31,5 +31,5 @@ namespace rgb_matrix {
         assert(result == all_used_bits); 
     }
 
-    template class BCM<PixelDesignator>;
+    template class BCM<PixelDesignator_HUB75>;
 }

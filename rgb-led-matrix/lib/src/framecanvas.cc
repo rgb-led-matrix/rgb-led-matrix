@@ -43,5 +43,6 @@ namespace rgb_matrix {
   }
 
   template class FrameCanvas<PixelDesignator>;
+  template class FrameCanvas<PixelDesignator_HUB75>;
 
 }
