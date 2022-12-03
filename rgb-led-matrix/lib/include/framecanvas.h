@@ -17,12 +17,12 @@ namespace rgb_matrix {
       virtual void Clear();
       virtual void Fill(uint8_t red, uint8_t green, uint8_t blue);
 
-      void Serialize(const char **data, size_t *len, Canvas_ID *id);
-      bool Deserialize(const char *data, size_t len, Canvas_ID id);
-
-      virtual void show();
+      virtual void Serialize(const char **data, size_t *len, Canvas_ID *id);
+      virtual bool Deserialize(const char *data, size_t len, Canvas_ID id);
 
     protected:
+      virtual void show();
+      
       Framebuffer<T> *const frame_;
   };
 }

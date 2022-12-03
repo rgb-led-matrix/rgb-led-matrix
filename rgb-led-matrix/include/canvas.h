@@ -20,8 +20,8 @@ namespace rgb_matrix {
       virtual void Clear() = 0;
       virtual void Fill(uint8_t red, uint8_t green, uint8_t blue) = 0;
 
-      void Serialize(const char **data, size_t *len, Canvas_ID *id) const;
-      bool Deserialize(const char *data, size_t len, Canvas_ID id);
+      virtual void Serialize(const char **data, size_t *len, Canvas_ID *id) = 0;
+      virtual bool Deserialize(const char *data, size_t len, Canvas_ID id) = 0;
 
     protected:
       friend class RGBMatrix;
