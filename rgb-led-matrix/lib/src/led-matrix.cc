@@ -38,6 +38,12 @@ namespace rgb_matrix {
     Framebuffer<PixelDesignator>::InitHardwareMapping(_options.hardware_mapping);
   }
 
+  RGBMatrix::~RGBMatrix() {
+    if (_ptr != nullptr)
+      delete _ptr;
+    _ptr = nullptr;
+  }
+
   RGBMatrix *RGBMatrix::CreateFromOptions(Options &options) {
     if (_ptr == nullptr) {
       _ptr = new RGBMatrix(options);

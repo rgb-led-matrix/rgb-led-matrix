@@ -21,7 +21,7 @@ namespace rgb_matrix {
 
   class RGBMatrix {
     public:
-      virtual ~RGBMatrix() {}
+      virtual ~RGBMatrix();
 
       static RGBMatrix *CreateFromOptions(Options &options);
 
