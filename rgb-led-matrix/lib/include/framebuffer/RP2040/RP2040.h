@@ -1,13 +1,13 @@
-#ifndef BCM_H
-#define BCM_H
+#ifndef RP2040_H
+#define RP2040_H
 
 #include "framebuffer/framebuffer.h"
 #include "port/gpio/gpio.h"
 
 namespace rgb_matrix {
-    template <typename T> class BCM : public Framebuffer<T> {
+    template <typename T> class RP2040 : public Framebuffer<T> {
         public:
-            BCM(DOTCorrect dot, GAMMA gamma);
+            RP2040(DOTCorrect dot, GAMMA gamma);
 
             virtual void DumpToMatrix();
 

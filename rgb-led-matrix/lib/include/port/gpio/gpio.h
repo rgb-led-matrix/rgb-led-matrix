@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
 
-#ifndef RPI_GPIO_INTERNAL_H
-#define RPI_GPIO_INTERNAL_H
+#ifndef GPIO_H
+#define GPIO_H
 
 #include "gpio-bits.h"
 
@@ -28,7 +28,7 @@ public:
 
   // Initialize before use. Returns 'true' if successful, 'false' otherwise
   // (e.g. due to a permission problem).
-  bool Init(int slowdown);
+  bool Init();
 
   // Initialize outputs.
   // Returns the bits that were available and could be set for output.
@@ -44,18 +44,12 @@ public:
   inline void SetBits(gpio_bits_t value) {
     if (!value) return;
     WriteSetBits(value);
-    for (int i = 0; i < slowdown_; ++i) {
-      WriteSetBits(value);
-    }
   }
 
   // Clear the bits that are '1' in the output. Leave the rest untouched.
   inline void ClearBits(gpio_bits_t value) {
     if (!value) return;
     WriteClrBits(value);
-    for (int i = 0; i < slowdown_; ++i) {
-      WriteClrBits(value);
-    }
   }
 
   // Write all the bits of "value" mentioned in "mask". Leave the rest untouched.
@@ -70,45 +64,25 @@ public:
 
 private:
   inline gpio_bits_t ReadRegisters() const {
-    return (static_cast<gpio_bits_t>(*gpio_read_bits_low_)
-#ifdef ENABLE_WIDE_GPIO_COMPUTE_MODULE
-            | (static_cast<gpio_bits_t>(*gpio_read_bits_low_) << 32)
-#endif
-            );
+    return (static_cast<gpio_bits_t>(*gpio_read_bits_low_));
   }
 
   inline void WriteSetBits(gpio_bits_t value) {
     *gpio_set_bits_low_ = static_cast<uint32_t>(value & 0xFFFFFFFF);
-#ifdef ENABLE_WIDE_GPIO_COMPUTE_MODULE
-    if (uses_64_bit_)
-      *gpio_set_bits_high_ = static_cast<uint32_t>(value >> 32);
-#endif
   }
 
   inline void WriteClrBits(gpio_bits_t value) {
     *gpio_clr_bits_low_ = static_cast<uint32_t>(value & 0xFFFFFFFF);
-#ifdef ENABLE_WIDE_GPIO_COMPUTE_MODULE
-    if (uses_64_bit_)
-      *gpio_clr_bits_high_ = static_cast<uint32_t>(value >> 32);
-#endif
   }
 
 private:
   gpio_bits_t output_bits_;
   gpio_bits_t input_bits_;
   gpio_bits_t reserved_bits_;
-  int slowdown_;
 
   volatile uint32_t *gpio_set_bits_low_;
   volatile uint32_t *gpio_clr_bits_low_;
   volatile uint32_t *gpio_read_bits_low_;
-
-#ifdef ENABLE_WIDE_GPIO_COMPUTE_MODULE
-  bool uses_64_bit_;
-  volatile uint32_t *gpio_set_bits_high_;
-  volatile uint32_t *gpio_clr_bits_high_;
-  volatile uint32_t *gpio_read_bits_high_;
-#endif
 };
 
 // Get rolling over microsecond counter. We get this from a hardware register
@@ -117,4 +91,4 @@ uint32_t GetMicrosecondCounter();
 
 }  // end namespace rgb_matrix
 
-#endif  // RPI_GPIO_INGERNALH
+#endif
