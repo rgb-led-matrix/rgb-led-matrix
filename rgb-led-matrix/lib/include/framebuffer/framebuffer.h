@@ -70,8 +70,7 @@ namespace rgb_matrix {
 
     protected:
       Framebuffer();
-
-      virtual void InitGPIO() = 0;
+      
       virtual inline void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 
       const int rows_;  
