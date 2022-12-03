@@ -1,5 +1,5 @@
 add_executable(rpi
-    gpio/gpio.cc
+    gpio/gpio.cpp
     thread/thread.cpp
     pin-mapper/RP2040/RP2040_Pins.cpp
     pin-mapper/HUB75/HUB75_Pins.cpp
