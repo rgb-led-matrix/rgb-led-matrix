@@ -14,7 +14,7 @@
 #define address3(b)   GPIO_BIT(b)
 
 
-struct RP2040_Pins pin_mappings[] = {
+struct PinMapping pin_mappings[] = {
   {
     // Hopefully someday this will get fixed
     RP2040_Pins((char *) "regular", TX(18), RX(18), reset(18), bootloader(18),

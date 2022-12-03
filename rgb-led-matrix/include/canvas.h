@@ -7,7 +7,7 @@
 namespace rgb_matrix {
 
   enum Canvas_ID {
-    RP2040 = 0
+    RP2040_ID = 0
   };
 
   class Canvas {

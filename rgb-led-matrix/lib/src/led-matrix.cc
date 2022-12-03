@@ -1,20 +1,3 @@
-// -*- mode: c++; c-basic-offset: 2; indent-tabs-mode: nil; -*-
-// Copyright (C) 2013 Henner Zeller <h.zeller@acm.org>
-//
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation version 2.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
-
-#include "led-matrix.h"
-
 #include <assert.h>
 #include <grp.h>
 #include <pwd.h>
@@ -29,13 +12,9 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "led-matrix.h"
 #include "framecanvas.h"
-
-#include "mappers/multiplex/multiplex-mappers-internal.h"
-#include "mappers/pixel/pixel-mapper.h"
-
 #include "framebuffer/framebuffer.h"
-#include "framebuffer/RP2040/RP2040.h"
 
 namespace rgb_matrix {
 RGBMatrix *RGBMatrix::_ptr = nullptr;
@@ -52,27 +31,11 @@ Options::Options() :
   multiplexing(0),
   pixel_mapper_config(NULL)
 {
-  // Nothing to see here.
+  // Do nothing
 }
 
 RGBMatrix::RGBMatrix(Options o) :_options(o) {
-  const MultiplexMapper *multiplex_mapper = NULL;
-  if (_options.multiplexing > 0) {
-    const MuxMapperList &multiplexers = GetRegisteredMultiplexMappers();
-    if (_options.multiplexing <= (int) multiplexers.size()) {
-      // TODO: we could also do a find-by-name here, but not sure if worthwhile
-      multiplex_mapper = multiplexers[_options.multiplexing - 1];
-    }
-  }
-
-  if (multiplex_mapper) {
-    // The multiplexers might choose to have a different physical layout.
-    // We need to configure that first before setting up the hardware.
-    multiplex_mapper->EditColsRows(&_options.cols, &_options.rows);
-  }
-
   Framebuffer::InitHardwareMapping(_options.hardware_mapping);
-  Framebuffer::InitSharedMapper(multiplex_mapper, _options.pixel_mapper_config);
 }
 
 RGBMatrix *RGBMatrix::CreateFromOptions(Options &options) {
@@ -84,12 +47,28 @@ RGBMatrix *RGBMatrix::CreateFromOptions(Options &options) {
 }
 
 Canvas *RGBMatrix::CreateCanvas(Canvas_ID id) {
-  switch (id) {
-    case Canvas_ID::RP2040:
-      return new FrameCanvas(new RP2040(_options.rows, _options.cols, &shared_pixel_mapper_));
-    default:
-      return nullptr;
+  Framebuffer *buf = Framebuffer::CreateFramebuffer(id, _options.rows, _options.cols);
+
+  if (buf == nullptr)
+    return nullptr;
+
+  const MultiplexMapper *multiplex_mapper = NULL;
+
+  if (_options.multiplexing > 0) {
+    const MuxMapperList &multiplexers = GetRegisteredMultiplexMappers();
+    
+    if (_options.multiplexing <= (int) multiplexers.size())
+      multiplex_mapper = multiplexers[_options.multiplexing - 1];
   }
+
+  if (multiplex_mapper)
+    multiplex_mapper->EditColsRows(&_options.cols, &_options.rows);
+  
+  buf->InitSharedMapper(multiplex_mapper, _options.pixel_mapper_config);
+  buf->SetBrightness(_options.brightness);
+  buf->SetPWMBits(_options.pwm_bits);
+
+  return new FrameCanvas(buf);
 }
 
 void RGBMatrix::show(Canvas *c) {

@@ -30,15 +30,7 @@ void FrameCanvas::Fill(uint8_t red, uint8_t green, uint8_t blue) {
   }
 }
 
-void FrameCanvas::SetBrightness(uint8_t brightness) { 
-  frame_->SetBrightness(brightness);
-}
-
-uint8_t FrameCanvas::brightness() { 
-  return frame_->brightness(); 
-}
-
-void FrameCanvas::Serialize(const char **data, size_t *len, Canvas_ID *id) const {
+void FrameCanvas::Serialize(const char **data, size_t *len, Canvas_ID *id) {
   frame_->Serialize(data, len, id);
 }
 bool FrameCanvas::Deserialize(const char *data, size_t len, Canvas_ID id) {
