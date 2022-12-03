@@ -5,7 +5,7 @@
 #include "port/gpio/gpio.h"
 
 namespace rgb_matrix {
-class RP2040 : public Framebuffer {
+template <typename T> class RP2040 : public Framebuffer<T> {
     public:
         RP2040(int rows, int columns);
 

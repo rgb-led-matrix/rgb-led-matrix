@@ -27,28 +27,29 @@
 #include "port/gpio/gpio.h"
 #include "mappers/pixel/pixel-mapper.h"
 #include "port/pin-mapper/PinMapping.h"
+#include "led-matrix.h"
 
 namespace rgb_matrix {
 
-PixelDesignator *PixelDesignatorMap::get(int x, int y) {
+struct PinMapping *hardware_mapping_ = NULL;
+
+template <typename T> T *PixelDesignatorMap<T>::get(int x, int y) {
   if (x < 0 || y < 0 || x >= width_ || y >= height_)
     return NULL;
   return buffer_ + (y*width_) + x;
 }
 
-PixelDesignatorMap::PixelDesignatorMap(int width, int height)
+template <typename T> PixelDesignatorMap<T>::PixelDesignatorMap(int width, int height)
   : width_(width), height_(height),
-    buffer_(new PixelDesignator[width * height]) {
+    buffer_(new T[width * height]) {
 }
 
-PixelDesignatorMap::~PixelDesignatorMap() {
+template <typename T> PixelDesignatorMap<T>::~PixelDesignatorMap() {
   delete [] buffer_;
 }
 
-const struct PinMapping *Framebuffer::hardware_mapping_ = NULL;
-
 // Don't use this!    
-Framebuffer::Framebuffer()
+template <typename T> Framebuffer<T>::Framebuffer()
   : rows_(16),
     columns_(32),
     pwm_bits_(kBitPlanes), brightness_(100),
@@ -56,15 +57,15 @@ Framebuffer::Framebuffer()
   assert(shared_mapper_ != NULL);
 }
 
-Framebuffer::Framebuffer(int rows, int columns)
+template <typename T> Framebuffer<T>::Framebuffer(int rows, int columns)
   : rows_(rows),
     columns_(columns),
     pwm_bits_(kBitPlanes), brightness_(100) {
   assert(hardware_mapping_ != NULL);   // Called InitHardwareMapping() ?
-  *shared_mapper_ = new PixelDesignatorMap(columns, rows);
+  *shared_mapper_ = new PixelDesignatorMap<T>(columns, rows);
 }
 
-/* static */ void Framebuffer::InitHardwareMapping(const char *named_hardware) {
+template <typename T> void Framebuffer<T>::InitHardwareMapping(const char *named_hardware) {
   if (named_hardware == NULL || *named_hardware == '\0') {
     named_hardware = "regular";
   }
@@ -90,17 +91,17 @@ Framebuffer::Framebuffer(int rows, int columns)
   hardware_mapping_ = mapping;
 }
 
-bool Framebuffer::SetPWMBits(uint8_t value) {
+template <typename T> bool Framebuffer<T>::SetPWMBits(uint8_t value) {
   if (value < 1 || value > kBitPlanes)
     return false;
   pwm_bits_ = value;
   return true;
 }
 
-int Framebuffer::width() const { return (*shared_mapper_)->width(); }
-int Framebuffer::height() const { return (*shared_mapper_)->height(); }
+template <typename T> int Framebuffer<T>::width() const { return (*shared_mapper_)->width(); }
+template <typename T> int Framebuffer<T>::height() const { return (*shared_mapper_)->height(); }
 
-void Framebuffer::ApplyNamedPixelMappers(const char *pixel_mapper_config) {
+template <typename T> void Framebuffer<T>::ApplyNamedPixelMappers(const char *pixel_mapper_config) {
   if (pixel_mapper_config == NULL || strlen(pixel_mapper_config) == 0)
     return;
   char *const writeable_copy = strdup(pixel_mapper_config);
@@ -124,7 +125,7 @@ void Framebuffer::ApplyNamedPixelMappers(const char *pixel_mapper_config) {
   free(writeable_copy);
 }
 
-bool Framebuffer::ApplyPixelMapper(const PixelMapper *mapper) {
+template <typename T> bool Framebuffer<T>::ApplyPixelMapper(const PixelMapper *mapper) {
   if (mapper == NULL) 
     return true;
 
@@ -135,7 +136,7 @@ bool Framebuffer::ApplyPixelMapper(const PixelMapper *mapper) {
   if (!mapper->GetSizeMapping(old_width, old_height, &new_width, &new_height))
     return false;
 
-  PixelDesignatorMap *new_mapper = new PixelDesignatorMap(new_width, new_height);
+  PixelDesignatorMap<T> *new_mapper = new PixelDesignatorMap<T>(new_width, new_height);
 
   for (int y = 0; y < new_height; ++y) {
     for (int x = 0; x < new_width; ++x) {
@@ -150,7 +151,7 @@ bool Framebuffer::ApplyPixelMapper(const PixelMapper *mapper) {
         continue;
       }
 
-      const PixelDesignator *orig_designator;
+      const T *orig_designator;
       orig_designator = (*shared_mapper_)->get(orig_x, orig_y);
       *new_mapper->get(x, y) = *orig_designator;
     }
@@ -161,38 +162,45 @@ bool Framebuffer::ApplyPixelMapper(const PixelMapper *mapper) {
   return true;
 }
 
-void Framebuffer::InitSharedMapper(const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
+template <typename T> void Framebuffer<T>::InitSharedMapper(const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
   ApplyPixelMapper(multiplex_mapper);
   ApplyNamedPixelMappers(pixel_mapper_config);
 }
 
-Framebuffer *Framebuffer::CreateFramebuffer(Canvas_ID id, int rows, int cols) {
+template <typename T> Framebuffer<T> *Framebuffer<T>::CreateFramebuffer(Canvas_ID id, Options options, const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
   switch (id) {
     case Canvas_ID::RP2040_ID:
-      return new RP2040(rows, cols);
-    default:
-      return nullptr;
+      Framebuffer<T> *buf = new RP2040<T>(options.rows, options.cols);
+      buf->InitSharedMapper(multiplex_mapper, options.pixel_mapper_config);
+      buf->SetBrightness(options.brightness);
+      buf->SetPWMBits(options.pwm_bits);
+      return buf;
   }
+
+  return nullptr;
 }
 
-void Framebuffer::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
-  PixelDesignator *pixel = (*shared_mapper_)->get(x, y);
+template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+  T *pixel = (*shared_mapper_)->get(x, y);
   MapColors(red, green, blue, &pixel->r_bit, &pixel->g_bit, &pixel->b_bit);
 }
 
 // TODO: Fix this
-void Framebuffer::Serialize(const char **data, size_t *len, Canvas_ID *id) {
+template <typename T> void Framebuffer<T>::Serialize(const char **data, size_t *len, Canvas_ID *id) {
   *data = reinterpret_cast<const char*>((*shared_mapper_)->buffer());
-  *len = sizeof(PixelDesignator) * (*shared_mapper_)->height() * (*shared_mapper_)->width();
+  *len = sizeof(T) * (*shared_mapper_)->height() * (*shared_mapper_)->width();
   *id = id_;
 }
 
 // TODO: Fix this
-bool Framebuffer::Deserialize(const char *data, size_t len, Canvas_ID id) {
-  if (len != (sizeof(PixelDesignator) * (*shared_mapper_)->height() * (*shared_mapper_)->width()) || id != id_) 
+template <typename T> bool Framebuffer<T>::Deserialize(const char *data, size_t len, Canvas_ID id) {
+  if (len != (sizeof(T) * (*shared_mapper_)->height() * (*shared_mapper_)->width()) || id != id_) 
     return false;
   memcpy((*shared_mapper_)->buffer(), data, len);
   return true;
 }
+
+template class Framebuffer<PixelDesignator>;
+template class PixelDesignatorMap<PixelDesignator>;
 
 }  // namespace rgb_matrix

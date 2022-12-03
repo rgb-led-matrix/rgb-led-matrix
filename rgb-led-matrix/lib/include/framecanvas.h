@@ -5,9 +5,9 @@
 #include "framebuffer/framebuffer.h"
 
 namespace rgb_matrix {
-  class FrameCanvas : public Canvas {
+  template <typename T> class FrameCanvas : public Canvas {
     public:
-      FrameCanvas(Framebuffer *frame) : frame_(frame) {}
+      FrameCanvas(Framebuffer<T> *frame) : frame_(frame) {}
       virtual ~FrameCanvas();
 
       virtual int width() const;
@@ -23,7 +23,7 @@ namespace rgb_matrix {
       virtual void show();
 
     protected:
-      Framebuffer *const frame_;
+      Framebuffer<T> *const frame_;
   };
 }
 #endif

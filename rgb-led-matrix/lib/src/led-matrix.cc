@@ -26,7 +26,7 @@ Options::Options() :
   hardware_mapping("regular"),
   rows(32),
   cols(32),
-  pwm_bits(Framebuffer::kDefaultBitPlanes),
+  pwm_bits(Framebuffer<PixelDesignator>::kDefaultBitPlanes),
   brightness(100),
   multiplexing(0),
   pixel_mapper_config(NULL)
@@ -35,7 +35,7 @@ Options::Options() :
 }
 
 RGBMatrix::RGBMatrix(Options o) :_options(o) {
-  Framebuffer::InitHardwareMapping(_options.hardware_mapping);
+  Framebuffer<PixelDesignator>::InitHardwareMapping(_options.hardware_mapping);
 }
 
 RGBMatrix *RGBMatrix::CreateFromOptions(Options &options) {
@@ -47,11 +47,6 @@ RGBMatrix *RGBMatrix::CreateFromOptions(Options &options) {
 }
 
 Canvas *RGBMatrix::CreateCanvas(Canvas_ID id) {
-  Framebuffer *buf = Framebuffer::CreateFramebuffer(id, _options.rows, _options.cols);
-
-  if (buf == nullptr)
-    return nullptr;
-
   const MultiplexMapper *multiplex_mapper = NULL;
 
   if (_options.multiplexing > 0) {
@@ -63,12 +58,14 @@ Canvas *RGBMatrix::CreateCanvas(Canvas_ID id) {
 
   if (multiplex_mapper)
     multiplex_mapper->EditColsRows(&_options.cols, &_options.rows);
-  
-  buf->InitSharedMapper(multiplex_mapper, _options.pixel_mapper_config);
-  buf->SetBrightness(_options.brightness);
-  buf->SetPWMBits(_options.pwm_bits);
 
-  return new FrameCanvas(buf);
+  switch (id) {
+    case Canvas_ID::RP2040_ID:
+      return new FrameCanvas<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(id, _options, multiplex_mapper, _options.pixel_mapper_config));
+    default:
+      return nullptr;
+  }
+  
 }
 
 void RGBMatrix::show(Canvas *c) {

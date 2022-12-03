@@ -8,6 +8,8 @@
 #include "mappers/multiplex/multiplex-mappers-internal.h"
 
 namespace rgb_matrix {
+  class Options;
+
 struct PixelDesignator {
   PixelDesignator() : r_bit(0), g_bit(0), b_bit(0) {}
 
@@ -16,24 +18,24 @@ struct PixelDesignator {
   uint16_t b_bit;
 };
 
-class PixelDesignatorMap {
+template <typename T> class PixelDesignatorMap {
 public:
   PixelDesignatorMap(int width, int height);
   ~PixelDesignatorMap();
 
-  PixelDesignator *get(int x, int y);
+  T *get(int x, int y);
 
   inline int width() const { return width_; }
   inline int height() const { return height_; }
-  inline PixelDesignator *const buffer() const { return buffer_; }
+  inline T *const buffer() const { return buffer_; }
 
 private:
   const int width_;
   const int height_;
-  PixelDesignator *const buffer_;
+  T *const buffer_;
 };
 
-class Framebuffer {
+template <typename T> class Framebuffer {
 public:
   static constexpr int kBitPlanes = 11;
   static constexpr int kDefaultBitPlanes = 11;
@@ -42,7 +44,7 @@ public:
   virtual ~Framebuffer() {}
 
   static void InitHardwareMapping(const char *named_hardware);
-  static Framebuffer *CreateFramebuffer(Canvas_ID id, int rows, int cols);
+  static Framebuffer *CreateFramebuffer(Canvas_ID id, Options options, const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config);
 
   virtual bool SetPWMBits(uint8_t value);
 
@@ -74,9 +76,7 @@ protected:
   uint8_t pwm_bits_; 
   uint8_t brightness_;
   Canvas_ID id_;
-  PixelDesignatorMap **shared_mapper_;
-
-  static const struct PinMapping *hardware_mapping_;
+  PixelDesignatorMap<T> **shared_mapper_;
 };
 }
 #endif
