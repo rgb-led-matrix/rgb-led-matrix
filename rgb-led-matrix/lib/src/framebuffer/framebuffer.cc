@@ -65,7 +65,7 @@ namespace rgb_matrix {
     }
 
     struct PinMapping *mapping = NULL;
-    for (PinMapping *it = pin_mappings; strlen(it->name) > 0; ++it) {
+    for (PinMapping *it = *pin_mappings; strlen(it->name) > 0; ++it) {
       if (strcasecmp(it->name, named_hardware) == 0) {
         mapping = it;
         break;
@@ -75,8 +75,8 @@ namespace rgb_matrix {
     if (!mapping) {
       fprintf(stderr, "There is no hardware mapping named '%s'.\nAvailable: ",
               named_hardware);
-      for (PinMapping *it = pin_mappings; it->name; ++it) {
-        if (it != pin_mappings) fprintf(stderr, ", ");
+      for (PinMapping *it = *pin_mappings; it->name; ++it) {
+        if (it != *pin_mappings) fprintf(stderr, ", ");
         fprintf(stderr, "'%s'", it->name);
       }
       fprintf(stderr, "\n");

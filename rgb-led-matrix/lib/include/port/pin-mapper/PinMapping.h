@@ -10,6 +10,6 @@ struct PinMapping {
     const char *name;
 };
 
-extern struct PinMapping pin_mappings[];
+extern struct PinMapping **pin_mappings;
 
 #endif

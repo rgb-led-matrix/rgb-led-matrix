@@ -9,6 +9,7 @@ namespace rgb_matrix {
         : Framebuffer<T>(dot, gamma) {
             io = new GPIO();
             InitGPIO();
+            *pin_mappings = RP2040_pin_mappings;
     }
     
     template <typename T> void RP2040<T>::DumpToMatrix() {

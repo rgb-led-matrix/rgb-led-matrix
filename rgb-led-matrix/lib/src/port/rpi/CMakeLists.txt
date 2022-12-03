@@ -1,6 +1,8 @@
 add_executable(rpi
     gpio/gpio.cc
     pin-mapper/RP2040/RP2040_Pins.cpp
+    pin-mapper/HUB75/HUB75_Pins.cpp
+    pin-mapper/PinMapping.cpp
     ../../led-matrix.cc
     ../../framecanvas.cc
     main.cpp)

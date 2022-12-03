@@ -1,11 +1,11 @@
-#ifndef RP2040_PIN_MAPPING_H
-#define RP2040_PIN_MAPPING_H
+#ifndef HUB75_PIN_MAPPING_H
+#define HUB75_PIN_MAPPING_H
 
 #include "port/pin-mapper/PinMapping.h"
 
-struct RP2040_Pins : public PinMapping {
+struct HUB75_Pins : public PinMapping {
   public:
-    RP2040_Pins(char *name, gpio_bits_t TX, gpio_bits_t RX, gpio_bits_t reset,
+    HUB75_Pins(char *name, gpio_bits_t TX, gpio_bits_t RX, gpio_bits_t reset,
       gpio_bits_t bootloader, gpio_bits_t cs_out, gpio_bits_t address0,
       gpio_bits_t address1, gpio_bits_t address2, gpio_bits_t address3)
         : PinMapping(name), TX(TX), RX(RX), reset(reset), bootloader(bootloader),
@@ -25,6 +25,6 @@ struct RP2040_Pins : public PinMapping {
     const gpio_bits_t address3;
 };
 
-extern struct PinMapping RP2040_pin_mappings[];
+extern struct PinMapping HUB75_pin_mappings[];
 
 #endif
