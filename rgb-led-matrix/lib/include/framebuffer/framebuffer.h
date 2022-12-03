@@ -23,7 +23,8 @@ namespace rgb_matrix {
       PixelDesignatorMap(int width, int height);
       ~PixelDesignatorMap();
 
-      T *get(int x, int y);
+      T *get(uint32_t location);
+      uint32_t *get(int x, int y);
 
       inline int width() const { return width_; }
       inline int height() const { return height_; }
@@ -33,6 +34,7 @@ namespace rgb_matrix {
       const int width_;
       const int height_;
       T *const buffer_;
+      uint32_t *locations_;
   };
 
   template <typename T> class Framebuffer {

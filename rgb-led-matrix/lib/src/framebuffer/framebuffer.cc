@@ -18,15 +18,23 @@ namespace rgb_matrix {
 
   struct PinMapping *hardware_mapping_ = NULL;
 
-  template <typename T> T *PixelDesignatorMap<T>::get(int x, int y) {
-    if (x < 0 || y < 0 || x >= width_ || y >= height_)
+  template <typename T> T *PixelDesignatorMap<T>::get(uint32_t location) {
+    if (location >= height_ * width_)
       return NULL;
-    return buffer_ + (y*width_) + x;
+    return buffer_ + location;
+  }
+
+  template <typename T> uint32_t *PixelDesignatorMap<T>::get(int x, int y) {
+    if (x < 0 || y < 0 || x >= width_ || y >= height_)
+      return 0;
+    return locations_ + (y * width_) + x;
   }
 
   template <typename T> PixelDesignatorMap<T>::PixelDesignatorMap(int width, int height)
-    : width_(width), height_(height),
-      buffer_(new T[width * height]) {
+    : width_(width), height_(height), buffer_(new T[width * height]), locations_(new uint32_t[width * height]) {
+        for (int y = 0; y < height; ++y)
+          for (int x = 0; x < width; ++x)
+            locations_[y * width + x] = y * width + x;
   }
 
   template <typename T> PixelDesignatorMap<T>::~PixelDesignatorMap() {
@@ -136,7 +144,7 @@ namespace rgb_matrix {
           continue;
         }
 
-        const T *orig_designator;
+        const uint32_t *orig_designator;
         orig_designator = (*shared_mapper_)->get(orig_x, orig_y);
         *new_mapper->get(x, y) = *orig_designator;
       }
@@ -166,7 +174,7 @@ namespace rgb_matrix {
   }
 
   template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
-    T *pixel = (*shared_mapper_)->get(x, y);
+    T *pixel = (*shared_mapper_)->get(*(*shared_mapper_)->get(x, y));
     MapColors(red, green, blue, &pixel->r_bit, &pixel->g_bit, &pixel->b_bit);
   }
 
