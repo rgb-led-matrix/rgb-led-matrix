@@ -70,7 +70,7 @@ Framebuffer::Framebuffer(int rows, int columns)
   }
 
   struct PinMapping *mapping = NULL;
-  for (PinMapping *it = pin_mappings; it->name; ++it) {
+  for (PinMapping *it = pin_mappings; strlen(it->name) > 0; ++it) {
     if (strcasecmp(it->name, named_hardware) == 0) {
       mapping = it;
       break;
@@ -173,6 +173,26 @@ Framebuffer *Framebuffer::CreateFramebuffer(Canvas_ID id, int rows, int cols) {
     default:
       return nullptr;
   }
+}
+
+void Framebuffer::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+  PixelDesignator *pixel = (*shared_mapper_)->get(x, y);
+  MapColors(red, green, blue, &pixel->r_bit, &pixel->g_bit, &pixel->b_bit);
+}
+
+// TODO: Fix this
+void Framebuffer::Serialize(const char **data, size_t *len, Canvas_ID *id) {
+  *data = reinterpret_cast<const char*>((*shared_mapper_)->buffer());
+  *len = sizeof(PixelDesignator) * (*shared_mapper_)->height() * (*shared_mapper_)->width();
+  *id = id_;
+}
+
+// TODO: Fix this
+bool Framebuffer::Deserialize(const char *data, size_t len, Canvas_ID id) {
+  if (len != (sizeof(PixelDesignator) * (*shared_mapper_)->height() * (*shared_mapper_)->width()) || id != id_) 
+    return false;
+  memcpy((*shared_mapper_)->buffer(), data, len);
+  return true;
 }
 
 }  // namespace rgb_matrix

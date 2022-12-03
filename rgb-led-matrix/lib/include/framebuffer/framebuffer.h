@@ -22,15 +22,12 @@
 #include "mappers/multiplex/multiplex-mappers-internal.h"
 
 namespace rgb_matrix {
-// An opaque type used within the framebuffer that can be used
-// to copy between PixelMappers.
 struct PixelDesignator {
-  PixelDesignator() : gpio_word(-1), r_bit(0), g_bit(0), b_bit(0), mask(~0u){}
-  long gpio_word;
-  gpio_bits_t r_bit;
-  gpio_bits_t g_bit;
-  gpio_bits_t b_bit;
-  gpio_bits_t mask;
+  PixelDesignator() : r_bit(0), g_bit(0), b_bit(0) {}
+
+  uint16_t r_bit;
+  uint16_t g_bit;
+  uint16_t b_bit;
 };
 
 class PixelDesignatorMap {
@@ -38,12 +35,11 @@ public:
   PixelDesignatorMap(int width, int height);
   ~PixelDesignatorMap();
 
-  // Get a writable version of the PixelDesignator. Outside Framebuffer used
-  // by the RGBMatrix to re-assign mappings to new PixelDesignatorMappers.
   PixelDesignator *get(int x, int y);
 
   inline int width() const { return width_; }
   inline int height() const { return height_; }
+  inline PixelDesignator *const buffer() const { return buffer_; }
 
 private:
   const int width_;
@@ -71,9 +67,10 @@ public:
 
   virtual int width() const;
   virtual int height() const;
-  virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) = 0;
-  virtual void Serialize(const char **data, size_t *len, Canvas_ID *id) = 0;
-  virtual bool Deserialize(const char *data, size_t len, Canvas_ID id) = 0;
+  virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
+  virtual void Serialize(const char **data, size_t *len, Canvas_ID *id);
+  virtual bool Deserialize(const char *data, size_t len, Canvas_ID id);
+
   virtual void DumpToMatrix() = 0;
 
   bool ApplyPixelMapper(const PixelMapper *mapper);
@@ -84,7 +81,6 @@ protected:
   Framebuffer();
 
   virtual void InitGPIO() = 0;
-  virtual inline gpio_bits_t *ValueAt(int double_row, int column, int bit) = 0;
   virtual inline void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 
   const int rows_;  

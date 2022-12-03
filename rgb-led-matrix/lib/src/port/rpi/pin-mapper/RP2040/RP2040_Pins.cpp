@@ -20,4 +20,10 @@ struct PinMapping pin_mappings[] = {
     RP2040_Pins((char *) "regular", TX(18), RX(18), reset(18), bootloader(18),
       cs_out(18), address0(18), address1(18), address2(18), address3(18) )
   },
+
+  {
+    // Terminates list
+    RP2040_Pins((char *) "", TX(18), RX(18), reset(18), bootloader(18),
+      cs_out(18), address0(18), address1(18), address2(18), address3(18) )
+  },
 };
