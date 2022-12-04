@@ -1,0 +1,1 @@
+struct PinMapping **pin_mappings;

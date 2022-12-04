@@ -1,18 +1,3 @@
-// -*- mode: c++; c-basic-offset: 2; indent-tabs-mode: nil; -*-
-// Copyright (C) 2014 Henner Zeller <h.zeller@acm.org>
-//
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation version 2.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
-
 #ifndef CANVAS_H
 #define CANVAS_H
 
@@ -20,60 +5,30 @@
 #include <stddef.h>
 
 namespace rgb_matrix {
-enum Canvas_ID {
-  BCM = 0
-};
 
-// An interface for things a Canvas can do. The RGBMatrix implements this
-// interface, so you can use it directly wherever a canvas is needed.
-//
-// This abstraction also allows you to e.g. create delegating
-// implementations that do a particular transformation, e.g. re-map
-// pixels (as you might lay out the physical RGB matrix in a different way),
-// compose images (OR, XOR, transparecy), scale, rotate, anti-alias or
-// translate coordinates in a funky way.
-//
-// It is a good idea to have your applications use the concept of
-// a Canvas to write the content to instead of directly using the RGBMatrix.
-class Canvas {
-public:
-  virtual ~Canvas() {}
-  virtual int width() const = 0;  // Pixels available in x direction.
-  virtual int height() const = 0; // Pixels available in y direction.
+  enum Canvas_ID {
+    RP2040_ID = 0,
+    BCM_ID = 1
+  };
 
-  // Set pixel at coordinate (x,y) with given color. Pixel (0,0) is the
-  // top left corner.
-  // Each color is 8 bit (24bpp), 0 black, 255 brightest.
-  virtual void SetPixel(int x, int y,
-                        uint8_t red, uint8_t green, uint8_t blue) = 0;
+  class Canvas {
+    public:
+      virtual ~Canvas() {}
+      virtual int width() const = 0;  // Pixels available in x direction.
+      virtual int height() const = 0; // Pixels available in y direction.
 
-  // Clear screen to be all black.
-  virtual void Clear() = 0;
+      virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) = 0;
+      virtual void Clear() = 0;
+      virtual void Fill(uint8_t red, uint8_t green, uint8_t blue) = 0;
 
-  // Fill screen with given 24bpp color.
-  virtual void Fill(uint8_t red, uint8_t green, uint8_t blue) = 0;
+      virtual void Serialize(const char **data, size_t *len, Canvas_ID *id) = 0;
+      virtual bool Deserialize(const char *data, size_t len, Canvas_ID id) = 0;
 
-    //-- Serialize()/Deserialize() are fast ways to store and re-create a canvas.
+    protected:
+      friend class RGBMatrix;
 
-  // Provides a pointer to a buffer of the internal representation to
-  // be copied out for later Deserialize().
-  //
-  // Returns a "data" pointer and the data "len" in the given out-paramters;
-  // the content can be copied from there by the caller.
-  //
-  // Note, the content is not simply RGB, it is the opaque and platform
-  // specific representation which allows to make deserialization very fast.
-  // It is also bigger than just RGB; if you want to store it somewhere,
-  // using compression is a good idea.
-  void Serialize(const char **data, size_t *len, Canvas_ID *id) const;
+      virtual void show() = 0;
+  };
 
-  // Load data previously stored with Serialize(). Needs to be restored into
-  // a FrameCanvas with exactly the same settings (rows, chain, transformer,...)
-  // as serialized.
-  // Returns 'false' if size is unexpected.
-  // This method should only be called if FrameCanvas is off-screen.
-  bool Deserialize(const char *data, size_t len, Canvas_ID id);
-};
-
-}  // namespace rgb_matrix
-#endif  // RPI_CANVAS_H
+}
+#endif
