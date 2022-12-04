@@ -42,11 +42,14 @@ namespace rgb_matrix {
     
     protected:
       virtual bool isValid() = 0; 
+
+      friend struct Options;
+      Canvas_ID id_;
   };
 
   class RP2040_CFG : public CFG {
     public:
-      RP2040_CFG(int rows, int cols) : CFG(rows, cols) {}
+      RP2040_CFG(int rows, int cols) : CFG(rows, cols) { id_ = Canvas_ID::RP2040_ID; }
 
       int rows_;
       int cols_;
@@ -55,11 +58,12 @@ namespace rgb_matrix {
     
     protected:
       bool isValid() { return true; }
+
   };
 
   class BCM_CFG : public CFG {
     public:
-      BCM_CFG(int rows, int cols) : CFG(rows, cols) {}
+      BCM_CFG(int rows, int cols) : CFG(rows, cols) { id_ = Canvas_ID::RP2040_ID;  }
 
       int pwm_bits_;
       int brightness_;

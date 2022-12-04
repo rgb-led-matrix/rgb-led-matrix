@@ -35,7 +35,7 @@ namespace rgb_matrix {
     multiplexing(0),
     pixel_mapper_config(NULL)
   {
-    // Do nothing
+    assert(canvas_id == config->id_);
   }
 
   DOTCorrect::DOTCorrect(int r, int c) : rows(r), cols(c) {
