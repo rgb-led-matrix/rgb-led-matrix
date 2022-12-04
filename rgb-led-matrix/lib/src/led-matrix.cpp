@@ -22,15 +22,20 @@ namespace rgb_matrix {
   // TODO: Get rid of this!!!
   using namespace internal;
 
-  Options::Options(int rows, int cols) :
+  CFG::CFG(int rows, int cols) :
+    dot(rows, cols) 
+  {
+    // Do nothing
+  }
+
+  Options::Options(Canvas_ID canvas_id, CFG *config) :
     hardware_mapping("regular"),
-    dot(rows, cols),
-    pwm_bits(Framebuffer<PixelDesignator>::kDefaultBitPlanes),
-    brightness(100),
+    cfg(config),
+    id(canvas_id),
     multiplexing(0),
     pixel_mapper_config(NULL)
   {
-    // Do nothing
+    assert(canvas_id == config->id_);
   }
 
   DOTCorrect::DOTCorrect(int r, int c) : rows(r), cols(c) {
@@ -88,7 +93,7 @@ namespace rgb_matrix {
     return _ptr;
   }
 
-  Canvas *RGBMatrix::CreateCanvas(Canvas_ID id) {
+  Canvas *RGBMatrix::CreateCanvas() {
     const MultiplexMapper *multiplex_mapper = NULL;
 
     if (_options.multiplexing > 0) {
@@ -99,13 +104,13 @@ namespace rgb_matrix {
     }
 
     if (multiplex_mapper)
-      multiplex_mapper->EditColsRows(&_options.dot.cols, &_options.dot.rows);
+      multiplex_mapper->EditColsRows(&_options.cfg->dot.cols, &_options.cfg->dot.rows);
 
-    switch (id) {
+    switch (_options.id) {
       case Canvas_ID::RP2040_ID:
-        return new FrameCanvas<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(id, _options, multiplex_mapper, _options.pixel_mapper_config));
+        return new FrameCanvas<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(_options, multiplex_mapper));
       case Canvas_ID::BCM_ID:
-        return new FrameCanvas<PixelDesignator_HUB75>(Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(id, _options, multiplex_mapper, _options.pixel_mapper_config));
+        return new FrameCanvas<PixelDesignator_HUB75>(Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(_options, multiplex_mapper));
       default:
         return nullptr;
     }

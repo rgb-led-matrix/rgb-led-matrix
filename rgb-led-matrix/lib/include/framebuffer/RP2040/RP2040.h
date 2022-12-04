@@ -7,7 +7,7 @@
 namespace rgb_matrix {
     template <typename T> class RP2040 : public Framebuffer<T> {
         public:
-            RP2040(DOTCorrect dot, GAMMA gamma);
+            RP2040(Canvas_ID id, CFG *cfg);
 
             virtual void DumpToMatrix();
 

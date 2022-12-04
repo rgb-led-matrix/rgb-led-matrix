@@ -33,16 +33,54 @@ namespace rgb_matrix {
       float *table_;
   };
 
-  struct Options {
-    Options(int rows, int cols);
+  class CFG {
+    public:
+      CFG(int rows, int cols);
 
-    const char *hardware_mapping;
-    DOTCorrect dot;
-    GAMMA gamma;
-    int pwm_bits;
-    int brightness;
+      DOTCorrect dot;
+      GAMMA gamma;
+    
+    protected:
+      virtual bool isValid() = 0; 
+
+      friend struct Options;
+      Canvas_ID id_;
+  };
+
+  class RP2040_CFG : public CFG {
+    public:
+      RP2040_CFG(int rows, int cols) : CFG(rows, cols) { id_ = Canvas_ID::RP2040_ID; }
+
+      int rows_;
+      int cols_;
+      int pwm_bits_;
+      int brightness_;
+    
+    protected:
+      bool isValid() { return true; }
+
+  };
+
+  class BCM_CFG : public CFG {
+    public:
+      BCM_CFG(int rows, int cols) : CFG(rows, cols) { id_ = Canvas_ID::BCM_ID;  }
+
+      int pwm_bits_;
+      int brightness_;
+    
+    protected:
+      bool isValid() { return true; }
+  };
+
+  struct Options {
+    Options(Canvas_ID id, CFG *cfg);
+
+    Canvas_ID id;
+    CFG *cfg;
+
     int multiplexing;
     const char *pixel_mapper_config;
+    const char *hardware_mapping;
   };
 
   class RGBMatrix {
@@ -51,11 +89,11 @@ namespace rgb_matrix {
 
       static RGBMatrix *CreateFromOptions(Options &options);
 
-      virtual Canvas *CreateCanvas(Canvas_ID id);
+      virtual Canvas *CreateCanvas();
       virtual void show(Canvas *c);
 
     protected:
-      RGBMatrix() : _options(Options(16, 32)) {}
+      RGBMatrix() : _options(Options(Canvas_ID::BCM_ID, nullptr)) {}
       RGBMatrix(Options o);
 
       Options _options;

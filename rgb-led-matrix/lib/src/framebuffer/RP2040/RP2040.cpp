@@ -5,8 +5,8 @@
 namespace rgb_matrix {
     extern struct PinMapping *hardware_mapping_;
 
-    template <typename T> RP2040<T>::RP2040(DOTCorrect dot, GAMMA gamma) 
-        : Framebuffer<T>(dot, gamma) {
+    template <typename T> RP2040<T>::RP2040(Canvas_ID id, CFG *cfg) 
+        : Framebuffer<T>(id, cfg) {
             io = new GPIO();
             InitGPIO();
             *pin_mappings = RP2040_pin_mappings;
