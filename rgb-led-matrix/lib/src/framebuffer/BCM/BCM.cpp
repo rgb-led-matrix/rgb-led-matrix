@@ -5,8 +5,8 @@
 namespace rgb_matrix {
     extern struct PinMapping *hardware_mapping_;
 
-    template <typename T> BCM<T>::BCM(Canvas_ID id, DOTCorrect dot, GAMMA gamma) 
-        : Framebuffer<T>(id, dot, gamma) {
+    template <typename T> BCM<T>::BCM(Canvas_ID id, CFG *cfg) 
+        : Framebuffer<T>(id, cfg) {
             io = new GPIO();
             InitGPIO();
             *pin_mappings = HUB75_pin_mappings;

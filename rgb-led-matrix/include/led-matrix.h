@@ -33,17 +33,50 @@ namespace rgb_matrix {
       float *table_;
   };
 
-  struct Options {
-    Options(int rows, int cols, Canvas_ID id);
+  class CFG {
+    public:
+      CFG(int rows, int cols);
 
-    const char *hardware_mapping;
-    DOTCorrect dot;
-    GAMMA gamma;
+      DOTCorrect dot;
+      GAMMA gamma;
+    
+    protected:
+      virtual bool isValid() = 0; 
+  };
+
+  class RP2040_CFG : public CFG {
+    public:
+      RP2040_CFG(int rows, int cols) : CFG(rows, cols) {}
+
+      int rows_;
+      int cols_;
+      int pwm_bits_;
+      int brightness_;
+    
+    protected:
+      bool isValid() { return true; }
+  };
+
+  class BCM_CFG : public CFG {
+    public:
+      BCM_CFG(int rows, int cols) : CFG(rows, cols) {}
+
+      int pwm_bits_;
+      int brightness_;
+    
+    protected:
+      bool isValid() { return true; }
+  };
+
+  struct Options {
+    Options(Canvas_ID id, CFG *cfg);
+
     Canvas_ID id;
-    int pwm_bits;
-    int brightness;
+    CFG *cfg;
+
     int multiplexing;
     const char *pixel_mapper_config;
+    const char *hardware_mapping;
   };
 
   class RGBMatrix {
@@ -56,7 +89,7 @@ namespace rgb_matrix {
       virtual void show(Canvas *c);
 
     protected:
-      RGBMatrix() : _options(Options(16, 32, Canvas_ID::BCM_ID)) {}
+      RGBMatrix() : _options(Options(Canvas_ID::BCM_ID, nullptr)) {}
       RGBMatrix(Options o);
 
       Options _options;

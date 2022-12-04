@@ -22,12 +22,16 @@ namespace rgb_matrix {
   // TODO: Get rid of this!!!
   using namespace internal;
 
-  Options::Options(int rows, int cols, Canvas_ID canvas_id) :
+  CFG::CFG(int rows, int cols) :
+    dot(rows, cols) 
+  {
+    // Do nothing
+  }
+
+  Options::Options(Canvas_ID canvas_id, CFG *config) :
     hardware_mapping("regular"),
-    dot(rows, cols),
-    pwm_bits(Framebuffer<PixelDesignator>::kDefaultBitPlanes),
+    cfg(config),
     id(canvas_id),
-    brightness(100),
     multiplexing(0),
     pixel_mapper_config(NULL)
   {
@@ -100,7 +104,7 @@ namespace rgb_matrix {
     }
 
     if (multiplex_mapper)
-      multiplex_mapper->EditColsRows(&_options.dot.cols, &_options.dot.rows);
+      multiplex_mapper->EditColsRows(&_options.cfg->dot.cols, &_options.cfg->dot.rows);
 
     switch (_options.id) {
       case Canvas_ID::RP2040_ID:

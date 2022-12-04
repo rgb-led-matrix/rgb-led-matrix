@@ -42,21 +42,17 @@ namespace rgb_matrix {
 
   // Don't use this!    
   template <typename T> Framebuffer<T>::Framebuffer()
-    : rows_(16),
-      columns_(32),
-      dot_(rows_, columns_),
-      pwm_bits_(kBitPlanes), brightness_(100),
+    : cfg_(nullptr), id_(Canvas_ID::BCM_ID),
       shared_mapper_(NULL) {
     assert(shared_mapper_ != NULL);
   }
 
-  template <typename T> Framebuffer<T>::Framebuffer(Canvas_ID id, DOTCorrect dot, GAMMA gamma)
-    : rows_(dot.rows),
-      columns_(dot.cols),
-      dot_(dot), gamma_(gamma), id_(id),
-      pwm_bits_(kBitPlanes), brightness_(100) {
+  template <typename T> Framebuffer<T>::Framebuffer(Canvas_ID id, CFG *cfg)
+    : cfg_(cfg), id_(id) {
     assert(hardware_mapping_ != NULL);   // Called InitHardwareMapping() ?
-    *shared_mapper_ = new PixelDesignatorMap<T>(dot.cols, dot.rows);
+    assert(cfg != nullptr);
+
+    *shared_mapper_ = new PixelDesignatorMap<T>(cfg->dot.cols, cfg->dot.rows);
   }
 
   template <typename T> void Framebuffer<T>::InitHardwareMapping(const char *named_hardware) {
@@ -83,13 +79,6 @@ namespace rgb_matrix {
       abort();
     }
     hardware_mapping_ = mapping;
-  }
-
-  template <typename T> bool Framebuffer<T>::SetPWMBits(uint8_t value) {
-    if (value < 1 || value > kBitPlanes)
-      return false;
-    pwm_bits_ = value;
-    return true;
   }
 
   template <typename T> int Framebuffer<T>::width() const { return (*shared_mapper_)->width(); }
@@ -164,10 +153,8 @@ namespace rgb_matrix {
   template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const internal::MultiplexMapper *multiplex_mapper) {
     switch (options.id) {
       case Canvas_ID::RP2040_ID:
-        Framebuffer<PixelDesignator> *buf = new RP2040<PixelDesignator>(options.id, options.dot, options.gamma);
+        Framebuffer<PixelDesignator> *buf = new RP2040<PixelDesignator>(options.id, options.cfg);
         buf->InitSharedMapper(multiplex_mapper, options.pixel_mapper_config);
-        buf->SetBrightness(options.brightness);
-        buf->SetPWMBits(options.pwm_bits);
         return buf;
     }
 
@@ -177,10 +164,8 @@ namespace rgb_matrix {
   template <> Framebuffer<PixelDesignator_HUB75> *Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(Options options, const internal::MultiplexMapper *multiplex_mapper) {
     switch (options.id) {
       case Canvas_ID::BCM_ID:
-        Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.id, options.dot, options.gamma);
+        Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.id, options.cfg);
         buf->InitSharedMapper(multiplex_mapper, options.pixel_mapper_config);
-        buf->SetBrightness(options.brightness);
-        buf->SetPWMBits(options.pwm_bits);
         return buf;
     }
 
