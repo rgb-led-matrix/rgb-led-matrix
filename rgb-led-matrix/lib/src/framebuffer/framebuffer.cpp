@@ -50,10 +50,10 @@ namespace rgb_matrix {
     assert(shared_mapper_ != NULL);
   }
 
-  template <typename T> Framebuffer<T>::Framebuffer(DOTCorrect dot, GAMMA gamma)
+  template <typename T> Framebuffer<T>::Framebuffer(Canvas_ID id, DOTCorrect dot, GAMMA gamma)
     : rows_(dot.rows),
       columns_(dot.cols),
-      dot_(dot), gamma_(gamma),
+      dot_(dot), gamma_(gamma), id_(id),
       pwm_bits_(kBitPlanes), brightness_(100) {
     assert(hardware_mapping_ != NULL);   // Called InitHardwareMapping() ?
     *shared_mapper_ = new PixelDesignatorMap<T>(dot.cols, dot.rows);
@@ -161,10 +161,10 @@ namespace rgb_matrix {
     ApplyNamedPixelMappers(pixel_mapper_config);
   }
 
-  template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Canvas_ID id, Options options, const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
-    switch (id) {
+  template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const internal::MultiplexMapper *multiplex_mapper) {
+    switch (options.id) {
       case Canvas_ID::RP2040_ID:
-        Framebuffer<PixelDesignator> *buf = new RP2040<PixelDesignator>(options.dot, options.gamma);
+        Framebuffer<PixelDesignator> *buf = new RP2040<PixelDesignator>(options.id, options.dot, options.gamma);
         buf->InitSharedMapper(multiplex_mapper, options.pixel_mapper_config);
         buf->SetBrightness(options.brightness);
         buf->SetPWMBits(options.pwm_bits);
@@ -174,10 +174,10 @@ namespace rgb_matrix {
     return nullptr;
   }
 
-  template <> Framebuffer<PixelDesignator_HUB75> *Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(Canvas_ID id, Options options, const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
-    switch (id) {
+  template <> Framebuffer<PixelDesignator_HUB75> *Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(Options options, const internal::MultiplexMapper *multiplex_mapper) {
+    switch (options.id) {
       case Canvas_ID::BCM_ID:
-        Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.dot, options.gamma);
+        Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.id, options.dot, options.gamma);
         buf->InitSharedMapper(multiplex_mapper, options.pixel_mapper_config);
         buf->SetBrightness(options.brightness);
         buf->SetPWMBits(options.pwm_bits);

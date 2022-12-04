@@ -34,11 +34,12 @@ namespace rgb_matrix {
   };
 
   struct Options {
-    Options(int rows, int cols);
+    Options(int rows, int cols, Canvas_ID id);
 
     const char *hardware_mapping;
     DOTCorrect dot;
     GAMMA gamma;
+    Canvas_ID id;
     int pwm_bits;
     int brightness;
     int multiplexing;
@@ -51,11 +52,11 @@ namespace rgb_matrix {
 
       static RGBMatrix *CreateFromOptions(Options &options);
 
-      virtual Canvas *CreateCanvas(Canvas_ID id);
+      virtual Canvas *CreateCanvas();
       virtual void show(Canvas *c);
 
     protected:
-      RGBMatrix() : _options(Options(16, 32)) {}
+      RGBMatrix() : _options(Options(16, 32, Canvas_ID::BCM_ID)) {}
       RGBMatrix(Options o);
 
       Options _options;

@@ -51,11 +51,11 @@ namespace rgb_matrix {
       static constexpr int kBitPlanes = 11;
       static constexpr int kDefaultBitPlanes = 11;
 
-      Framebuffer(DOTCorrect dot, GAMMA gamma);
+      Framebuffer(Canvas_ID id, DOTCorrect dot, GAMMA gamma);
       virtual ~Framebuffer() {}
 
       static void InitHardwareMapping(const char *named_hardware);
-      static Framebuffer *CreateFramebuffer(Canvas_ID id, Options options, const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config);
+      static Framebuffer *CreateFramebuffer(Options options, const internal::MultiplexMapper *multiplex_mapper);
 
       virtual bool SetPWMBits(uint8_t value);
 

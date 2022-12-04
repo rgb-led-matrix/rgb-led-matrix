@@ -3,10 +3,10 @@
 using namespace rgb_matrix;
 
 int main(int argc, char **argv) {
-    Options options(32, 32);
+    Options options(32, 32, Canvas_ID::RP2040_ID);
     RGBMatrix *matrix = RGBMatrix::CreateFromOptions(options);
-    Canvas *canvas0 = matrix->CreateCanvas(Canvas_ID::RP2040_ID);
-    Canvas *canvas1 = matrix->CreateCanvas(Canvas_ID::RP2040_ID);
+    Canvas *canvas0 = matrix->CreateCanvas();
+    Canvas *canvas1 = matrix->CreateCanvas();
 
     while (1) {
         canvas0->Fill(255, 255, 255);

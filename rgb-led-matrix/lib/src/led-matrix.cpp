@@ -22,10 +22,11 @@ namespace rgb_matrix {
   // TODO: Get rid of this!!!
   using namespace internal;
 
-  Options::Options(int rows, int cols) :
+  Options::Options(int rows, int cols, Canvas_ID canvas_id) :
     hardware_mapping("regular"),
     dot(rows, cols),
     pwm_bits(Framebuffer<PixelDesignator>::kDefaultBitPlanes),
+    id(canvas_id),
     brightness(100),
     multiplexing(0),
     pixel_mapper_config(NULL)
@@ -88,7 +89,7 @@ namespace rgb_matrix {
     return _ptr;
   }
 
-  Canvas *RGBMatrix::CreateCanvas(Canvas_ID id) {
+  Canvas *RGBMatrix::CreateCanvas() {
     const MultiplexMapper *multiplex_mapper = NULL;
 
     if (_options.multiplexing > 0) {
@@ -101,11 +102,11 @@ namespace rgb_matrix {
     if (multiplex_mapper)
       multiplex_mapper->EditColsRows(&_options.dot.cols, &_options.dot.rows);
 
-    switch (id) {
+    switch (_options.id) {
       case Canvas_ID::RP2040_ID:
-        return new FrameCanvas<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(id, _options, multiplex_mapper, _options.pixel_mapper_config));
+        return new FrameCanvas<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(_options, multiplex_mapper));
       case Canvas_ID::BCM_ID:
-        return new FrameCanvas<PixelDesignator_HUB75>(Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(id, _options, multiplex_mapper, _options.pixel_mapper_config));
+        return new FrameCanvas<PixelDesignator_HUB75>(Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(_options, multiplex_mapper));
       default:
         return nullptr;
     }
