@@ -63,7 +63,7 @@ namespace rgb_matrix {
 
   class BCM_CFG : public CFG {
     public:
-      BCM_CFG(int rows, int cols) : CFG(rows, cols) { id_ = Canvas_ID::RP2040_ID;  }
+      BCM_CFG(int rows, int cols) : CFG(rows, cols) { id_ = Canvas_ID::BCM_ID;  }
 
       int pwm_bits_;
       int brightness_;
