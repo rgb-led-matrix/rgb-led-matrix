@@ -156,6 +156,7 @@ namespace rgb_matrix {
     switch (options.id) {
       case Canvas_ID::RP2040_ID:
         Framebuffer<PixelDesignator> *buf = new RP2040<PixelDesignator>(options.id, options.cfg);
+        // TODO: Fix nullptr
         buf->InitSharedMapper(nullptr, multiplex_mapper, options.pixel_mapper_config);
         return buf;
     }
