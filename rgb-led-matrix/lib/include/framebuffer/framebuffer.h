@@ -4,28 +4,14 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "canvas.h"
+#include "led-matrix.h"
+#include "external/external.h"
+#include "HUB75/HUB75.h"
 #include "port/pin-mapper/PinMapping.h"
 #include "mappers/multiplex/multiplex-mappers-internal.h"
-#include "led-matrix.h"
 
 namespace rgb_matrix {
-  class Options;
-
-  struct PixelDesignator {
-    PixelDesignator() : r_bit(0), g_bit(0), b_bit(0) {}
-
-    uint16_t r_bit;
-    uint16_t g_bit;
-    uint16_t b_bit;
-  };
-
-  struct PixelDesignator_HUB75 {
-    PixelDesignator_HUB75() : r_bit(0), g_bit(0), b_bit(0) {}
-
-    uint16_t r_bit;
-    uint16_t g_bit;
-    uint16_t b_bit;
-  };
+  class Options; 
 
   template <typename T> struct PixelDesignatorMap {
     public:

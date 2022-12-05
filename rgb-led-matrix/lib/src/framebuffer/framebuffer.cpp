@@ -7,10 +7,11 @@
 #include <string.h>
 #include <algorithm>
 
-#include "framebuffer/RP2040/RP2040.h"
-#include "framebuffer/BCM/BCM.h"
+#include "CFG/CFG.h"
+#include "framebuffer/external/RP2040/RP2040.h"
+#include "framebuffer/HUB75/BCM/BCM.h"
 #include "port/gpio/gpio.h"
-#include "mappers/pixel/pixel-mapper.h"
+#include "mappers/pixel/HUB75/pixel-mapper.h"
 #include "port/pin-mapper/PinMapping.h"
 
 namespace rgb_matrix {

@@ -1,5 +1,6 @@
 #include "canvas.h"
 #include "led-matrix.h"
+#include "CFG/RP2040_CFG.h"
 using namespace rgb_matrix;
 
 int main(int argc, char **argv) {

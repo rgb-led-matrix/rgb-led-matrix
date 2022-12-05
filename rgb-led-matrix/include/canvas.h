@@ -3,14 +3,9 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include "types.h"
 
 namespace rgb_matrix {
-
-  enum Canvas_ID {
-    RP2040_ID = 0,
-    BCM_ID = 1
-  };
-
   class Canvas {
     public:
       virtual ~Canvas() {}
@@ -29,6 +24,5 @@ namespace rgb_matrix {
 
       virtual void show() = 0;
   };
-
 }
 #endif

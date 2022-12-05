@@ -1,5 +1,5 @@
 #include <assert.h>
-#include "framebuffer/BCM/BCM.h"
+#include "framebuffer/HUB75/BCM/BCM.h"
 #include "port/pin-mapper/HUB75/HUB75_Pins.h"
 
 namespace rgb_matrix {

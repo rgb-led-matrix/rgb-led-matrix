@@ -1,4 +1,4 @@
-#include "port/pin-mapper/RP2040/RP2040_Pins.h"
+#include "port/pin-mapper/external/RP2040/RP2040_Pins.h"
 
 #define GPIO_BIT(b) ((uint32_t) 1 << (b))
 

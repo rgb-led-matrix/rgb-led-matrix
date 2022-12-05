@@ -15,7 +15,7 @@
 
 #include <vector>
 
-#include "mappers/pixel/pixel-mapper.h"
+#include "mappers/pixel/HUB75/pixel-mapper.h"
 
 namespace rgb_matrix {
 namespace internal {

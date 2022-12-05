@@ -1,6 +1,6 @@
 #include <assert.h>
-#include "framebuffer/RP2040/RP2040.h"
-#include "port/pin-mapper/RP2040/RP2040_Pins.h"
+#include "framebuffer/external/RP2040/RP2040.h"
+#include "port/pin-mapper/external/RP2040/RP2040_Pins.h"
 
 namespace rgb_matrix {
     extern struct PinMapping *hardware_mapping_;

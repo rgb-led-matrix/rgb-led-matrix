@@ -13,6 +13,7 @@
 #include <unistd.h>
 
 #include "led-matrix.h"
+#include "CFG/CFG.h"
 #include "framecanvas.h"
 #include "framebuffer/framebuffer.h"
 
