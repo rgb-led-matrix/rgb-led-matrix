@@ -10,6 +10,8 @@ namespace rgb_matrix {
 
       int pwm_bits_;
       int brightness_;
+      int chain_;
+      int parallel_;
     
     protected:
       bool isValid() { return true; }
