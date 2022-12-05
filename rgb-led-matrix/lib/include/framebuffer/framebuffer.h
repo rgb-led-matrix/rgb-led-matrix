@@ -8,7 +8,7 @@
 #include "external/external.h"
 #include "HUB75/HUB75.h"
 #include "port/pin-mapper/PinMapping.h"
-#include "mappers/multiplex/multiplex-mappers-internal.h"
+#include "mappers/multiplex/multiplex-mapper.h"
 
 namespace rgb_matrix {
   class Options; 
@@ -38,7 +38,7 @@ namespace rgb_matrix {
       virtual ~Framebuffer() {}
 
       static void InitHardwareMapping(const char *named_hardware);
-      static Framebuffer *CreateFramebuffer(Options options, const internal::MultiplexMapper *multiplex_mapper);
+      static Framebuffer *CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper);
 
       virtual int width() const;
       virtual int height() const;
@@ -50,7 +50,7 @@ namespace rgb_matrix {
 
       bool ApplyPixelMapper(const PixelMapper *mapper);
       void ApplyNamedPixelMappers(const char *pixel_mapper_config);
-      void InitSharedMapper(const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config);
+      void InitSharedMapper(const MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config);
 
     protected:
       Framebuffer();

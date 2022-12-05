@@ -20,9 +20,6 @@
 namespace rgb_matrix {
   RGBMatrix *RGBMatrix::_ptr = nullptr;
 
-  // TODO: Get rid of this!!!
-  using namespace internal;
-
   CFG::CFG(int rows, int cols) :
     dot(rows, cols) 
   {
