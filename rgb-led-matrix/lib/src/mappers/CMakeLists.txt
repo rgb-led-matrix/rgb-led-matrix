@@ -1,2 +1,2 @@
 add_subdirectory(multiplex)
-add_subdirectory(pixel/HUB75)
+add_subdirectory(pixel)
