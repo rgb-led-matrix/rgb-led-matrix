@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <map>
-#include "mappers/pixel/HUB75/pixel-mapper.h"
+#include "mappers/pixel/HUB75/PixelMapper_HUB75_LUT.h"
 
 namespace rgb_matrix {
 
@@ -287,11 +287,11 @@ namespace rgb_matrix {
   }
 
   // Public API.
-  void RegisterPixelMapper(PixelMapper *mapper) {
+  void PixelMapper_HUB75_LUT::RegisterPixelMapper(PixelMapper *mapper) {
     RegisterPixelMapperInternal(GetMapperMap(), mapper);
   }
 
-  std::vector<std::string> GetAvailablePixelMappers() {
+  std::vector<std::string> PixelMapper_HUB75_LUT::GetAvailablePixelMappers() {
     std::vector<std::string> result;
     MapperByName *m = GetMapperMap();
     for (MapperByName::const_iterator it = m->begin(); it != m->end(); ++it) {
@@ -300,7 +300,7 @@ namespace rgb_matrix {
     return result;
   }
 
-  const PixelMapper *FindPixelMapper(const char *name,
+  const PixelMapper *PixelMapper_HUB75_LUT::FindPixelMapper(const char *name,
                                     int chain, int parallel,
                                     const char *parameter) {
     std::string lower_name;

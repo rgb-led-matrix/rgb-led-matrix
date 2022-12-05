@@ -11,7 +11,8 @@
 #include "framebuffer/external/RP2040/RP2040.h"
 #include "framebuffer/HUB75/BCM/BCM.h"
 #include "port/gpio/gpio.h"
-#include "mappers/pixel/HUB75/pixel-mapper.h"
+#include "mappers/pixel/pixel-mapper.h"
+#include "mappers/pixel/HUB75/PixelMapper_HUB75_LUT.h"
 #include "port/pin-mapper/PinMapping.h"
 
 namespace rgb_matrix {
@@ -85,7 +86,7 @@ namespace rgb_matrix {
   template <typename T> int Framebuffer<T>::width() const { return (*shared_mapper_)->width(); }
   template <typename T> int Framebuffer<T>::height() const { return (*shared_mapper_)->height(); }
 
-  template <typename T> void Framebuffer<T>::ApplyNamedPixelMappers(const char *pixel_mapper_config) {
+  template <typename T> void Framebuffer<T>::ApplyNamedPixelMappers(PixelMapper_LUT *lut, const char *pixel_mapper_config) {
     if (pixel_mapper_config == NULL || strlen(pixel_mapper_config) == 0)
       return;
     char *const writeable_copy = strdup(pixel_mapper_config);
@@ -102,7 +103,7 @@ namespace rgb_matrix {
         fprintf(stderr, "Stray parameter ':%s' without mapper name ?\n", optional_param_start);
       }
       if (*s) {
-        ApplyPixelMapper(FindPixelMapper(s, 1, 1, optional_param_start));
+        ApplyPixelMapper(lut->FindPixelMapper(s, 1, 1, optional_param_start));
       }
       s = semicolon + 1;
     }
@@ -146,16 +147,16 @@ namespace rgb_matrix {
     return true;
   }
 
-  template <typename T> void Framebuffer<T>::InitSharedMapper(const MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
+  template <typename T> void Framebuffer<T>::InitSharedMapper(PixelMapper_LUT *lut, const MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
     ApplyPixelMapper(multiplex_mapper);
-    ApplyNamedPixelMappers(pixel_mapper_config);
+    ApplyNamedPixelMappers(lut, pixel_mapper_config);
   }
 
   template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
     switch (options.id) {
       case Canvas_ID::RP2040_ID:
         Framebuffer<PixelDesignator> *buf = new RP2040<PixelDesignator>(options.id, options.cfg);
-        buf->InitSharedMapper(multiplex_mapper, options.pixel_mapper_config);
+        buf->InitSharedMapper(nullptr, multiplex_mapper, options.pixel_mapper_config);
         return buf;
     }
 
@@ -166,7 +167,7 @@ namespace rgb_matrix {
     switch (options.id) {
       case Canvas_ID::BCM_ID:
         Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.id, options.cfg);
-        buf->InitSharedMapper(multiplex_mapper, options.pixel_mapper_config);
+        buf->InitSharedMapper(PixelMapper_HUB75_LUT::CreateLUT(), multiplex_mapper, options.pixel_mapper_config);
         return buf;
     }
 

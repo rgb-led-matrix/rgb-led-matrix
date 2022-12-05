@@ -1,5 +1,5 @@
-#ifndef RP2040_H
-#define RP2040_H
+#ifndef RP2040_FRAMEBUFFER_H
+#define RP2040_FRAMEBUFFER_H
 
 #include "framebuffer/framebuffer.h"
 #include "port/gpio/gpio.h"

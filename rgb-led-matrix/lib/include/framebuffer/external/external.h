@@ -1,5 +1,5 @@
-#ifndef EXTERNAL_H
-#define EXTERNAL_H
+#ifndef EXTERNAL_FRAMEBUFFER_H
+#define EXTERNAL_FRAMEBUFFER_H
 
 #include "stdint.h"
 

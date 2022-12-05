@@ -1,5 +1,5 @@
-#ifndef HUB75_H
-#define HUB75_H
+#ifndef HUB75_FRAMEBUFFER_H
+#define HUB75_FRAMEBUFFER_H
 
 #include "stdint.h"
 
