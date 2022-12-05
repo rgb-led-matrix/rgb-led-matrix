@@ -34,8 +34,6 @@ namespace rgb_matrix {
 
         protected:
             PixelMapper_LUT() {}
-
-            static PixelMapper_LUT *ptr_;
   };
 }
 

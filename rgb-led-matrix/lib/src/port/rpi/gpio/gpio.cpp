@@ -1,18 +1,3 @@
-// -*- mode: c++; c-basic-offset: 2; indent-tabs-mode: nil; -*-
-// Copyright (C) 2013 Henner Zeller <h.zeller@acm.org>
-//
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation version 2.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
-
 #define __STDC_FORMAT_MACROS
 #include <inttypes.h>
 
@@ -28,16 +13,16 @@
 #include <unistd.h>
 
 // Raspberry 1 and 2 have different base addresses for the periphery
-#define BCM2708_PERI_BASE        0x20000000
-#define BCM2709_PERI_BASE        0x3F000000
-#define BCM2711_PERI_BASE        0xFE000000
+#define BCM2708_PERI_BASE         0x20000000
+#define BCM2709_PERI_BASE         0x3F000000
+#define BCM2711_PERI_BASE         0xFE000000
 
-#define GPIO_REGISTER_OFFSET         0x200000
+#define GPIO_REGISTER_OFFSET      0x200000
 
-#define GPIO_PWM_BASE_OFFSET	(GPIO_REGISTER_OFFSET + 0xC000)
-#define GPIO_CLK_BASE_OFFSET	0x101000
+#define GPIO_PWM_BASE_OFFSET	    (GPIO_REGISTER_OFFSET + 0xC000)
+#define GPIO_CLK_BASE_OFFSET	    0x101000
 
-#define REGISTER_BLOCK_SIZE (4*1024)
+#define REGISTER_BLOCK_SIZE       (4*1024)
 
 // GPIO setup macros. Always use INP_GPIO(x) before using OUT_GPIO(x).
 #define INP_GPIO(g) *(s_GPIO_registers+((g)/10)) &= ~(7ull<<(((g)%10)*3))
