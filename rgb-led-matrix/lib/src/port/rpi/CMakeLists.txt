@@ -13,6 +13,9 @@ add_executable(rpi
 set(CMAKE_C_COMPILER /opt/pi/tools/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
 set(CMAKE_CXX_COMPILER /opt/pi/tools/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++)
 
+target_compile_definitions(rpi PUBLIC
+    GPIO_BITS_T_DEFINE=uint32_t)
+
 target_link_libraries(rpi
     pixel-mapper
     multiplex-mapper
