@@ -1,1 +1,2 @@
 add_subdirectory(rpi)
+add_subdirectory(rock_pi_s)
