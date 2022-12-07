@@ -18,12 +18,13 @@ namespace rgb_matrix {
 
   struct RP2040_Multiplexed_PMP_Pins : public PinMapping {
     public:
-      RP2040_Multiplexed_PMP_Pins(const char *name, uint32_t clk, uint32_t dat, cs_t cs) 
-        : PinMapping(name), clk(clk), dat(1 << dat), cs(cs) {}
+      RP2040_Multiplexed_PMP_Pins(const char *name, uint32_t clk, uint32_t dat, cs_t cs, uint32_t reset) 
+        : PinMapping(name), clk(clk), dat(1 << dat), cs(cs), reset(1 << reset) {}
 
       const cs_t cs;
       const gpio_bits_t clk;
       const uint32_t dat;       // Defines 8 pins (dat + 0, dat + 1, ..., dat + 7)
+      const uint32_t reset;     // Not used
   };
 
   extern struct PinMapping RP2040_Multiplexed_PMP_pin_mappings[];
