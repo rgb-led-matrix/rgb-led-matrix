@@ -1,6 +1,5 @@
 add_executable(rpi
     gpio/gpio.cpp
-    thread/thread.cpp
     pin-pulser/PinPulser.cpp
     pin-pulser/PICO/PICO.cpp
     pin-mapper/external/RP2040/RP2040_Multiplexed_Dual_UART_Pins.cpp
