@@ -1,4 +1,4 @@
-add_executable(rpi
+add_library(rpi SHARED
     gpio/gpio.cpp
     pin-pulser/PinPulser.cpp
     pin-pulser/PICO/PICO.cpp
@@ -6,8 +6,7 @@ add_executable(rpi
     pin-mapper/HUB75/HUB75_Pins.cpp
     pin-mapper/PinMapping.cpp
     ../../led-matrix.cpp
-    ../../framecanvas.cpp
-    main.cpp)
+    ../../framecanvas.cpp)
 
 set(CMAKE_C_COMPILER /opt/pi/tools/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
 set(CMAKE_CXX_COMPILER /opt/pi/tools/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++)
@@ -18,5 +17,4 @@ target_compile_definitions(rpi PUBLIC
 target_link_libraries(rpi
     pixel-mapper
     multiplex-mapper
-    framebuffer
-    pthread)
+    framebuffer)
