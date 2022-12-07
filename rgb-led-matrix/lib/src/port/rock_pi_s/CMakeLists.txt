@@ -1,4 +1,4 @@
-add_library(rpi SHARED
+add_library(rock_pi_s SHARED
     gpio/gpio.cpp
     pin-pulser/PinPulser.cpp
     pin-pulser/PICO/PICO.cpp
@@ -11,10 +11,10 @@ add_library(rpi SHARED
 set(CMAKE_C_COMPILER /opt/pi/tools/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
 set(CMAKE_CXX_COMPILER /opt/pi/tools/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++)
 
-target_compile_definitions(rpi PUBLIC
+target_compile_definitions(rock_pi_s PUBLIC
     GPIO_BITS_T_DEFINE=uint32_t)
 
-target_link_libraries(rpi
+target_link_libraries(rock_pi_s
     pixel-mapper
     multiplex-mapper
     framebuffer)

@@ -4,29 +4,14 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "canvas.h"
-#include "port/pin-mapper/PinMapping.h"
-#include "mappers/multiplex/multiplex-mappers-internal.h"
 #include "led-matrix.h"
+#include "external/external.h"
+#include "HUB75/HUB75.h"
+#include "port/pin-mapper/PinMapping.h"
+#include "mappers/multiplex/multiplex-mapper.h"
+#include "mappers/pixel/PixelMapper_LUT.h"
 
 namespace rgb_matrix {
-  class Options;
-
-  struct PixelDesignator {
-    PixelDesignator() : r_bit(0), g_bit(0), b_bit(0) {}
-
-    uint16_t r_bit;
-    uint16_t g_bit;
-    uint16_t b_bit;
-  };
-
-  struct PixelDesignator_HUB75 {
-    PixelDesignator_HUB75() : r_bit(0), g_bit(0), b_bit(0) {}
-
-    uint16_t r_bit;
-    uint16_t g_bit;
-    uint16_t b_bit;
-  };
-
   template <typename T> struct PixelDesignatorMap {
     public:
       PixelDesignatorMap(int width, int height);
@@ -52,7 +37,7 @@ namespace rgb_matrix {
       virtual ~Framebuffer() {}
 
       static void InitHardwareMapping(const char *named_hardware);
-      static Framebuffer *CreateFramebuffer(Options options, const internal::MultiplexMapper *multiplex_mapper);
+      static Framebuffer *CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper);
 
       virtual int width() const;
       virtual int height() const;
@@ -63,8 +48,8 @@ namespace rgb_matrix {
       virtual void DumpToMatrix() = 0;
 
       bool ApplyPixelMapper(const PixelMapper *mapper);
-      void ApplyNamedPixelMappers(const char *pixel_mapper_config);
-      void InitSharedMapper(const internal::MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config);
+      void ApplyNamedPixelMappers(PixelMapper_LUT *lut, const char *pixel_mapper_config);
+      void InitSharedMapper(PixelMapper_LUT *lut, const MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config);
 
     protected:
       Framebuffer();
