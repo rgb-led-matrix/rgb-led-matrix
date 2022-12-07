@@ -5,9 +5,9 @@
 #include "port/gpio/gpio.h"
 
 namespace rgb_matrix {
-    template <typename T> class RP2040_Multiplexed_Dual_UART : public Framebuffer<T> {
+    template <typename T> class RP2040_Multiplexed_PMP : public Framebuffer<T> {
         public:
-            RP2040_Multiplexed_Dual_UART(Canvas_ID id, CFG *cfg);
+            RP2040_Multiplexed_PMP(Canvas_ID id, CFG *cfg);
 
             virtual void DumpToMatrix();
 

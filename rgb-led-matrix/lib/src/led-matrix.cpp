@@ -105,7 +105,7 @@ namespace rgb_matrix {
       multiplex_mapper->EditColsRows(&_options.cfg->dot.cols, &_options.cfg->dot.rows);
 
     switch (_options.id) {
-      case Canvas_ID::RP2040_Multiplexed_Dual_UART_ID:
+      case Canvas_ID::RP2040_Multiplexed_PMP_ID:
         return new FrameCanvas<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(_options, multiplex_mapper));
       case Canvas_ID::BCM_ID:
         return new FrameCanvas<PixelDesignator_HUB75>(Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(_options, multiplex_mapper));

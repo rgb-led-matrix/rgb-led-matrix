@@ -1,11 +1,11 @@
 #include "canvas.h"
 #include "led-matrix.h"
-#include "CFG/RP2040_Multiplexed_Dual_UART_CFG.h"
+#include "CFG/RP2040_Multiplexed_PMP_CFG.h"
 using namespace rgb_matrix;
 
 int main(int argc, char **argv) {
-    RP2040_Multiplexed_Dual_UART_CFG *cfg = new RP2040_Multiplexed_Dual_UART_CFG(32, 32);
-    Options options(Canvas_ID::RP2040_Multiplexed_Dual_UART_ID, cfg);
+    RP2040_Multiplexed_PMP_CFG *cfg = new RP2040_Multiplexed_PMP_CFG(32, 32);
+    Options options(Canvas_ID::RP2040_Multiplexed_PMP_ID, cfg);
     RGBMatrix *matrix = RGBMatrix::CreateFromOptions(options);
     Canvas *canvas0 = matrix->CreateCanvas();
     Canvas *canvas1 = matrix->CreateCanvas();

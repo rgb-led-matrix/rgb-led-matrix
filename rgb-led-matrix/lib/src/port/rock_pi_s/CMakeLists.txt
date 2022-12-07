@@ -2,7 +2,7 @@ add_library(rock_pi_s SHARED
     gpio/gpio.cpp
     pin-pulser/PinPulser.cpp
     pin-pulser/PICO/PICO.cpp
-    pin-mapper/external/RP2040/RP2040_Multiplexed_Dual_UART_Pins.cpp
+    pin-mapper/external/RP2040/RP2040_Multiplexed_PMP_Pins.cpp
     pin-mapper/HUB75/HUB75_Pins.cpp
     pin-mapper/PinMapping.cpp
     ../../led-matrix.cpp

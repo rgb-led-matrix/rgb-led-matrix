@@ -5,7 +5,7 @@ namespace rgb_matrix {
     class CFG;
 
     enum Canvas_ID {
-        RP2040_Multiplexed_Dual_UART_ID = 0,
+        RP2040_Multiplexed_PMP_ID = 0,
         BCM_ID = 1
     };
 
