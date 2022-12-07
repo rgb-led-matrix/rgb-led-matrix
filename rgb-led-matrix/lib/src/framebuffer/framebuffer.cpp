@@ -8,7 +8,7 @@
 #include <algorithm>
 
 #include "CFG/CFG.h"
-#include "framebuffer/external/RP2040/RP2040.h"
+#include "framebuffer/external/RP2040/RP2040_Multiplexed_Dual_UART.h"
 #include "framebuffer/HUB75/BCM/BCM.h"
 #include "port/gpio/gpio.h"
 #include "mappers/pixel/pixel-mapper.h"
@@ -154,8 +154,8 @@ namespace rgb_matrix {
 
   template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
     switch (options.id) {
-      case Canvas_ID::RP2040_ID:
-        Framebuffer<PixelDesignator> *buf = new RP2040<PixelDesignator>(options.id, options.cfg);
+      case Canvas_ID::RP2040_Multiplexed_Dual_UART_ID:
+        Framebuffer<PixelDesignator> *buf = new RP2040_Multiplexed_Dual_UART<PixelDesignator>(options.id, options.cfg);
         // TODO: Fix nullptr
         buf->InitSharedMapper(nullptr, multiplex_mapper, options.pixel_mapper_config);
         return buf;

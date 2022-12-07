@@ -3,7 +3,7 @@ add_executable(rpi
     thread/thread.cpp
     pin-pulser/PinPulser.cpp
     pin-pulser/PICO/PICO.cpp
-    pin-mapper/external/RP2040/RP2040_Pins.cpp
+    pin-mapper/external/RP2040/RP2040_Multiplexed_Dual_UART_Pins.cpp
     pin-mapper/HUB75/HUB75_Pins.cpp
     pin-mapper/PinMapping.cpp
     ../../led-matrix.cpp

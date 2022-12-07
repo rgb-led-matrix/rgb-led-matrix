@@ -3,13 +3,15 @@
 
 #include "port/gpio/gpio-bits.h"
 
-struct PinMapping {
-  public:
-    PinMapping(char *s) : name(s) {}
+namespace rgb_matrix {
+  struct PinMapping {
+    public:
+      PinMapping(const char *s) : name(s) {}
 
-    const char *name;
-};
+      const char *name;
+  };
 
-extern struct PinMapping **pin_mappings;
+  extern struct PinMapping **pin_mappings;
+}
 
 #endif
