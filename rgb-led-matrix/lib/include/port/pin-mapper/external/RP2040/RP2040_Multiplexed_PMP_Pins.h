@@ -22,8 +22,8 @@ namespace rgb_matrix {
         : PinMapping(name), dat(1 << dat), wr(wr), reset(1 << reset) {}
 
       const wr_t wr;
-      const uint32_t dat;       // Defines 8 pins (dat + 0, dat + 1, ..., dat + 7)
-      const gpio_bits_t reset;     // Not used
+      const uint32_t dat;         // Defines 8 pins (dat + 0, dat + 1, ..., dat + 7)
+      const gpio_bits_t reset;    // Not used (This is the actual reset used to signal USB bootloader!)
   };
 
   extern struct PinMapping RP2040_Multiplexed_PMP_pin_mappings[];

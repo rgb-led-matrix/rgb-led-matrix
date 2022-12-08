@@ -32,7 +32,7 @@ namespace rgb_matrix {
       const gpio_bits_t lat;
       const gpio_bits_t flag;
       const gpio_bits_t interrupt;
-      const gpio_bits_t reset;
+      const gpio_bits_t reset;      // This not the actual reset
       const HUB75_t p0;
       const HUB75_t p1;
       const HUB75_t p2;

@@ -11,10 +11,12 @@ int main(int argc, char **argv) {
 
         io->Init();
         io->InitOutputs(pin);
-        io->SetBits(pin);
-        std::this_thread::sleep_for(std::chrono::microseconds(100));
         io->ClearBits(pin);
+        std::this_thread::sleep_for(std::chrono::microseconds(100));
+        io->SetBits(pin);
         std::this_thread::sleep_for(std::chrono::seconds(10));
+
+        // TODO: Release and make input?
     }
 
     return 0;
