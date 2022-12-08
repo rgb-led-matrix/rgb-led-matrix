@@ -3,7 +3,6 @@
 namespace rgb_matrix {
   struct PinMapping RP2040_Multiplexed_PMP_pin_mappings[] = {
     {
-      // Hopefully someday this will get fixed
       RP2040_Multiplexed_PMP_Pins("regular", 4, wr_t(24, 25, 26, 27), 23)
     },
 
