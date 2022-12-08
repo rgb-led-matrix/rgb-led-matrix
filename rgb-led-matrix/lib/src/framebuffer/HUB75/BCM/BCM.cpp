@@ -23,7 +23,7 @@ namespace rgb_matrix {
 
     template <typename T> void BCM<T>::InitGPIO() {
         const struct HUB75_Pins &h =  *((struct HUB75_Pins *) hardware_mapping_);
-        gpio_bits_t all_used_bits = h.clk | h.lat | h.flag | h.interrupt;
+        gpio_bits_t all_used_bits = h.clk | h.lat | h.flag;
         
         switch (h.num) {
             case 3:
@@ -36,6 +36,7 @@ namespace rgb_matrix {
                 break;
         }
 
+        assert(io->RequestInputs(h.interrupt) == h.interrupt);
         const gpio_bits_t result = io->InitOutputs(all_used_bits);
         assert(result == all_used_bits); 
     }

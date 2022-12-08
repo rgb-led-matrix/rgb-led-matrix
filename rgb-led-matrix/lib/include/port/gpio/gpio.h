@@ -74,6 +74,6 @@ private:
 // if possible and a terrible slow fallback otherwise.
 uint32_t GetMicrosecondCounter();
 
-}  // end namespace rgb_matrix
+}
 
 #endif

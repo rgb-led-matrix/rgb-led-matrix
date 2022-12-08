@@ -220,4 +220,4 @@ uint32_t GetMicrosecondCounter() {
   return epoch_usec & 0xFFFFFFFF;
 }
 
-} // namespace rgb_matrix
+}
