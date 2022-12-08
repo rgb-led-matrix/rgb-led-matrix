@@ -17,3 +17,13 @@ target_link_libraries(rock_pi_s
     multiplex-mapper
     framebuffer
     pin-pulser)
+
+add_executable(rock_pi_s-helper
+    helper.cpp
+    gpio/gpio.cpp)
+    
+target_compile_definitions(rock_pi_s-helper PUBLIC
+    GPIO_BITS_T_DEFINE=uint32_t)
+    
+target_link_libraries(rock_pi_s-helper
+    pthread)
