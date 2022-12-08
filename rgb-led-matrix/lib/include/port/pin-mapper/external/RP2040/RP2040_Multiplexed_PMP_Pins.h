@@ -23,7 +23,7 @@ namespace rgb_matrix {
 
       const wr_t wr;
       const uint32_t dat;       // Defines 8 pins (dat + 0, dat + 1, ..., dat + 7)
-      const uint32_t reset;     // Not used
+      const gpio_bits_t reset;     // Not used
   };
 
   extern struct PinMapping RP2040_Multiplexed_PMP_pin_mappings[];

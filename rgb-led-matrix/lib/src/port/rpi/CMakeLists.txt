@@ -1,7 +1,5 @@
 add_library(rpi SHARED
     gpio/gpio.cpp
-    pin-pulser/PinPulser.cpp
-    pin-pulser/PICO/PICO.cpp
     pin-mapper/external/RP2040/RP2040_Multiplexed_PMP_Pins.cpp
     pin-mapper/HUB75/HUB75_Pins.cpp
     pin-mapper/PinMapping.cpp
@@ -17,4 +15,5 @@ target_compile_definitions(rpi PUBLIC
 target_link_libraries(rpi
     pixel-mapper
     multiplex-mapper
-    framebuffer)
+    framebuffer
+    pin-pulser)
