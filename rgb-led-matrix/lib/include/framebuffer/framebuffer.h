@@ -59,6 +59,8 @@ namespace rgb_matrix {
       Canvas_ID id_;
       CFG *cfg_;
 
+      static PinMapping *hardware_mapping_;
+
       // TODO: Remove double pointer
       PixelDesignatorMap<T> **shared_mapper_;
   };

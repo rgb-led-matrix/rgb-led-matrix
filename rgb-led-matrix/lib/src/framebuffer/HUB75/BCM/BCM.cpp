@@ -3,13 +3,15 @@
 #include "port/pin-mapper/HUB75/HUB75_Pins.h"
 
 namespace rgb_matrix {
-    extern struct PinMapping *hardware_mapping_;
-
     template <typename T> BCM<T>::BCM(Canvas_ID id, CFG *cfg) 
         : Framebuffer<T>(id, cfg) {
             io = new GPIO();
             InitGPIO();
-            *pin_mappings = HUB75_pin_mappings;
+
+            if (pin_mappings != nullptr)
+                throw pin_mappings;
+
+            pin_mappings = new std::list<PinMapping>(HUB75_pin_mappings, HUB75_pin_mappings + HUB75_pin_mappings_size);
     }
     
     template <typename T> void BCM<T>::DumpToMatrix() {
@@ -22,7 +24,7 @@ namespace rgb_matrix {
     }
 
     template <typename T> void BCM<T>::InitGPIO() {
-        const struct HUB75_Pins &h =  *((struct HUB75_Pins *) hardware_mapping_);
+        const struct HUB75_Pins &h =  *((struct HUB75_Pins *) Framebuffer<T>::hardware_mapping_);
         gpio_bits_t all_used_bits = h.clk | h.lat | h.flag | h.reset;
         
         switch (h.num) {

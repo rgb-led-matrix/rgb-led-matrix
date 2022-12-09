@@ -17,7 +17,7 @@
 
 namespace rgb_matrix {
 
-  struct PinMapping *hardware_mapping_ = NULL;
+  template <typename T> PinMapping *Framebuffer<T>::hardware_mapping_ = nullptr;
 
   template <typename T> T *PixelDesignatorMap<T>::get(uint32_t location) {
     if (location >= height_ * width_)
@@ -62,25 +62,14 @@ namespace rgb_matrix {
       named_hardware = "regular";
     }
 
-    struct PinMapping *mapping = NULL;
-    for (PinMapping *it = *pin_mappings; strlen(it->name) > 0; ++it) {
+    for (std::list<PinMapping>::iterator it = pin_mappings->begin(); it != pin_mappings->end(); it++) {
       if (strcasecmp(it->name, named_hardware) == 0) {
-        mapping = it;
-        break;
+        hardware_mapping_ = &*(it);
+        return;
       }
     }
 
-    if (!mapping) {
-      fprintf(stderr, "There is no hardware mapping named '%s'.\nAvailable: ",
-              named_hardware);
-      for (PinMapping *it = *pin_mappings; it->name; ++it) {
-        if (it != *pin_mappings) fprintf(stderr, ", ");
-        fprintf(stderr, "'%s'", it->name);
-      }
-      fprintf(stderr, "\n");
-      abort();
-    }
-    hardware_mapping_ = mapping;
+    abort();
   }
 
   template <typename T> int Framebuffer<T>::width() const { return (*shared_mapper_)->width(); }

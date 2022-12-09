@@ -16,7 +16,7 @@ namespace rgb_matrix {
     const gpio_bits_t b1;
   };
 
-  struct HUB75_Pins : public PinMapping {
+  class HUB75_Pins : public PinMapping {
     public:
       HUB75_Pins(const char *name, uint32_t clk, uint32_t lat, HUB75_t p, uint32_t flag, uint32_t interrupt, uint32_t reset)
           : PinMapping(name), clk(1 << clk), lat(1 << lat), num(1), p0(p), p1(p), p2(p), flag(1 << flag), interrupt(1 << interrupt), reset(1 << reset) {}
@@ -39,7 +39,8 @@ namespace rgb_matrix {
       const uint8_t num;
   };
 
-  extern struct PinMapping HUB75_pin_mappings[];
+  extern HUB75_Pins HUB75_pin_mappings[];
+  extern const uint32_t HUB75_pin_mappings_size;
 }
 
 #endif

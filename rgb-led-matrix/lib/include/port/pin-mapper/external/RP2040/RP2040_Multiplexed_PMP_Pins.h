@@ -16,7 +16,7 @@ namespace rgb_matrix {
     gpio_bits_t wr[4];
   };
 
-  struct RP2040_Multiplexed_PMP_Pins : public PinMapping {
+  class RP2040_Multiplexed_PMP_Pins : public PinMapping {
     public:
       RP2040_Multiplexed_PMP_Pins(const char *name, uint32_t dat, wr_t wr, uint32_t reset) 
         : PinMapping(name), dat(1 << dat), wr(wr), reset(1 << reset) {}
@@ -26,7 +26,8 @@ namespace rgb_matrix {
       const gpio_bits_t reset;    // Not used (This is the actual reset used to signal USB bootloader!)
   };
 
-  extern struct PinMapping RP2040_Multiplexed_PMP_pin_mappings[];
+  extern RP2040_Multiplexed_PMP_Pins RP2040_Multiplexed_PMP_pin_mappings[];
+  extern const uint32_t RP2040_Multiplexed_PMP_pin_mappings_size;
 }
 
 #endif
