@@ -17,7 +17,7 @@
 
 namespace rgb_matrix {
 
-  template <typename T> PinMapping *Framebuffer<T>::hardware_mapping_ = nullptr;
+  template <typename T> uint32_t Framebuffer<T>::hardware_mapping_;
 
   template <typename T> T *PixelDesignatorMap<T>::get(uint32_t location) {
     if (location >= height_ * width_)
@@ -51,23 +51,18 @@ namespace rgb_matrix {
 
   template <typename T> Framebuffer<T>::Framebuffer(Canvas_ID id, CFG *cfg)
     : cfg_(cfg), id_(id) {
-    assert(hardware_mapping_ != NULL);   // Called InitHardwareMapping() ?
     assert(cfg != nullptr);
 
     *shared_mapper_ = new PixelDesignatorMap<T>(cfg->dot.cols, cfg->dot.rows);
   }
 
   template <typename T> void Framebuffer<T>::InitHardwareMapping(const char *named_hardware) {
-    if (named_hardware == NULL || *named_hardware == '\0') {
+    if (named_hardware == NULL || *named_hardware == '\0')
       named_hardware = "regular";
-    }
 
-    for (std::list<PinMapping>::iterator it = pin_mappings->begin(); it != pin_mappings->end(); it++) {
-      if (strcasecmp(it->name, named_hardware) == 0) {
-        hardware_mapping_ = &*(it);
+    for (hardware_mapping_ = 0; hardware_mapping_ < pin_mappings_size; hardware_mapping_++)
+      if (strcasecmp(pin_mappings[hardware_mapping_].name, named_hardware) == 0)
         return;
-      }
-    }
 
     abort();
   }

@@ -18,6 +18,9 @@ namespace rgb_matrix {
 
   class RP2040_Multiplexed_PMP_Pins : public PinMapping {
     public:
+      RP2040_Multiplexed_PMP_Pins(const RP2040_Multiplexed_PMP_Pins &pins) : PinMapping(pins.name), 
+        wr(pins.wr), dat(pins.dat), reset(pins.reset) {}
+
       RP2040_Multiplexed_PMP_Pins(const char *name, uint32_t dat, wr_t wr, uint32_t reset) 
         : PinMapping(name), dat(1 << dat), wr(wr), reset(1 << reset) {}
 

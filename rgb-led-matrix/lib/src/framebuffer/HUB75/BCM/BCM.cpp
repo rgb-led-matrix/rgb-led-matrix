@@ -11,7 +11,8 @@ namespace rgb_matrix {
             if (pin_mappings != nullptr)
                 throw pin_mappings;
 
-            pin_mappings = new std::list<PinMapping>(HUB75_pin_mappings, HUB75_pin_mappings + HUB75_pin_mappings_size);
+            pin_mappings = HUB75_pin_mappings;
+            pin_mappings_size = HUB75_pin_mappings_size;
     }
     
     template <typename T> void BCM<T>::DumpToMatrix() {
@@ -24,7 +25,7 @@ namespace rgb_matrix {
     }
 
     template <typename T> void BCM<T>::InitGPIO() {
-        const struct HUB75_Pins &h =  *((struct HUB75_Pins *) Framebuffer<T>::hardware_mapping_);
+        const struct HUB75_Pins h =  HUB75_pin_mappings[Framebuffer<T>::hardware_mapping_];
         gpio_bits_t all_used_bits = h.clk | h.lat | h.flag | h.reset;
         
         switch (h.num) {

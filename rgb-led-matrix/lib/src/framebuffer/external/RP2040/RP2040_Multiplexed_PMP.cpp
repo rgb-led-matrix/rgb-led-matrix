@@ -11,7 +11,8 @@ namespace rgb_matrix {
             if (pin_mappings != nullptr)
                 throw pin_mappings;
 
-            pin_mappings = new std::list<PinMapping>(RP2040_Multiplexed_PMP_pin_mappings, RP2040_Multiplexed_PMP_pin_mappings + RP2040_Multiplexed_PMP_pin_mappings_size);
+            pin_mappings = RP2040_Multiplexed_PMP_pin_mappings;
+            pin_mappings_size = RP2040_Multiplexed_PMP_pin_mappings_size;
     }
     
     template <typename T> void RP2040_Multiplexed_PMP<T>::DumpToMatrix() {
@@ -23,7 +24,7 @@ namespace rgb_matrix {
     }
 
     template <typename T> void RP2040_Multiplexed_PMP<T>::InitGPIO() {
-        const struct RP2040_Multiplexed_PMP_Pins &h =  *((struct RP2040_Multiplexed_PMP_Pins *) Framebuffer<T>::hardware_mapping_);
+        const struct RP2040_Multiplexed_PMP_Pins h =  RP2040_Multiplexed_PMP_pin_mappings[Framebuffer<T>::hardware_mapping_];
         gpio_bits_t all_used_bits = h.wr.wr[0] | h.wr.wr[1] | h.wr.wr[2] | h.wr.wr[3] | h.reset;
 
         for (int i = 0; i < 8; i++)

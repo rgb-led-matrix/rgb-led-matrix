@@ -18,14 +18,17 @@ namespace rgb_matrix {
 
   class HUB75_Pins : public PinMapping {
     public:
+      HUB75_Pins(const HUB75_Pins &pins) : PinMapping(pins.name), clk(pins.clk), lat(pins.lat), flag(pins.flag), interrupt(pins.interrupt),
+        reset(pins.reset), p0(pins.p0), p1(pins.p1), p2(pins.p2), num(pins.num) {}
+
       HUB75_Pins(const char *name, uint32_t clk, uint32_t lat, HUB75_t p, uint32_t flag, uint32_t interrupt, uint32_t reset)
-          : PinMapping(name), clk(1 << clk), lat(1 << lat), num(1), p0(p), p1(p), p2(p), flag(1 << flag), interrupt(1 << interrupt), reset(1 << reset) {}
+        : PinMapping(name), clk(1 << clk), lat(1 << lat), num(1), p0(p), p1(p), p2(p), flag(1 << flag), interrupt(1 << interrupt), reset(1 << reset) {}
 
       HUB75_Pins(const char *name, uint32_t clk, uint32_t lat, HUB75_t p0, HUB75_t p1, uint32_t flag, uint32_t interrupt, uint32_t reset)
-          : PinMapping(name), clk(1 << clk), lat(1 << lat), num(2), p0(p0), p1(p1), p2(p0), flag(1 << flag), interrupt(1 << interrupt), reset(1 << reset) {}
+        : PinMapping(name), clk(1 << clk), lat(1 << lat), num(2), p0(p0), p1(p1), p2(p0), flag(1 << flag), interrupt(1 << interrupt), reset(1 << reset) {}
 
       HUB75_Pins(const char *name, uint32_t clk, uint32_t lat, HUB75_t p0, HUB75_t p1, HUB75_t p2, uint32_t flag, uint32_t interrupt, uint32_t reset)
-          : PinMapping(name), clk(1 << clk), lat(1 << lat), num(3), p0(p0), p1(p1), p2(p2), flag(1 << flag), interrupt(1 << interrupt), reset(1 << reset) {}
+        : PinMapping(name), clk(1 << clk), lat(1 << lat), num(3), p0(p0), p1(p1), p2(p2), flag(1 << flag), interrupt(1 << interrupt), reset(1 << reset) {}
 
 
       const gpio_bits_t clk;
