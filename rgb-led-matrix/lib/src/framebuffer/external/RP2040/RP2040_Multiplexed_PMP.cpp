@@ -27,7 +27,7 @@ namespace rgb_matrix {
         const struct RP2040_Multiplexed_PMP_Pins h =  RP2040_Multiplexed_PMP_pin_mappings[Framebuffer<T>::hardware_mapping_];
         gpio_bits_t all_used_bits = h.wr.wr[0] | h.wr.wr[1] | h.wr.wr[2] | h.wr.wr[3] | h.reset;
 
-        for (int i = 0; i < 8; i++)
+        for (gpio_bits_t i = 0; i < 8; i++)
             all_used_bits |= 1 << (h.dat + i);
 
         const gpio_bits_t result = io->InitOutputs(all_used_bits);
