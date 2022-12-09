@@ -4,7 +4,7 @@
 #include "port/gpio/gpio-bits.h"
 
 namespace rgb_matrix {
-  class PinMapping {
+  struct PinMapping {
     public:
       PinMapping() {}
       PinMapping(const char *s) : name(s) {}
