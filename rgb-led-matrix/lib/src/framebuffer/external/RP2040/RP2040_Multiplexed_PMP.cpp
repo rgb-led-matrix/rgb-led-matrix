@@ -3,13 +3,16 @@
 #include "port/pin-mapper/external/RP2040/RP2040_Multiplexed_PMP_Pins.h"
 
 namespace rgb_matrix {
-    extern struct PinMapping *hardware_mapping_;
-
     template <typename T> RP2040_Multiplexed_PMP<T>::RP2040_Multiplexed_PMP(Canvas_ID id, CFG *cfg) 
         : Framebuffer<T>(id, cfg) {
             io = new GPIO();
             InitGPIO();
-            *pin_mappings = RP2040_Multiplexed_PMP_pin_mappings;
+
+            if (pin_mappings != nullptr)
+                throw pin_mappings;
+
+            pin_mappings = RP2040_Multiplexed_PMP_pin_mappings;
+            pin_mappings_size = RP2040_Multiplexed_PMP_pin_mappings_size;
     }
     
     template <typename T> void RP2040_Multiplexed_PMP<T>::DumpToMatrix() {
@@ -21,10 +24,10 @@ namespace rgb_matrix {
     }
 
     template <typename T> void RP2040_Multiplexed_PMP<T>::InitGPIO() {
-        const struct RP2040_Multiplexed_PMP_Pins &h =  *((struct RP2040_Multiplexed_PMP_Pins *) hardware_mapping_);
-        gpio_bits_t all_used_bits = h.cs.cs[0] | h.cs.cs[1] | h.cs.cs[2] | h.cs.cs[3] | h.clk;
-        
-        for (int i = 0; i < 8; i++)
+        const struct RP2040_Multiplexed_PMP_Pins h =  RP2040_Multiplexed_PMP_pin_mappings[Framebuffer<T>::hardware_mapping_];
+        gpio_bits_t all_used_bits = h.wr.wr[0] | h.wr.wr[1] | h.wr.wr[2] | h.wr.wr[3] | h.reset;
+
+        for (gpio_bits_t i = 0; i < 8; i++)
             all_used_bits |= 1 << (h.dat + i);
 
         const gpio_bits_t result = io->InitOutputs(all_used_bits);

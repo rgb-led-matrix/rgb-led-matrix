@@ -21,6 +21,6 @@ namespace rgb_matrix {
 
       Options _options;
       static RGBMatrix *_ptr;
-    };
+  };
 }
 #endif

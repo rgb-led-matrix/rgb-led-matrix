@@ -17,7 +17,7 @@
 
 namespace rgb_matrix {
 
-  struct PinMapping *hardware_mapping_ = NULL;
+  template <typename T> uint32_t Framebuffer<T>::hardware_mapping_;
 
   template <typename T> T *PixelDesignatorMap<T>::get(uint32_t location) {
     if (location >= height_ * width_)
@@ -51,36 +51,20 @@ namespace rgb_matrix {
 
   template <typename T> Framebuffer<T>::Framebuffer(Canvas_ID id, CFG *cfg)
     : cfg_(cfg), id_(id) {
-    assert(hardware_mapping_ != NULL);   // Called InitHardwareMapping() ?
     assert(cfg != nullptr);
 
     *shared_mapper_ = new PixelDesignatorMap<T>(cfg->dot.cols, cfg->dot.rows);
   }
 
   template <typename T> void Framebuffer<T>::InitHardwareMapping(const char *named_hardware) {
-    if (named_hardware == NULL || *named_hardware == '\0') {
+    if (named_hardware == NULL || *named_hardware == '\0')
       named_hardware = "regular";
-    }
 
-    struct PinMapping *mapping = NULL;
-    for (PinMapping *it = *pin_mappings; strlen(it->name) > 0; ++it) {
-      if (strcasecmp(it->name, named_hardware) == 0) {
-        mapping = it;
-        break;
-      }
-    }
+    for (hardware_mapping_ = 0; hardware_mapping_ < pin_mappings_size; hardware_mapping_++)
+      if (strcasecmp(pin_mappings[hardware_mapping_].name, named_hardware) == 0)
+        return;
 
-    if (!mapping) {
-      fprintf(stderr, "There is no hardware mapping named '%s'.\nAvailable: ",
-              named_hardware);
-      for (PinMapping *it = *pin_mappings; it->name; ++it) {
-        if (it != *pin_mappings) fprintf(stderr, ", ");
-        fprintf(stderr, "'%s'", it->name);
-      }
-      fprintf(stderr, "\n");
-      abort();
-    }
-    hardware_mapping_ = mapping;
+    abort();
   }
 
   template <typename T> int Framebuffer<T>::width() const { return (*shared_mapper_)->width(); }

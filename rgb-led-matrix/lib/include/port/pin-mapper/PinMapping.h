@@ -6,12 +6,14 @@
 namespace rgb_matrix {
   struct PinMapping {
     public:
+      PinMapping() {}
       PinMapping(const char *s) : name(s) {}
 
       const char *name;
   };
 
-  extern struct PinMapping **pin_mappings;
+  extern PinMapping *pin_mappings;
+  extern uint32_t pin_mappings_size;
 }
 
 #endif
