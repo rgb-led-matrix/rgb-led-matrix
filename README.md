@@ -19,7 +19,7 @@ bash build.sh
 #### rgb-led-matrix (Required)
 ```bash
 bash scripts/pi_cross_compile_setup.sh  # Only the first time
-bash build.sh # TODO: Make build Rock Pi S only
+bash build.sh # TODO: Make build Raspberry Pi only
 ```
 #### rgb-led-matrix-rp2040-module (Required for HUB75, unless using some other rgb-led-matrix-module. Requires multicore. (Pi 2, Pi 3, Pi 4, Pi Zero 2, etc.))
 Edit configuration and program:
