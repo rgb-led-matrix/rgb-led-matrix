@@ -4,3 +4,6 @@
 [submodule "external/RP2040/LED_Matrix_RP2040"]
 	path = external/RP2040/LED_Matrix_RP2040
 	url = https://github.com/rgb-led-matrix/LED_Matrix_RP2040.git
+[submodule "modules/rock-pi-s/rock_pi_s_gpiomem"]
+	path = modules/rock-pi-s/rock_pi_s_gpiomem
+	url = https://github.com/rgb-led-matrix/rock_pi_s_gpiomem.git
