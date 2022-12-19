@@ -9,10 +9,77 @@ Work in progress. Code is licensed under GPL 2. The original code base was https
 There is no warranty for this. Work is free to use according to the [GPL 2 license](COPYING). I am not responsible or liable for any damages or issues as a result of this in any way. User is responsible for all laws and regulations as required. Work is AS-IS and it is the respiblity of any user to address any shortages discovered in this code base before using it.
 
 ## Building
-Note this is a hack for now
+Note this is a hack for now. Currently it builds both the Raspberry Pi and Rock Pi S.
 
 ```bash
 bash build.sh
+```
+
+### Raspberry Pi (Requires /dev/gpiomem, available by default on Raspberry Pi Kernel)
+#### rgb-led-matrix (Required)
+```bash
+bash scripts/pi_cross_compile_setup.sh  # Only the first time
+bash build.sh # TODO: Make build Rock Pi S only
+```
+#### rgb-led-matrix-rp2040-module (Required for HUB75, unless using some other rgb-led-matrix-module. Requires multicore. (Pi 2, Pi 3, Pi 4, Pi Zero 2, etc.))
+Edit configuration and program:
+```bash
+cd firmware/PICO/rgb-led-matrix-rp2040-module
+vim RP2040_Module/config.h
+bash setup.sh   # Only the first time
+bash build.sh
+# TODO: Call bootloader script
+cd ../../..
+```
+
+#### LED_Matrix_RP2040 (Required for external/RP2040. May want multicore, not required. (Pi 2, Pi 3, Pi 4, Pi Zero 2, etc.))
+Edit configuration and program:
+```bash
+cd external/RP2040/LED_Matrix_RP2040
+git submodule update --init
+vim ../cfg.xml
+groovy build.groovy -c ../cfg.xml
+./LED_Matrix/build/build.sh
+# TODO: Call bootloader script
+cd ../../../
+```
+
+### Rock Pi S
+#### /dev/gpiomem kernel module (Required)
+Cross compilation recommended, note this currently downloads and builds the linux kernel.
+```bash
+cd modules/rock-pi-s/rock_pi_s_gpiomem
+bash setup.sh   # Only the first time
+bash build_cross.sh
+sudo insmod gpiomem.ko
+cd ../../..
+```
+#### rgb-led-matrix (Required)
+```bash
+bash scripts/rock_pi_s_cross_compile_setup.sh  # Only the first time
+bash build.sh # TODO: Make build Rock Pi S only
+```
+#### rgb-led-matrix-rp2040-module (Required for HUB75, unless using some other rgb-led-matrix-module)
+Edit configuration and program:
+```bash
+cd firmware/PICO/rgb-led-matrix-rp2040-module
+vim RP2040_Module/config.h
+bash setup.sh   # Only the first time
+bash build.sh
+# TODO: Call bootloader script
+cd ../../..
+```
+
+#### LED_Matrix_RP2040 (Required for external/RP2040)
+Edit configuration and program:
+```bash
+cd external/RP2040/LED_Matrix_RP2040
+git submodule update --init
+vim ../cfg.xml
+groovy build.groovy -c ../cfg.xml
+./LED_Matrix/build/build.sh
+# TODO: Call bootloader script
+cd ../../../
 ```
 
 ## Layout
