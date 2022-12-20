@@ -54,6 +54,41 @@ bash build_cross.sh
 sudo insmod gpiomem.ko
 cd ../../..
 ```
+Note if you need to use different kernel version or kernel configuration. You will need to change the setup script.
+
+To change the kernel version:
+```bash
+cd kernel
+git checkout <branch/tag>
+
+# If cross compiling, export these:
+export ARCH=arm64
+export CROSS_COMPILE=$PWD/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
+
+make modules_prepare
+cd ..
+make
+```
+
+To change the kernel configuration:
+```bash
+cd kernel
+
+# If cross compiling, export these:
+export ARCH=arm64
+export CROSS_COMPILE=$PWD/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
+
+# If you do not have default configuration
+make menuconfig
+
+# If you do have default configuration
+make <default_config>
+
+make modules_prepare
+cd ..
+make
+```
+
 #### rgb-led-matrix (Required)
 ```bash
 bash scripts/rock_pi_s_cross_compile_setup.sh  # Only the first time
