@@ -123,11 +123,9 @@ There are six sections at this directory level. Look at lower levels for more de
 ### Hardware
 This is a section for hardware adapter modules. Currently there are two classes.
 
-#### HUB75
-These are for the HUB75 framebuffer implementations. These are bit bang notions and do not use external. These may require a kernel module in modules, depending on platform.
+HUB75 - These are for the HUB75 framebuffer implementations. These are bit bang notions and do not use external. These may require a kernel module in modules, depending on platform.
 
-#### external
-These are for the external framebuffer implementations. See external section. Currently the only subclass is RP2040, which is based on LED_Matrix_RP2040.
+external - These are for the external framebuffer implementations. See external section. Currently the only subclass is RP2040, which is based on LED_Matrix_RP2040.
 
 ### external
 This is a section for hardware offload modules used in rgb-led-matrix/lib/src/framebuffer. Some external modules may have better features.
