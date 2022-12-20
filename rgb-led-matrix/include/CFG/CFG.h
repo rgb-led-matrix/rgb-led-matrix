@@ -17,7 +17,6 @@ namespace rgb_matrix {
     protected:
       virtual bool isValid() = 0; 
 
-      friend struct Options;
       Canvas_ID id_;
   };
 }

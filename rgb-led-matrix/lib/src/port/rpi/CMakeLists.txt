@@ -17,7 +17,8 @@ target_link_libraries(rpi
     pixel-mapper
     multiplex-mapper
     framebuffer
-    pin-pulser)
+    pin-pulser
+    worker)
 
 add_executable(rpi-helper
     helper.cpp

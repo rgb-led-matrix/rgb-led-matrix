@@ -17,7 +17,8 @@ target_link_libraries(rock_pi_s
     pixel-mapper
     multiplex-mapper
     framebuffer
-    pin-pulser)
+    pin-pulser
+    worker)
 
 add_executable(rock_pi_s-helper
     helper.cpp

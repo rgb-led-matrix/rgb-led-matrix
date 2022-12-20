@@ -137,9 +137,9 @@ namespace rgb_matrix {
   }
 
   template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
-    switch (options.id) {
+    switch (options.cfg->get_id()) {
       case Canvas_ID::RP2040_Multiplexed_PMP_ID:
-        Framebuffer<PixelDesignator> *buf = new RP2040_Multiplexed_PMP<PixelDesignator>(options.id, options.cfg);
+        Framebuffer<PixelDesignator> *buf = new RP2040_Multiplexed_PMP<PixelDesignator>(options.cfg->get_id(), options.cfg);
         // TODO: Fix nullptr
         buf->InitSharedMapper(nullptr, multiplex_mapper, options.pixel_mapper_config);
         return buf;
@@ -149,9 +149,9 @@ namespace rgb_matrix {
   }
 
   template <> Framebuffer<PixelDesignator_HUB75> *Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
-    switch (options.id) {
+    switch (options.cfg->get_id()) {
       case Canvas_ID::BCM_ID:
-        Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.id, options.cfg);
+        Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.cfg->get_id(), options.cfg);
         buf->InitSharedMapper(PixelMapper_HUB75_LUT::CreateLUT(), multiplex_mapper, options.pixel_mapper_config);
         return buf;
     }

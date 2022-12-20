@@ -16,6 +16,7 @@
 #include "CFG/CFG.h"
 #include "framecanvas.h"
 #include "framebuffer/framebuffer.h"
+#include "worker/UpdateThread.h"
 
 namespace rgb_matrix {
   RGBMatrix *RGBMatrix::_ptr = nullptr;
@@ -26,15 +27,11 @@ namespace rgb_matrix {
     // Do nothing
   }
 
-  Options::Options(Canvas_ID canvas_id, CFG *config) :
+  Options::Options(CFG *config) :
     hardware_mapping("regular"),
     cfg(config),
-    id(canvas_id),
     multiplexing(0),
-    pixel_mapper_config(NULL)
-  {
-    assert(canvas_id == config->id_);
-  }
+    pixel_mapper_config(NULL) {}
 
   DOTCorrect::DOTCorrect(int r, int c) : rows(r), cols(c) {
     table_ = new float[3 * rows * cols];
@@ -75,12 +72,14 @@ namespace rgb_matrix {
 
   RGBMatrix::RGBMatrix(Options o) :_options(o) {
     Framebuffer<PixelDesignator>::InitHardwareMapping(_options.hardware_mapping);
+    UpdateThread::CreateThread(_options.cfg);
   }
 
   RGBMatrix::~RGBMatrix() {
     if (_ptr != nullptr)
       delete _ptr;
     _ptr = nullptr;
+    UpdateThread::DestroyThread();
   }
 
   RGBMatrix *RGBMatrix::CreateFromOptions(Options &options) {
@@ -104,7 +103,7 @@ namespace rgb_matrix {
     if (multiplex_mapper)
       multiplex_mapper->EditColsRows(&_options.cfg->dot.cols, &_options.cfg->dot.rows);
 
-    switch (_options.id) {
+    switch (_options.cfg->get_id()) {
       case Canvas_ID::RP2040_Multiplexed_PMP_ID:
         return new FrameCanvas<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(_options, multiplex_mapper));
       case Canvas_ID::BCM_ID:

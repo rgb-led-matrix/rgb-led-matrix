@@ -36,9 +36,8 @@ namespace rgb_matrix {
     };
 
     struct Options {
-        Options(Canvas_ID id, CFG *cfg);
+        Options(CFG *cfg);
 
-        Canvas_ID id;
         CFG *cfg;
 
         int multiplexing;
