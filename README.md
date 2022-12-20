@@ -118,10 +118,25 @@ cd ../../../
 ```
 
 ## Layout
-There are three sections at this directory level. Look at lower levels for more details about each section.
+There are six sections at this directory level. Look at lower levels for more details about each section.
+
+### Hardware
+This is a section for hardware adapter modules. Currently there are two classes.
+
+#### HUB75
+These are for the HUB75 framebuffer implementations. These are bit bang notions and do not use external. These may require a kernel module in modules, depending on platform.
+
+#### external
+These are for the external framebuffer implementations. See external section. Currently the only subclass is RP2040, which is based on LED_Matrix_RP2040.
 
 ### external
 This is a section for hardware offload modules used in rgb-led-matrix/lib/src/framebuffer. Some external modules may have better features.
+
+### firmware
+This section is for the pin-pulser implementation, which has been moved to an external microcontroller. This was done to improve performance and portability. Firmware submodules used here are derived from rgb-led-matrix-module. Currently the only implementation is rgb-led-matrix-rp2040-module using the RPi PICO module.
+
+### modules
+This section is for kernel modules used by different platforms. These kernel modules provide things like user space access to GPIO registers with standard priviledges. Currently the only implementation is rock_pi_s_gpiomem which creates /dev/mem on Rock Pi S using 4.4 Linux Kernel. However this logic should be portable to other platforms and kernel versions, using Linux.
 
 ### rgb-led-matrix
 This is the main library source directory. The top level library includes are in rgb-led-matrix/include while the internal source is divided into rgb-led-matrix/lib which has an include and src folder. Applications do not need to worry about the internal logic, just the top level includes and the libraries.
