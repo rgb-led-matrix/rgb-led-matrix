@@ -14,6 +14,10 @@ namespace rgb_matrix {
             pin_mappings = RP2040_Multiplexed_PMP_pin_mappings;
             pin_mappings_size = RP2040_Multiplexed_PMP_pin_mappings_size;
     }
+
+    template<typename T> RP2040_Multiplexed_PMP<T>::~RP2040_Multiplexed_PMP() {
+        delete io;      // TODO: Look into GPIO, can we delete this?
+    }
     
     template <typename T> void RP2040_Multiplexed_PMP<T>::DumpToMatrix() {
         // TODO: Send buffer to RP2040 external hardware module
