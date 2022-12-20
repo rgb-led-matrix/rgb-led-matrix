@@ -44,13 +44,12 @@ namespace rgb_matrix {
 
   // Don't use this!    
   template <typename T> Framebuffer<T>::Framebuffer()
-    : cfg_(nullptr), id_(Canvas_ID::BCM_ID),
-      shared_mapper_(NULL) {
+    : cfg_(nullptr), shared_mapper_(NULL) {
     assert(shared_mapper_ != NULL);
   }
 
-  template <typename T> Framebuffer<T>::Framebuffer(Canvas_ID id, CFG *cfg)
-    : cfg_(cfg), id_(id) {
+  template <typename T> Framebuffer<T>::Framebuffer(CFG *cfg)
+    : cfg_(cfg) {
     assert(cfg != nullptr);
 
     *shared_mapper_ = new PixelDesignatorMap<T>(cfg->dot.cols, cfg->dot.rows);
@@ -139,7 +138,7 @@ namespace rgb_matrix {
   template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
     switch (options.cfg->get_id()) {
       case Canvas_ID::RP2040_Multiplexed_PMP_ID:
-        Framebuffer<PixelDesignator> *buf = new RP2040_Multiplexed_PMP<PixelDesignator>(options.cfg->get_id(), options.cfg);
+        Framebuffer<PixelDesignator> *buf = new RP2040_Multiplexed_PMP<PixelDesignator>(options.cfg);
         // TODO: Fix nullptr
         buf->InitSharedMapper(nullptr, multiplex_mapper, options.pixel_mapper_config);
         return buf;
@@ -151,7 +150,7 @@ namespace rgb_matrix {
   template <> Framebuffer<PixelDesignator_HUB75> *Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
     switch (options.cfg->get_id()) {
       case Canvas_ID::BCM_ID:
-        Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.cfg->get_id(), options.cfg);
+        Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.cfg);
         buf->InitSharedMapper(PixelMapper_HUB75_LUT::CreateLUT(), multiplex_mapper, options.pixel_mapper_config);
         return buf;
     }
@@ -168,12 +167,12 @@ namespace rgb_matrix {
   template <typename T> void Framebuffer<T>::Serialize(const char **data, size_t *len, Canvas_ID *id) {
     *data = reinterpret_cast<const char*>((*shared_mapper_)->buffer());
     *len = sizeof(T) * (*shared_mapper_)->height() * (*shared_mapper_)->width();
-    *id = id_;
+    *id = cfg_->get_id();
   }
 
   // TODO: Fix this
   template <typename T> bool Framebuffer<T>::Deserialize(const char *data, size_t len, Canvas_ID id) {
-    if (len != (sizeof(T) * (*shared_mapper_)->height() * (*shared_mapper_)->width()) || id != id_) 
+    if (len != (sizeof(T) * (*shared_mapper_)->height() * (*shared_mapper_)->width()) || id != cfg_->get_id()) 
       return false;
     memcpy((*shared_mapper_)->buffer(), data, len);
     return true;

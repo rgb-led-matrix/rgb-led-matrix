@@ -1,11 +1,10 @@
 #include <assert.h>
 #include "framebuffer/HUB75/BCM/BCM.h"
 #include "port/pin-mapper/HUB75/HUB75_Pins.h"
-#include "CFG/BCM_CFG.h"
 
 namespace rgb_matrix {
-    template <typename T> BCM<T>::BCM(Canvas_ID id, CFG *cfg) 
-        : Framebuffer<T>(id, cfg) {
+    template <typename T> BCM<T>::BCM(CFG *cfg) 
+        : Framebuffer<T>(cfg) {
             io = new GPIO();
             InitGPIO();
 
@@ -14,19 +13,10 @@ namespace rgb_matrix {
 
             pin_mappings = HUB75_pin_mappings;
             pin_mappings_size = HUB75_pin_mappings_size;
-
-            BCM_CFG *cfg_ptr = nullptr;
-            if (cfg->get_id() == Canvas_ID::BCM_ID)
-                cfg_ptr = static_cast<BCM_CFG *>(cfg);
-            else
-                throw cfg;
-
-            //thread = new BCM_Thread(cfg_ptr->thread_priority, cfg_ptr->thread_affinity);
     }
 
     template<typename T> BCM<T>::~BCM() {
         delete io;      // TODO: Look into GPIO, can we delete this?
-        delete thread;
     }
     
     template <typename T> void BCM<T>::DumpToMatrix() {
