@@ -8,6 +8,9 @@ namespace rgb_matrix {
     public:
       BCM_CFG(int rows, int cols) : CFG(rows, cols) { id_ = Canvas_ID::BCM_ID;  }
 
+      int thread_priority;
+      uint32_t thread_affinity;
+
       int pwm_bits_;
       int brightness_;
       int chain_;
