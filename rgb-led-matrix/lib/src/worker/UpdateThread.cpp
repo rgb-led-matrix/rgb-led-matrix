@@ -6,7 +6,7 @@ namespace rgb_matrix {
 
     void UpdateThread::CreateThread(CFG *cfg) {
         switch (cfg->get_id()) {
-            case Canvas_ID::BCM_ID:
+            case Canvas_ID::HUB75_BCM_ID:
                 ptr = new BCM_Thread(cfg);
                 break;
             case Canvas_ID::RP2040_Multiplexed_PMP_ID:

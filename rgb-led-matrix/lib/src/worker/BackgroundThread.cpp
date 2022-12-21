@@ -6,7 +6,7 @@ namespace rgb_matrix {
 
     void BackgroundThread::CreateThread(CFG *cfg, PinMapping *pins) {
         switch (cfg->get_id()) {
-            case Canvas_ID::BCM_ID:
+            case Canvas_ID::HUB75_BCM_ID:
                 ptr = OE_Thread<int>::CreateThread(cfg, static_cast<HUB75_Pins *>(pins));
                 break;
             case Canvas_ID::RP2040_Multiplexed_PMP_ID:

@@ -1,12 +1,12 @@
 #include "framebuffer/HUB75/BCM/BCM_Thread.h"
-#include "CFG/BCM_CFG.h"
+#include "CFG/HUB75_BCM_CFG.h"
 
 namespace rgb_matrix {
     BCM_Thread::BCM_Thread(CFG *cfg) {
 
-        BCM_CFG *cfg_ptr = nullptr;
-        if (cfg->get_id() == Canvas_ID::BCM_ID)
-            cfg_ptr = static_cast<BCM_CFG *>(cfg);
+        HUB75_BCM_CFG *cfg_ptr = nullptr;
+        if (cfg->get_id() == Canvas_ID::HUB75_BCM_ID)
+            cfg_ptr = static_cast<HUB75_BCM_CFG *>(cfg);
         else
             throw cfg;
 
