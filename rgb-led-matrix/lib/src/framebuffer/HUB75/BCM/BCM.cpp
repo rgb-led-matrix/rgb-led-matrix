@@ -22,7 +22,7 @@ namespace rgb_matrix {
     
     template <typename T> void BCM<T>::DumpToMatrix() {
         // TODO: Send buffer to GPIO
-        //  Create thread class in port API
+        //  Implement in BCM_Thread::Run
     }
 
     template <typename T> inline void  BCM<T>::MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
