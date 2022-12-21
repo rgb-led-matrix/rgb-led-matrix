@@ -9,7 +9,7 @@ namespace rgb_matrix {
 // For now, everything is initialized as output.
 class GPIO {
 public:
-  GPIO();
+  static GPIO *getGPIO();
 
   // Initialize before use. Returns 'true' if successful, 'false' otherwise
   // (e.g. due to a permission problem).
@@ -47,6 +47,11 @@ public:
 
   inline gpio_bits_t Read() const { return ReadRegisters() & input_bits_; }
 
+protected:
+  GPIO();
+
+  static GPIO *io_;
+
 private:
   inline gpio_bits_t ReadRegisters() const {
     return (static_cast<gpio_bits_t>(*gpio_read_bits_low_));
@@ -60,7 +65,6 @@ private:
     *gpio_clr_bits_low_ = static_cast<uint32_t>(value & 0xFFFFFFFF);
   }
 
-private:
   gpio_bits_t output_bits_;
   gpio_bits_t input_bits_;
   gpio_bits_t reserved_bits_;

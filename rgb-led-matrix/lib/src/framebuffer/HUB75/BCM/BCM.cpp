@@ -6,18 +6,20 @@
 namespace rgb_matrix {
     template <typename T> BCM<T>::BCM(CFG *cfg) 
         : Framebuffer<T>(cfg) {
-            io = new GPIO();
-            InitGPIO();
+            io = GPIO::getGPIO();
 
-            if (pin_mappings != nullptr)
-                throw pin_mappings;
+            if (!Framebuffer<T>::initIO) {
+                if (pin_mappings != nullptr)
+                    throw pin_mappings;
 
-            pin_mappings = HUB75_pin_mappings;
-            pin_mappings_size = HUB75_pin_mappings_size;
-
-            // TODO: Call this somehow?
-            //Framebuffer<T>::InitHardwareMapping(_options.hardware_mapping);
-            BackgroundThread::CreateThread(cfg, &HUB75_pin_mappings[Framebuffer<T>::hardware_mapping_]);
+                pin_mappings = HUB75_pin_mappings;
+                pin_mappings_size = HUB75_pin_mappings_size;
+                
+                InitGPIO();
+                Framebuffer<T>::InitHardwareMapping();
+                BackgroundThread::CreateThread(cfg, &HUB75_pin_mappings[Framebuffer<T>::hardware_mapping_]);
+                Framebuffer<T>::initIO = true;
+            }
     }
     
     template <typename T> void BCM<T>::DumpToMatrix() {

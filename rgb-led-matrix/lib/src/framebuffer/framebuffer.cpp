@@ -18,6 +18,8 @@
 namespace rgb_matrix {
 
   template <typename T> uint32_t Framebuffer<T>::hardware_mapping_;
+  template <typename T> const char *Framebuffer<T>::named_hardware_;
+  template <typename T> bool Framebuffer<T>::initIO = false;
 
   template <typename T> T *PixelDesignatorMap<T>::get(uint32_t location) {
     if (location >= height_ * width_)
@@ -55,12 +57,12 @@ namespace rgb_matrix {
     *shared_mapper_ = new PixelDesignatorMap<T>(cfg->dot.cols, cfg->dot.rows);
   }
 
-  template <typename T> void Framebuffer<T>::InitHardwareMapping(const char *named_hardware) {
-    if (named_hardware == NULL || *named_hardware == '\0')
-      named_hardware = "regular";
+  template <typename T> void Framebuffer<T>::InitHardwareMapping() {
+    if (named_hardware_ == NULL || *named_hardware_ == '\0')
+      named_hardware_ = "regular";
 
     for (hardware_mapping_ = 0; hardware_mapping_ < pin_mappings_size; hardware_mapping_++)
-      if (strcasecmp(pin_mappings[hardware_mapping_].name, named_hardware) == 0)
+      if (strcasecmp(pin_mappings[hardware_mapping_].name, named_hardware_) == 0)
         return;
 
     abort();
@@ -136,6 +138,8 @@ namespace rgb_matrix {
   }
 
   template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
+    named_hardware_ = options.hardware_mapping;
+
     switch (options.cfg->get_id()) {
       case Canvas_ID::RP2040_Multiplexed_PMP_ID:
         Framebuffer<PixelDesignator> *buf = new RP2040_Multiplexed_PMP<PixelDesignator>(options.cfg);
@@ -148,6 +152,8 @@ namespace rgb_matrix {
   }
 
   template <> Framebuffer<PixelDesignator_HUB75> *Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
+    named_hardware_ = options.hardware_mapping;
+
     switch (options.cfg->get_id()) {
       case Canvas_ID::HUB75_BCM_ID:
         Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.cfg);

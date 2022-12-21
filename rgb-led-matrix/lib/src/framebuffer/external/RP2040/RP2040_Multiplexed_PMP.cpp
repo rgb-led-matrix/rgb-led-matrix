@@ -1,22 +1,25 @@
 #include <assert.h>
 #include "framebuffer/external/RP2040/RP2040_Multiplexed_PMP.h"
 #include "port/pin-mapper/external/RP2040/RP2040_Multiplexed_PMP_Pins.h"
+#include "worker/BackgroundThread.h"
 
 namespace rgb_matrix {
     template <typename T> RP2040_Multiplexed_PMP<T>::RP2040_Multiplexed_PMP(CFG *cfg) 
         : Framebuffer<T>(cfg) {
-            io = new GPIO();
-            InitGPIO();
+            io = GPIO::getGPIO();          
 
-            if (pin_mappings != nullptr)
-                throw pin_mappings;
+            if (!Framebuffer<T>::initIO) {
+                if (pin_mappings != nullptr)
+                    throw pin_mappings;
 
-            pin_mappings = RP2040_Multiplexed_PMP_pin_mappings;
-            pin_mappings_size = RP2040_Multiplexed_PMP_pin_mappings_size;
-    }
-
-    template<typename T> RP2040_Multiplexed_PMP<T>::~RP2040_Multiplexed_PMP() {
-        delete io;      // TODO: Look into GPIO, can we delete this?
+                pin_mappings = RP2040_Multiplexed_PMP_pin_mappings;
+                pin_mappings_size = RP2040_Multiplexed_PMP_pin_mappings_size;
+                
+                InitGPIO();
+                Framebuffer<T>::InitHardwareMapping();
+                BackgroundThread::CreateThread(cfg, &RP2040_Multiplexed_PMP_pin_mappings[Framebuffer<T>::hardware_mapping_]);
+                Framebuffer<T>::initIO = true;
+            }
     }
     
     template <typename T> void RP2040_Multiplexed_PMP<T>::DumpToMatrix() {

@@ -38,7 +38,16 @@ static volatile uint32_t *s_GPIO_registers = NULL;
 
 namespace rgb_matrix {
 
+GPIO *GPIO::io_ = nullptr;
+
 #define GPIO_BIT(x) (1ull << x)
+
+GPIO *GPIO::getGPIO() {
+  if (io_ == nullptr)
+    io_ = new GPIO();
+  return io_;
+}
+
 
 GPIO::GPIO() : output_bits_(0), input_bits_(0), reserved_bits_(0) {
 }

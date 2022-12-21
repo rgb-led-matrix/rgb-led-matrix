@@ -3,7 +3,7 @@
 
 namespace rgb_matrix {
     template <typename T> OE_Thread<T>::OE_Thread(CFG *cfg, HUB75_Pins *pins) : pins_(pins) {
-        io_ = new GPIO(); // TODO: Convert to singleton
+        io_ = GPIO::getGPIO();
         
         switch (cfg->get_id()) {
             case Canvas_ID::HUB75_BCM_ID:

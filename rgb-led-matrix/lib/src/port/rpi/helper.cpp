@@ -6,7 +6,7 @@ using namespace rgb_matrix;
 
 int main(int argc, char **argv) {
     if (argc >= 2) {
-        GPIO *io = new GPIO();
+        GPIO *io = GPIO::getGPIO();
         gpio_bits_t pin = 1 << std::stoi(argv[1]);
 
         io->Init();
