@@ -138,3 +138,19 @@ This is the main library source directory. The top level library includes are in
 
 ### scripts
 This is a folder containing helper scripts for setup and other things. These will be referenced by other sections.
+
+## Porting
+
+### Adding new platform
+Implement the implementations required under port folder. You have a wide range of freedom here. However this must be able to run without special permissions. This will likely require kernel modules found in top level modules folder as submodules. Any require firmware should be added to a top level firmware folder as a submodule.
+
+### Adding new pin-mapper IO interface
+There are two types for consideration. Internal and external. Internal is generally from GPIO. External have folders containing submdoules in top level external folder.
+
+Canvas_ID is used to pick out the implementations. Names should bear out the implementation group. For example HUB75_blah, would reference an internal implementation named HUB75. These will have their own notion of PixelDesignator, pin-mapping, CFG, framebuffers, etc. While RP2040_blah, would reference an external implementation named RP2040. These will have their own notion of PixelDesignator, pin-mapping, CFG, framebuffers, etc. In both cases blah names a framebuffer and CFG, while the rest is shared.
+
+### Adding hardware adapters
+Per platform and pin-mapper IO interface there are folders for storing hardware adapters.
+
+### Adding toolcahins, build automation, setup, etc.
+A general collection of scripts can be found in the top level scripts folder.
