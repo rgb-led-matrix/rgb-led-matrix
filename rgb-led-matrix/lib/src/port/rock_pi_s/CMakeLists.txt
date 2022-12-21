@@ -3,6 +3,8 @@ add_library(rock_pi_s SHARED
     pin-mapper/external/RP2040/RP2040_Multiplexed_PMP_Pins.cpp
     pin-mapper/HUB75/HUB75_Pins.cpp
     pin-mapper/PinMapping.cpp
+    thread/Thread.cpp
+    pin-pulser/HUB75/OE_Thread.cpp
     ../../led-matrix.cpp
     ../../framecanvas.cpp)
 
@@ -16,7 +18,8 @@ target_link_libraries(rock_pi_s
     pixel-mapper
     multiplex-mapper
     framebuffer
-    pin-pulser)
+    pin-pulser
+    worker)
 
 add_executable(rock_pi_s-helper
     helper.cpp

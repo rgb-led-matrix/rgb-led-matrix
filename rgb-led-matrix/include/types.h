@@ -6,7 +6,7 @@ namespace rgb_matrix {
 
     enum Canvas_ID {
         RP2040_Multiplexed_PMP_ID = 0,
-        BCM_ID = 1
+        HUB75_BCM_ID = 1
     };
 
     struct GAMMA {
@@ -36,9 +36,8 @@ namespace rgb_matrix {
     };
 
     struct Options {
-        Options(Canvas_ID id, CFG *cfg);
+        Options(CFG *cfg);
 
-        Canvas_ID id;
         CFG *cfg;
 
         int multiplexing;

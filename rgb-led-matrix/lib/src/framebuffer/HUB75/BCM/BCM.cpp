@@ -1,10 +1,11 @@
 #include <assert.h>
 #include "framebuffer/HUB75/BCM/BCM.h"
 #include "port/pin-mapper/HUB75/HUB75_Pins.h"
+#include "worker/BackgroundThread.h"
 
 namespace rgb_matrix {
-    template <typename T> BCM<T>::BCM(Canvas_ID id, CFG *cfg) 
-        : Framebuffer<T>(id, cfg) {
+    template <typename T> BCM<T>::BCM(CFG *cfg) 
+        : Framebuffer<T>(cfg) {
             io = new GPIO();
             InitGPIO();
 
@@ -13,11 +14,15 @@ namespace rgb_matrix {
 
             pin_mappings = HUB75_pin_mappings;
             pin_mappings_size = HUB75_pin_mappings_size;
+
+            // TODO: Call this somehow?
+            //Framebuffer<T>::InitHardwareMapping(_options.hardware_mapping);
+            BackgroundThread::CreateThread(cfg, &HUB75_pin_mappings[Framebuffer<T>::hardware_mapping_]);
     }
     
     template <typename T> void BCM<T>::DumpToMatrix() {
         // TODO: Send buffer to GPIO
-        //  Create thread class in port API
+        //  Implement in BCM_Thread::Run
     }
 
     template <typename T> inline void  BCM<T>::MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {

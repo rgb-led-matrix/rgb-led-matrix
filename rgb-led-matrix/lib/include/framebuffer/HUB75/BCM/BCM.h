@@ -3,11 +3,13 @@
 
 #include "framebuffer/framebuffer.h"
 #include "port/gpio/gpio.h"
+#include "port/thread/Thread.h"
 
 namespace rgb_matrix {
     template <typename T> class BCM : public Framebuffer<T> {
         public:
-            BCM(Canvas_ID id, CFG *cfg);
+            BCM(CFG *cfg);
+            ~BCM() {}
 
             virtual void DumpToMatrix();
 

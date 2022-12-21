@@ -3,8 +3,8 @@
 #include "port/pin-mapper/external/RP2040/RP2040_Multiplexed_PMP_Pins.h"
 
 namespace rgb_matrix {
-    template <typename T> RP2040_Multiplexed_PMP<T>::RP2040_Multiplexed_PMP(Canvas_ID id, CFG *cfg) 
-        : Framebuffer<T>(id, cfg) {
+    template <typename T> RP2040_Multiplexed_PMP<T>::RP2040_Multiplexed_PMP(CFG *cfg) 
+        : Framebuffer<T>(cfg) {
             io = new GPIO();
             InitGPIO();
 
@@ -13,6 +13,10 @@ namespace rgb_matrix {
 
             pin_mappings = RP2040_Multiplexed_PMP_pin_mappings;
             pin_mappings_size = RP2040_Multiplexed_PMP_pin_mappings_size;
+    }
+
+    template<typename T> RP2040_Multiplexed_PMP<T>::~RP2040_Multiplexed_PMP() {
+        delete io;      // TODO: Look into GPIO, can we delete this?
     }
     
     template <typename T> void RP2040_Multiplexed_PMP<T>::DumpToMatrix() {

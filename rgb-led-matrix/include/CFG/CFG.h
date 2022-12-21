@@ -9,13 +9,14 @@ namespace rgb_matrix {
     public:
       CFG(int rows, int cols);
 
+      Canvas_ID get_id() { return id_; }
+
       DOTCorrect dot;
       GAMMA gamma;
     
     protected:
       virtual bool isValid() = 0; 
 
-      friend struct Options;
       Canvas_ID id_;
   };
 }

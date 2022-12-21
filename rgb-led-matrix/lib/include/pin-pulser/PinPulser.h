@@ -1,21 +1,20 @@
 #ifndef PIN_PULSER_H
 #define PIN_PULSER_H
 
-#include "port/gpio/gpio.h"
-#include "port/pin-mapper/HUB75/HUB75_Pins.h"
+#include <mutex>
 
 namespace rgb_matrix {
     class PinPulser {
         public:
-            PinPulser(GPIO *io, HUB75_Pins *pins);
-            ~PinPulser() {}
+            static void trigger();
+            static void notify();
+            static bool isTriggered();
+            static bool isNotified();
 
-            virtual void trigger() = 0;
-            virtual void wait() = 0;
-        
-        protected:
-            GPIO *io;
-            HUB75_Pins *pins;
+        private:
+            static std::mutex mutex_;
+            static bool isTriggered_;
+            static bool isNotified_;
     };
 }
 #endif

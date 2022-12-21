@@ -33,7 +33,7 @@ namespace rgb_matrix {
 
   template <typename T> class Framebuffer {
     public:
-      Framebuffer(Canvas_ID id, CFG *cfg);
+      Framebuffer(CFG *cfg);
       virtual ~Framebuffer() {}
 
       static void InitHardwareMapping(const char *named_hardware);
@@ -56,7 +56,6 @@ namespace rgb_matrix {
 
       virtual void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 
-      Canvas_ID id_;
       CFG *cfg_;
 
       static uint32_t hardware_mapping_;

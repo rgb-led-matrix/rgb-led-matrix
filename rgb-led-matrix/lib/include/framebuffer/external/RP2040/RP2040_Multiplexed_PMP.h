@@ -7,7 +7,8 @@
 namespace rgb_matrix {
     template <typename T> class RP2040_Multiplexed_PMP : public Framebuffer<T> {
         public:
-            RP2040_Multiplexed_PMP(Canvas_ID id, CFG *cfg);
+            RP2040_Multiplexed_PMP(CFG *cfg);
+            ~RP2040_Multiplexed_PMP();
 
             virtual void DumpToMatrix();
 
