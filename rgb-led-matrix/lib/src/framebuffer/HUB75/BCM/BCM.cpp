@@ -19,10 +19,6 @@ namespace rgb_matrix {
             //Framebuffer<T>::InitHardwareMapping(_options.hardware_mapping);
             BackgroundThread::CreateThread(cfg, &HUB75_pin_mappings[Framebuffer<T>::hardware_mapping_]);
     }
-
-    template<typename T> BCM<T>::~BCM() {
-        delete io;      // TODO: Look into GPIO, can we delete this?
-    }
     
     template <typename T> void BCM<T>::DumpToMatrix() {
         // TODO: Send buffer to GPIO

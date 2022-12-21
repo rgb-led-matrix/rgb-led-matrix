@@ -9,7 +9,7 @@ namespace rgb_matrix {
     template <typename T> class BCM : public Framebuffer<T> {
         public:
             BCM(CFG *cfg);
-            ~BCM();
+            ~BCM() {}
 
             virtual void DumpToMatrix();
 
