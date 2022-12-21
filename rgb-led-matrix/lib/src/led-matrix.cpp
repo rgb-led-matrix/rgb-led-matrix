@@ -17,6 +17,7 @@
 #include "framecanvas.h"
 #include "framebuffer/framebuffer.h"
 #include "worker/UpdateThread.h"
+#include "worker/BackgroundThread.h"
 
 namespace rgb_matrix {
   RGBMatrix *RGBMatrix::_ptr = nullptr;
@@ -71,7 +72,6 @@ namespace rgb_matrix {
   }
 
   RGBMatrix::RGBMatrix(Options o) :_options(o) {
-    Framebuffer<PixelDesignator>::InitHardwareMapping(_options.hardware_mapping);
     UpdateThread::CreateThread(_options.cfg);
   }
 
@@ -80,6 +80,7 @@ namespace rgb_matrix {
       delete _ptr;
     _ptr = nullptr;
     UpdateThread::DestroyThread();
+    BackgroundThread::DestroyThread();
   }
 
   RGBMatrix *RGBMatrix::CreateFromOptions(Options &options) {

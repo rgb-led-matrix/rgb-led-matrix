@@ -4,6 +4,7 @@ add_library(rock_pi_s SHARED
     pin-mapper/HUB75/HUB75_Pins.cpp
     pin-mapper/PinMapping.cpp
     thread/Thread.cpp
+    pin-pulser/OE_Thread.cpp
     ../../led-matrix.cpp
     ../../framecanvas.cpp)
 

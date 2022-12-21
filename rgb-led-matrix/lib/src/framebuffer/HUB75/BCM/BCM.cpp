@@ -1,6 +1,7 @@
 #include <assert.h>
 #include "framebuffer/HUB75/BCM/BCM.h"
 #include "port/pin-mapper/HUB75/HUB75_Pins.h"
+#include "worker/BackgroundThread.h"
 
 namespace rgb_matrix {
     template <typename T> BCM<T>::BCM(CFG *cfg) 
@@ -13,6 +14,10 @@ namespace rgb_matrix {
 
             pin_mappings = HUB75_pin_mappings;
             pin_mappings_size = HUB75_pin_mappings_size;
+
+            // TODO: Call this somehow?
+            //Framebuffer<T>::InitHardwareMapping(_options.hardware_mapping);
+            BackgroundThread::CreateThread(cfg, &HUB75_pin_mappings[Framebuffer<T>::hardware_mapping_]);
     }
 
     template<typename T> BCM<T>::~BCM() {

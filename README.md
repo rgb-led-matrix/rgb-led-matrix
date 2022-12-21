@@ -131,7 +131,7 @@ external - These are for the external framebuffer implementations. See external 
 This is a section for hardware offload modules used in rgb-led-matrix/lib/src/framebuffer. Some external modules may have better features.
 
 ### firmware
-This section is for the pin-pulser implementation, which has been moved to an external microcontroller. This was done to improve performance and portability. Firmware submodules used here are derived from rgb-led-matrix-module. Currently the only implementation is rgb-led-matrix-rp2040-module using the RPi PICO module.
+This section is for the pin-pulser implementation, which could be moved to an external microcontroller. (This may be dropped.) This was done to improve performance and portability. Firmware submodules used here are derived from rgb-led-matrix-module. Currently the only implementation is rgb-led-matrix-rp2040-module using the RPi PICO module.
 
 ### modules
 This section is for kernel modules used by different platforms. These kernel modules provide things like user space access to GPIO registers with standard priviledges. Currently the only implementation is rock_pi_s_gpiomem which creates /dev/mem on Rock Pi S using 4.4 Linux Kernel. However this logic should be portable to other platforms and kernel versions, using Linux.
