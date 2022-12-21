@@ -4,7 +4,7 @@ add_library(rpi SHARED
     pin-mapper/HUB75/HUB75_Pins.cpp
     pin-mapper/PinMapping.cpp
     thread/Thread.cpp
-    pin-pulser/OE_Thread.cpp
+    pin-pulser/HUB75/OE_Thread.cpp
     ../../led-matrix.cpp
     ../../framecanvas.cpp)
 

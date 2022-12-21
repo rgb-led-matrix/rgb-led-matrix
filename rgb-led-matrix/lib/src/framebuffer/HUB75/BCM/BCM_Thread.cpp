@@ -10,7 +10,7 @@ namespace rgb_matrix {
         else
             throw cfg;
 
-        Start(cfg_ptr->thread_priority, cfg_ptr->thread_affinity);
+        Start(cfg_ptr->thread_priority[0], cfg_ptr->thread_affinity[0]);
     }
 
     BCM_Thread::~BCM_Thread() {
