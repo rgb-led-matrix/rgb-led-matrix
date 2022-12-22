@@ -1,6 +1,5 @@
 #include <assert.h>
 #include <cmath>
-#include <algorithm>
 #include "framebuffer/external/RP2040/RP2040_SPI.h"
 
 namespace rgb_matrix {
@@ -49,14 +48,24 @@ namespace rgb_matrix {
             for (uint32_t i = 0; i < 256; i++) {
                 for (int j = 0; j < 100; j++) {
                     constexpr uint32_t lim = 65535;
-                    val[i][j][0] = (uint16_t) std::min((uint32_t ) round(pow(i * 65535 / 255.0 * round(j / 99.0), 1 / g.red)), lim);
-                    val[i][j][1] = (uint16_t) std::min((uint32_t) round(pow(i * 65535 / 255.0 * round(j / 99.0), 1 / g.green)), lim);
-                    val[i][j][2] = (uint16_t) std::min((uint32_t) round(pow(i * 65535 / 255.0 * round(j / 99.0), 1 / g.blue)), lim);
+                    val[i][j][0] = (uint16_t) round(pow(i / 255.0, 1 / g.red) * lim * j / 99.0);
+                    val[i][j][1] = (uint16_t) round(pow(i / 255.0, 1 / g.green) * lim * j / 99.0);
+                    val[i][j][2] = (uint16_t) round(pow(i / 255.0, 1 / g.blue) * lim* j / 99.0);
                 }
             }
         }
         else {
-            // TODO: Support CIE1931
+            for (uint32_t i = 0; i < 256; i++) {
+                for (int j = 0; j < 100; j++) {
+                    constexpr uint32_t lim = 65535;
+                    float temp = pow(i / 255.0, 1 / g.red) * j;
+                    val[i][j][0] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+                    temp = pow(i / 255.0, 1 / g.green) * j;
+                    val[i][j][1] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+                    temp = pow(i / 255.0, 1 / g.blue) * j;
+                    val[i][j][2] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+                }
+            }
         }
     }
 
