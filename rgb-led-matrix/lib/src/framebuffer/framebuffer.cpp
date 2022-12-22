@@ -151,19 +151,6 @@ namespace rgb_matrix {
     return nullptr;
   }
 
-  template <> Framebuffer<PixelDesignator_HUB75> *Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
-    named_hardware_ = options.hardware_mapping;
-
-    switch (options.cfg->get_id()) {
-      case Canvas_ID::HUB75_BCM_ID:
-        Framebuffer<PixelDesignator_HUB75> *buf = new BCM<PixelDesignator_HUB75>(options.cfg);
-        buf->InitSharedMapper(PixelMapper_HUB75_LUT::CreateLUT(), multiplex_mapper, options.pixel_mapper_config);
-        return buf;
-    }
-
-    return nullptr;
-  }
-
   template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
     T *pixel = (*shared_mapper_)->get(*(*shared_mapper_)->get(x, y));
     MapColors(red, green, blue, &pixel->r_bit, &pixel->g_bit, &pixel->b_bit);
@@ -186,7 +173,5 @@ namespace rgb_matrix {
 
   template class Framebuffer<PixelDesignator>;
   template class PixelDesignatorMap<PixelDesignator>;
-  template class Framebuffer<PixelDesignator_HUB75>;
-  template class PixelDesignatorMap<PixelDesignator_HUB75>;
 
 }  // namespace rgb_matrix

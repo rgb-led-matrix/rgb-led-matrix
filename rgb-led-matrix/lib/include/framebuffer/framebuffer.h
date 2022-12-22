@@ -6,8 +6,6 @@
 #include "canvas.h"
 #include "led-matrix.h"
 #include "external/external.h"
-#include "HUB75/HUB75.h"
-#include "port/pin-mapper/PinMapping.h"
 #include "mappers/multiplex/multiplex-mapper.h"
 #include "mappers/pixel/PixelMapper_LUT.h"
 

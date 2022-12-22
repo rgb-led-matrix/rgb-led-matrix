@@ -4,9 +4,9 @@
 #include "CFG/CFG.h"
 
 namespace rgb_matrix {
-  class RP2040_Multiplexed_PMP_CFG : public CFG {
+  class RP2040_SPI_CFG : public CFG {
     public:
-      RP2040_Multiplexed_PMP_CFG(int rows, int cols) : CFG(rows, cols) { id_ = Canvas_ID::RP2040_Multiplexed_PMP_ID; }
+      RP2040_SPI_CFG(int rows, int cols) : CFG(rows, cols) { id_ = Canvas_ID::RP2040_SPI_ID; }
 
       int rows_;
       int cols_;
