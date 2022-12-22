@@ -32,9 +32,9 @@ namespace rgb_matrix {
             *blue = (uint16_t) round(lut[b][bright][2] / 65535.0 * fb * cfg_->pwm_bits_);
         }
         else {
-            *red = (uint16_t) round(lut[r][bright][0] / 65535.0 * cfg_->pwm_bits_);
-            *green = (uint16_t) round(lut[g][bright][1] / 65535.0 * cfg_->pwm_bits_);
-            *blue = (uint16_t) round(lut[b][bright][2] / 65535.0 * cfg_->pwm_bits_);
+            *red = lut[r][bright][0] * cfg_->pwm_bits_ / 65535;
+            *green = lut[g][bright][1] * cfg_->pwm_bits_ / 65535;
+            *blue = lut[b][bright][2] * cfg_->pwm_bits_ / 65535;
         }
     }
 
