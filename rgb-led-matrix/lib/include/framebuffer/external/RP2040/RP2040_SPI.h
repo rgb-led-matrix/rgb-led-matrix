@@ -9,7 +9,7 @@ namespace rgb_matrix {
     template <typename T> class RP2040_SPI: public Framebuffer<T> {
         public:
             RP2040_SPI(CFG *cfg);
-            ~RP2040_SPI() {}
+            ~RP2040_SPI();
 
             virtual void DumpToMatrix();
 
@@ -23,7 +23,7 @@ namespace rgb_matrix {
                 uint16_t val[256][100][3];
             };
 
-            std::vector<std::vector<table>> lut;
+            table *lut;
             RP2040_SPI_CFG *cfg_;
     };
 }
