@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <cmath>
+#include <algorithm>
 #include "framebuffer/external/RP2040/RP2040_SPI.h"
 
 namespace rgb_matrix {
@@ -33,9 +34,10 @@ namespace rgb_matrix {
         if (!use_CIE1931) {
             for (uint32_t i = 0; i < 256; i++) {
                 for (int j = 0; j < 100; j++) {
-                    val[i][j][0] = (uint16_t) round(pow(i * 65535 / 255 * round(j / 99.0), 1 / g.red));
-                    val[i][j][1] = (uint16_t) round(pow(i * 65535 / 255 * round(j / 99.0), 1 / g.green));
-                    val[i][j][2] = (uint16_t) round(pow(i * 65535 / 255 * round(j / 99.0), 1 / g.blue));
+                    constexpr uint32_t lim = 65535;
+                    val[i][j][0] = (uint16_t) std::min((uint32_t ) round(pow(i * 65535 / 255.0 * round(j / 99.0), 1 / g.red)), lim);
+                    val[i][j][1] = (uint16_t) std::min((uint32_t) round(pow(i * 65535 / 255.0 * round(j / 99.0), 1 / g.green)), lim);
+                    val[i][j][2] = (uint16_t) std::min((uint32_t) round(pow(i * 65535 / 255.0 * round(j / 99.0), 1 / g.blue)), lim);
                 }
             }
         }
