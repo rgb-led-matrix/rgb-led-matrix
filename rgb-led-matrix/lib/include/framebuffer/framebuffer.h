@@ -51,7 +51,7 @@ namespace rgb_matrix {
     protected:
       Framebuffer();
 
-      virtual void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
+      virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 
       CFG *cfg_;
 
