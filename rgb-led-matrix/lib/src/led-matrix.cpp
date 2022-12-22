@@ -16,8 +16,6 @@
 #include "CFG/CFG.h"
 #include "framecanvas.h"
 #include "framebuffer/framebuffer.h"
-#include "worker/UpdateThread.h"
-#include "worker/BackgroundThread.h"
 
 namespace rgb_matrix {
   RGBMatrix *RGBMatrix::_ptr = nullptr;
@@ -72,15 +70,13 @@ namespace rgb_matrix {
   }
 
   RGBMatrix::RGBMatrix(Options o) :_options(o) {
-    UpdateThread::CreateThread(_options.cfg);
+    // Do Nothing
   }
 
   RGBMatrix::~RGBMatrix() {
     if (_ptr != nullptr)
       delete _ptr;
     _ptr = nullptr;
-    UpdateThread::DestroyThread();
-    BackgroundThread::DestroyThread();
   }
 
   RGBMatrix *RGBMatrix::CreateFromOptions(Options &options) {
@@ -105,10 +101,8 @@ namespace rgb_matrix {
       multiplex_mapper->EditColsRows(&_options.cfg->dot.cols, &_options.cfg->dot.rows);
 
     switch (_options.cfg->get_id()) {
-      case Canvas_ID::RP2040_Multiplexed_PMP_ID:
+      case Canvas_ID::RP2040_SPI_ID:
         return new FrameCanvas<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(_options, multiplex_mapper));
-      case Canvas_ID::HUB75_BCM_ID:
-        return new FrameCanvas<PixelDesignator_HUB75>(Framebuffer<PixelDesignator_HUB75>::CreateFramebuffer(_options, multiplex_mapper));
       default:
         return nullptr;
     }

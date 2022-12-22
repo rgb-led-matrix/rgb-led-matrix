@@ -5,8 +5,7 @@ namespace rgb_matrix {
     class CFG;
 
     enum Canvas_ID {
-        RP2040_Multiplexed_PMP_ID = 0,
-        HUB75_BCM_ID = 1
+        RP2040_SPI_ID = 0,
     };
 
     struct GAMMA {
