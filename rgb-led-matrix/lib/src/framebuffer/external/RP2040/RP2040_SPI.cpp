@@ -18,7 +18,7 @@ namespace rgb_matrix {
     }
     
     template <typename T> void RP2040_SPI<T>::DumpToMatrix() {
-        // TODO: Send buffer to RP2040 external hardware module
+        // TODO: Send buffer to RP2040 external hardware module via spidev
     }
 
     template <typename T> inline void  RP2040_SPI<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
@@ -42,7 +42,7 @@ namespace rgb_matrix {
             }
         }
         else {
-            // TODO:
+            // TODO: Support CIE1931
         }
     }
 
