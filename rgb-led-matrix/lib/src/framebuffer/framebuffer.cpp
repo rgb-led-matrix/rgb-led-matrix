@@ -8,18 +8,10 @@
 #include <algorithm>
 
 #include "CFG/CFG.h"
-#include "framebuffer/external/RP2040/RP2040_Multiplexed_PMP.h"
-#include "framebuffer/HUB75/BCM/BCM.h"
-#include "port/gpio/gpio.h"
+#include "framebuffer/external/RP2040/RP2040_SPI.h"
 #include "mappers/pixel/pixel-mapper.h"
-#include "mappers/pixel/HUB75/PixelMapper_HUB75_LUT.h"
-#include "port/pin-mapper/PinMapping.h"
 
 namespace rgb_matrix {
-
-  template <typename T> uint32_t Framebuffer<T>::hardware_mapping_;
-  template <typename T> const char *Framebuffer<T>::named_hardware_;
-  template <typename T> bool Framebuffer<T>::initIO = false;
 
   template <typename T> T *PixelDesignatorMap<T>::get(uint32_t location) {
     if (location >= height_ * width_)
@@ -55,17 +47,6 @@ namespace rgb_matrix {
     assert(cfg != nullptr);
 
     *shared_mapper_ = new PixelDesignatorMap<T>(cfg->dot.cols, cfg->dot.rows);
-  }
-
-  template <typename T> void Framebuffer<T>::InitHardwareMapping() {
-    if (named_hardware_ == NULL || *named_hardware_ == '\0')
-      named_hardware_ = "regular";
-
-    for (hardware_mapping_ = 0; hardware_mapping_ < pin_mappings_size; hardware_mapping_++)
-      if (strcasecmp(pin_mappings[hardware_mapping_].name, named_hardware_) == 0)
-        return;
-
-    abort();
   }
 
   template <typename T> int Framebuffer<T>::width() const { return (*shared_mapper_)->width(); }
@@ -138,11 +119,9 @@ namespace rgb_matrix {
   }
 
   template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
-    named_hardware_ = options.hardware_mapping;
-
     switch (options.cfg->get_id()) {
-      case Canvas_ID::RP2040_Multiplexed_PMP_ID:
-        Framebuffer<PixelDesignator> *buf = new RP2040_Multiplexed_PMP<PixelDesignator>(options.cfg);
+      case Canvas_ID::RP2040_SPI_ID:
+        Framebuffer<PixelDesignator> *buf = new RP2040_SPI<PixelDesignator>(options.cfg);
         // TODO: Fix nullptr
         buf->InitSharedMapper(nullptr, multiplex_mapper, options.pixel_mapper_config);
         return buf;

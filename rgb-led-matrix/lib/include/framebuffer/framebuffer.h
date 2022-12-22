@@ -34,7 +34,6 @@ namespace rgb_matrix {
       Framebuffer(CFG *cfg);
       virtual ~Framebuffer() {}
 
-      static void InitHardwareMapping();
       static Framebuffer *CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper);
 
       virtual int width() const;
@@ -55,10 +54,6 @@ namespace rgb_matrix {
       virtual void  MapColors(uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 
       CFG *cfg_;
-
-      static uint32_t hardware_mapping_;
-      static const char *named_hardware_;
-      static bool initIO;
 
       // TODO: Remove double pointer
       PixelDesignatorMap<T> **shared_mapper_;
