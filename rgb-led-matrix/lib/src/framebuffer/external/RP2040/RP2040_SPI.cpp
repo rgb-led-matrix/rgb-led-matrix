@@ -11,13 +11,9 @@ namespace rgb_matrix {
                 throw cfg;
 
             if (cfg_->use_gamma_correction)
-                lut = new table(cfg->gamma, cfg_->use_CIE1931);
+                build_table(cfg->gamma, cfg_->use_CIE1931);
             else
-                lut = new table(GAMMA(1.0, 1.0, 1.0), cfg_->use_CIE1931);
-    }
-
-    template <typename T> RP2040_SPI<T>::~RP2040_SPI() {
-        delete lut;
+                build_table(GAMMA(1.0, 1.0, 1.0), cfg_->use_CIE1931);
     }
     
     template <typename T> void RP2040_SPI<T>::DumpToMatrix() {
@@ -31,26 +27,26 @@ namespace rgb_matrix {
 
         if (cfg_->use_dot_correction) {
             cfg_->dot.get(x, y, r, g, b, &fr, &fg, &fb);
-            *red = (uint16_t) round(lut->val[r][bright][0] / 65535.0 * fr * cfg_->pwm_bits_);
-            *green = (uint16_t) round(lut->val[g][bright][1] / 65535.0 * fg * cfg_->pwm_bits_);
-            *blue = (uint16_t) round(lut->val[b][bright][2] / 65535.0 * fb * cfg_->pwm_bits_);
+            *red = (uint16_t) round(lut[r][bright][0] / 65535.0 * fr * cfg_->pwm_bits_);
+            *green = (uint16_t) round(lut[g][bright][1] / 65535.0 * fg * cfg_->pwm_bits_);
+            *blue = (uint16_t) round(lut[b][bright][2] / 65535.0 * fb * cfg_->pwm_bits_);
         }
         else {
-            *red = (uint16_t) round(lut->val[r][bright][0] / 65535.0 * cfg_->pwm_bits_);
-            *green = (uint16_t) round(lut->val[g][bright][1] / 65535.0 * cfg_->pwm_bits_);
-            *blue = (uint16_t) round(lut->val[b][bright][2] / 65535.0 * cfg_->pwm_bits_);
+            *red = (uint16_t) round(lut[r][bright][0] / 65535.0 * cfg_->pwm_bits_);
+            *green = (uint16_t) round(lut[g][bright][1] / 65535.0 * cfg_->pwm_bits_);
+            *blue = (uint16_t) round(lut[b][bright][2] / 65535.0 * cfg_->pwm_bits_);
         }
     }
 
     // Handles brightness, gamma and CIE1931
-    template <typename T> RP2040_SPI<T>::table::table(GAMMA g, bool use_CIE1931) {
+    template <typename T> void RP2040_SPI<T>::build_table(GAMMA g, bool use_CIE1931) {
         if (!use_CIE1931) {
             for (uint32_t i = 0; i < 256; i++) {
                 for (int j = 0; j < 100; j++) {
                     constexpr uint32_t lim = 65535;
-                    val[i][j][0] = (uint16_t) round(pow(i / 255.0, 1 / g.red) * lim * j / 99.0);
-                    val[i][j][1] = (uint16_t) round(pow(i / 255.0, 1 / g.green) * lim * j / 99.0);
-                    val[i][j][2] = (uint16_t) round(pow(i / 255.0, 1 / g.blue) * lim* j / 99.0);
+                    lut[i][j][0] = (uint16_t) round(pow(i / 255.0, 1 / g.red) * lim * j / 99.0);
+                    lut[i][j][1] = (uint16_t) round(pow(i / 255.0, 1 / g.green) * lim * j / 99.0);
+                    lut[i][j][2] = (uint16_t) round(pow(i / 255.0, 1 / g.blue) * lim* j / 99.0);
                 }
             }
         }
@@ -59,11 +55,11 @@ namespace rgb_matrix {
                 for (int j = 0; j < 100; j++) {
                     constexpr uint32_t lim = 65535;
                     float temp = pow(i / 255.0, 1 / g.red) * j;
-                    val[i][j][0] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+                    lut[i][j][0] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
                     temp = pow(i / 255.0, 1 / g.green) * j;
-                    val[i][j][1] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+                    lut[i][j][1] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
                     temp = pow(i / 255.0, 1 / g.blue) * j;
-                    val[i][j][2] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+                    lut[i][j][2] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
                 }
             }
         }
