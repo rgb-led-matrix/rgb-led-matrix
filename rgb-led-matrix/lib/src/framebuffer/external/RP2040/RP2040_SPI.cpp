@@ -29,10 +29,18 @@ namespace rgb_matrix {
     template <typename T> inline void  RP2040_SPI<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
         float fr, fg, fb;
         uint8_t bright = cfg_->use_brightness ? cfg_->brightness_ % 100 : 100;
-        cfg_->dot.get(x, y, r, g, b, &fr, &fg, &fb);
-        *red = (uint16_t) round(lut->val[r][bright][0] / 65535.0 * fr * cfg_->pwm_bits_);
-        *green = (uint16_t) round(lut->val[g][bright][1] / 65535.0 * fg * cfg_->pwm_bits_);
-        *blue = (uint16_t) round(lut->val[b][bright][2] / 65535.0 * fb * cfg_->pwm_bits_);
+
+        if (cfg_->use_dot_correction) {
+            cfg_->dot.get(x, y, r, g, b, &fr, &fg, &fb);
+            *red = (uint16_t) round(lut->val[r][bright][0] / 65535.0 * fr * cfg_->pwm_bits_);
+            *green = (uint16_t) round(lut->val[g][bright][1] / 65535.0 * fg * cfg_->pwm_bits_);
+            *blue = (uint16_t) round(lut->val[b][bright][2] / 65535.0 * fb * cfg_->pwm_bits_);
+        }
+        else {
+            *red = (uint16_t) round(lut->val[r][bright][0] / 65535.0 * cfg_->pwm_bits_);
+            *green = (uint16_t) round(lut->val[g][bright][1] / 65535.0 * cfg_->pwm_bits_);
+            *blue = (uint16_t) round(lut->val[b][bright][2] / 65535.0 * cfg_->pwm_bits_);
+        }
     }
 
     // Handles brightness, gamma and CIE1931
