@@ -29,7 +29,7 @@ namespace rgb_matrix {
     
     template <typename T> void RP2040_SPI<T>::DumpToMatrix() {
         // TODO: Send buffer to RP2040 external hardware module via spidev
-        
+
         char str[] = "Hello World\n";
         write((uint8_t *) str, strlen(str));
     }
@@ -84,19 +84,19 @@ namespace rgb_matrix {
         
         fd = open(spi, O_SYNC | O_RDWR);
         if (fd < 0)
-            throw this;
+            throw spi;
 
         temp = 8;
-        if (ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &temp) == -1)
-            throw this;
+        if (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &temp) == -1)
+            throw spi;
         
         temp = 10 * 1000 * 1000;
-        if (ioctl (fd, SPI_IOC_WR_MAX_SPEED_HZ, &temp) == -1)
-            throw this;
+        if (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &temp) == -1)
+            throw spi;
 
         temp = SPI_MODE_1;
-        if (ioctl (fd, SPI_IOC_WR_MODE, &temp) == -1)
-            throw this;
+        if (ioctl(fd, SPI_IOC_WR_MODE, &temp) == -1)
+            throw spi;
     }
 
     template <typename T> void RP2040_SPI<T>::write(uint8_t *buf, uint32_t len) {
@@ -110,7 +110,7 @@ namespace rgb_matrix {
             .cs_change = 1,
         };
 
-        if (ioctl (fd, SPI_IOC_MESSAGE(1), &tr) == -1)
+        if (ioctl(fd, SPI_IOC_MESSAGE(1), &tr) == -1)
             throw this;
     }
 
