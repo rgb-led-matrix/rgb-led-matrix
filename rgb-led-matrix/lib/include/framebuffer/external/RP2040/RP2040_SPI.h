@@ -9,6 +9,7 @@ namespace rgb_matrix {
     template <typename T> class RP2040_SPI: public Framebuffer<T> {
         public:
             RP2040_SPI(CFG *cfg);
+            ~RP2040_SPI();
 
             virtual void DumpToMatrix();
 
@@ -17,9 +18,12 @@ namespace rgb_matrix {
 
         private:
             void build_table(GAMMA g, bool use_CIE1931);
+            void init_spi(const char *spi);
+            void write(uint8_t *buf, uint32_t len);
 
             uint16_t lut[256][100][3];
             RP2040_SPI_CFG *cfg_;
+            int fd;
     };
 }
 

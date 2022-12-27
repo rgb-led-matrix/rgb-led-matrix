@@ -1,5 +1,10 @@
 #include <assert.h>
-#include <cmath>
+#include <math.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <linux/spi/spidev.h>
 #include "framebuffer/external/RP2040/RP2040_SPI.h"
 
 namespace rgb_matrix {
@@ -14,10 +19,19 @@ namespace rgb_matrix {
                 build_table(cfg->gamma, cfg_->use_CIE1931);
             else
                 build_table(GAMMA(1.0, 1.0, 1.0), cfg_->use_CIE1931);
+
+            init_spi(cfg_->spidev_path_);
+    }
+
+    template <typename T> RP2040_SPI<T>::~RP2040_SPI() {
+        close(fd);
     }
     
     template <typename T> void RP2040_SPI<T>::DumpToMatrix() {
         // TODO: Send buffer to RP2040 external hardware module via spidev
+        
+        char str[] = "Hello World\n";
+        write((uint8_t *) str, strlen(str));
     }
 
     // Handles dot correction and PWM bit scaling
@@ -46,7 +60,7 @@ namespace rgb_matrix {
                     constexpr uint32_t lim = 65535;
                     lut[i][j][0] = (uint16_t) round(pow(i / 255.0, 1 / g.red) * lim * j / 99.0);
                     lut[i][j][1] = (uint16_t) round(pow(i / 255.0, 1 / g.green) * lim * j / 99.0);
-                    lut[i][j][2] = (uint16_t) round(pow(i / 255.0, 1 / g.blue) * lim* j / 99.0);
+                    lut[i][j][2] = (uint16_t) round(pow(i / 255.0, 1 / g.blue) * lim * j / 99.0);
                 }
             }
         }
@@ -63,6 +77,41 @@ namespace rgb_matrix {
                 }
             }
         }
+    }
+
+    template <typename T> void RP2040_SPI<T>::init_spi(const char *spi) {
+        uint32_t temp;
+        
+        fd = open(spi, O_SYNC | O_RDWR);
+        if (fd < 0)
+            throw this;
+
+        temp = 8;
+        if (ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &temp) == -1)
+            throw this;
+        
+        temp = 10 * 1000 * 1000;
+        if (ioctl (fd, SPI_IOC_WR_MAX_SPEED_HZ, &temp) == -1)
+            throw this;
+
+        temp = SPI_MODE_1;
+        if (ioctl (fd, SPI_IOC_WR_MODE, &temp) == -1)
+            throw this;
+    }
+
+    template <typename T> void RP2040_SPI<T>::write(uint8_t *buf, uint32_t len) {
+        struct spi_ioc_transfer tr = {
+            .tx_buf = (unsigned long) buf,
+            .rx_buf = 0,
+            .len = len,
+            .speed_hz = 10 * 1000 * 1000,
+            .delay_usecs = 0,
+            .bits_per_word = 8,
+            .cs_change = 1,
+        };
+
+        if (ioctl (fd, SPI_IOC_MESSAGE(1), &tr) == -1)
+            throw this;
     }
 
     template class RP2040_SPI<PixelDesignator>;
