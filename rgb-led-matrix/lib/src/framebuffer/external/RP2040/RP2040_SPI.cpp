@@ -105,9 +105,9 @@ namespace rgb_matrix {
             .rx_buf = 0,
             .len = len,
             .speed_hz = 10 * 1000 * 1000,
-            .delay_usecs = 0,
+            .delay_usecs = 10,
             .bits_per_word = 8,
-            .cs_change = 1,
+            .cs_change = 0,
         };
 
         if (ioctl(fd, SPI_IOC_MESSAGE(1), &tr) == -1)
