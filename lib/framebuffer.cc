@@ -327,9 +327,9 @@ Framebuffer::Framebuffer(int rows, int columns, int parallel,
     gpio_bits_t g = h.p0_g1 | h.p0_g2 | h.p1_g1 | h.p1_g2 | h.p2_g1 | h.p2_g2 | h.p3_g1 | h.p3_g2 | h.p4_g1 | h.p4_g2 | h.p5_g1 | h.p5_g2;
     gpio_bits_t b = h.p0_b1 | h.p0_b2 | h.p1_b1 | h.p1_b2 | h.p2_b1 | h.p2_b2 | h.p3_b1 | h.p3_b2 | h.p4_b1 | h.p4_b2 | h.p5_b1 | h.p5_b2;
     PixelDesignator fill_bits;
-    fill_bits.r_bit = GetGpioFromLedSequence('R', led_sequence, r, g, b);
-    fill_bits.g_bit = GetGpioFromLedSequence('G', led_sequence, r, g, b);
-    fill_bits.b_bit = GetGpioFromLedSequence('B', led_sequence, r, g, b);
+    fill_bits.r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', led_sequence, r, g, b)));
+    fill_bits.g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', led_sequence, r, g, b)));
+    fill_bits.b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', led_sequence, r, g, b)));
 
     *shared_mapper_ = new PixelDesignatorMap(columns_, height_, fill_bits);
     for (int y = 0; y < height_; ++y) {
@@ -651,9 +651,9 @@ void Framebuffer::Fill(uint8_t r, uint8_t g, uint8_t b) {
   for (int b = kBitPlanes - pwm_bits_; b < kBitPlanes; ++b) {
     uint16_t mask = 1 << b;
     gpio_bits_t plane_bits = 0;
-    plane_bits |= ((red & mask) == mask)   ? fill.r_bit : 0;
-    plane_bits |= ((green & mask) == mask) ? fill.g_bit : 0;
-    plane_bits |= ((blue & mask) == mask)  ? fill.b_bit : 0;
+    plane_bits |= ((red & mask) == mask)   ? 1 << fill.r_bit_u8 : 0;
+    plane_bits |= ((green & mask) == mask) ? 1 << fill.g_bit_u8 : 0;
+    plane_bits |= ((blue & mask) == mask)  ? 1 << fill.b_bit_u8 : 0;
 
     for (int row = 0; row < double_rows_; ++row) {
       gpio_bits_t *row_data = ValueAt(row, 0, b);
@@ -679,9 +679,9 @@ void Framebuffer::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
   gpio_bits_t *bits = bitplane_buffer_ + pos;
   const int min_bit_plane = kBitPlanes - pwm_bits_;
   bits += (columns_ * min_bit_plane);
-  const gpio_bits_t r_bits = designator->r_bit;
-  const gpio_bits_t g_bits = designator->g_bit;
-  const gpio_bits_t b_bits = designator->b_bit;
+  const gpio_bits_t r_bits = 1 << designator->r_bit_u8;
+  const gpio_bits_t g_bits = 1 << designator->g_bit_u8;
+  const gpio_bits_t b_bits = 1 << designator->b_bit_u8;
   const gpio_bits_t designator_mask = designator->mask;
   for (uint16_t mask = 1<<min_bit_plane; mask != 1<<kBitPlanes; mask <<=1 ) {
     gpio_bits_t color_bits = 0;
@@ -719,76 +719,76 @@ void Framebuffer::InitDefaultDesignator(int x, int y, const char *seq,
   const struct HardwareMapping &h = *hardware_mapping_;
   gpio_bits_t *bits = ValueAt(y % double_rows_, x, 0);
   d->gpio_word = bits - bitplane_buffer_;
-  d->r_bit = d->g_bit = d->b_bit = 0;
+  d->r_bit_u8 = d->g_bit_u8 = d->b_bit_u8 = 0;
   if (y < rows_) {
     if (y < double_rows_) {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p0_r1, h.p0_g1, h.p0_b1);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p0_r1, h.p0_g1, h.p0_b1);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p0_r1, h.p0_g1, h.p0_b1);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p0_r1, h.p0_g1, h.p0_b1)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p0_r1, h.p0_g1, h.p0_b1)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p0_r1, h.p0_g1, h.p0_b1)));
     } else {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p0_r2, h.p0_g2, h.p0_b2);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p0_r2, h.p0_g2, h.p0_b2);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p0_r2, h.p0_g2, h.p0_b2);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p0_r2, h.p0_g2, h.p0_b2)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p0_r2, h.p0_g2, h.p0_b2)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p0_r2, h.p0_g2, h.p0_b2)));
     }
   }
   else if (y >= rows_ && y < 2 * rows_) {
     if (y - rows_ < double_rows_) {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p1_r1, h.p1_g1, h.p1_b1);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p1_r1, h.p1_g1, h.p1_b1);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p1_r1, h.p1_g1, h.p1_b1);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p1_r1, h.p1_g1, h.p1_b1)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p1_r1, h.p1_g1, h.p1_b1)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p1_r1, h.p1_g1, h.p1_b1)));
     } else {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p1_r2, h.p1_g2, h.p1_b2);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p1_r2, h.p1_g2, h.p1_b2);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p1_r2, h.p1_g2, h.p1_b2);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p1_r2, h.p1_g2, h.p1_b2)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p1_r2, h.p1_g2, h.p1_b2)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p1_r2, h.p1_g2, h.p1_b2)));
     }
   }
   else if (y >= 2*rows_ && y < 3 * rows_) {
     if (y - 2*rows_ < double_rows_) {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p2_r1, h.p2_g1, h.p2_b1);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p2_r1, h.p2_g1, h.p2_b1);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p2_r1, h.p2_g1, h.p2_b1);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p2_r1, h.p2_g1, h.p2_b1)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p2_r1, h.p2_g1, h.p2_b1)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p2_r1, h.p2_g1, h.p2_b1)));
     } else {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p2_r2, h.p2_g2, h.p2_b2);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p2_r2, h.p2_g2, h.p2_b2);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p2_r2, h.p2_g2, h.p2_b2);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p2_r2, h.p2_g2, h.p2_b2)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p2_r2, h.p2_g2, h.p2_b2)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p2_r2, h.p2_g2, h.p2_b2)));
     }
   }
   else if (y >= 3*rows_ && y < 4 * rows_) {
     if (y - 3*rows_ < double_rows_) {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p3_r1, h.p3_g1, h.p3_b1);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p3_r1, h.p3_g1, h.p3_b1);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p3_r1, h.p3_g1, h.p3_b1);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p3_r1, h.p3_g1, h.p3_b1)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p3_r1, h.p3_g1, h.p3_b1)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p3_r1, h.p3_g1, h.p3_b1)));
     } else {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p3_r2, h.p3_g2, h.p3_b2);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p3_r2, h.p3_g2, h.p3_b2);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p3_r2, h.p3_g2, h.p3_b2);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p3_r2, h.p3_g2, h.p3_b2)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p3_r2, h.p3_g2, h.p3_b2)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p3_r2, h.p3_g2, h.p3_b2)));
     }
   }
   else if (y >= 4*rows_ && y < 5 * rows_){
     if (y - 4*rows_ < double_rows_) {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p4_r1, h.p4_g1, h.p4_b1);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p4_r1, h.p4_g1, h.p4_b1);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p4_r1, h.p4_g1, h.p4_b1);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p4_r1, h.p4_g1, h.p4_b1)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p4_r1, h.p4_g1, h.p4_b1)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p4_r1, h.p4_g1, h.p4_b1)));
     } else {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p4_r2, h.p4_g2, h.p4_b2);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p4_r2, h.p4_g2, h.p4_b2);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p4_r2, h.p4_g2, h.p4_b2);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p4_r2, h.p4_g2, h.p4_b2)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p4_r2, h.p4_g2, h.p4_b2)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p4_r2, h.p4_g2, h.p4_b2)));
     }
 
   }
   else {
     if (y - 5*rows_ < double_rows_) {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p5_r1, h.p5_g1, h.p5_b1);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p5_r1, h.p5_g1, h.p5_b1);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p5_r1, h.p5_g1, h.p5_b1);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p5_r1, h.p5_g1, h.p5_b1)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p5_r1, h.p5_g1, h.p5_b1)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p5_r1, h.p5_g1, h.p5_b1)));
     } else {
-      d->r_bit = GetGpioFromLedSequence('R', seq, h.p5_r2, h.p5_g2, h.p5_b2);
-      d->g_bit = GetGpioFromLedSequence('G', seq, h.p5_r2, h.p5_g2, h.p5_b2);
-      d->b_bit = GetGpioFromLedSequence('B', seq, h.p5_r2, h.p5_g2, h.p5_b2);
+      d->r_bit_u8 = lround(log2(GetGpioFromLedSequence('R', seq, h.p5_r2, h.p5_g2, h.p5_b2)));
+      d->g_bit_u8 = lround(log2(GetGpioFromLedSequence('G', seq, h.p5_r2, h.p5_g2, h.p5_b2)));
+      d->b_bit_u8 = lround(log2(GetGpioFromLedSequence('B', seq, h.p5_r2, h.p5_g2, h.p5_b2)));
     }
   }
 
-  d->mask = ~(d->r_bit | d->g_bit | d->b_bit);
+  d->mask = ~(1 << d->r_bit_u8 | 1 << d->g_bit_u8 | 1 << d->b_bit_u8);
 }
 
 void Framebuffer::Serialize(const char **data, size_t *len) const {

@@ -29,12 +29,12 @@ class RowAddressSetter;
 // An opaque type used within the framebuffer that can be used
 // to copy between PixelMappers.
 struct PixelDesignator {
-  PixelDesignator() : gpio_word(-1), r_bit(0), g_bit(0), b_bit(0), mask(~0u){}
+  PixelDesignator() : gpio_word(-1), mask(~0u), r_bit_u8(0), g_bit_u8(0), b_bit_u8(0) {}
   long gpio_word;
-  gpio_bits_t r_bit;
-  gpio_bits_t g_bit;
-  gpio_bits_t b_bit;
   gpio_bits_t mask;
+  uint8_t r_bit_u8;
+  uint8_t g_bit_u8;
+  uint8_t b_bit_u8;
 };
 
 class PixelDesignatorMap {
