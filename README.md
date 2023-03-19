@@ -31,6 +31,10 @@ Issues found within the original code (most could be fixed or mitigated):
 * kBitPlanes is actually the recommended way to configure the number of PWM bits at compile time rather than run time
 * BCM is used for reducing computational latency of bit plane generation for frames however this may still be an issue for some applications desiring a high frame rate
 
+The approach used in the original code base is in fact possible. However it somewhat champions a different hardware architecture or use of the Raspberry Pi as a hardware module. Using the original code base as a library in generic applications is not completely recommended. Again certain hardware and/or software mitigations are required. Conceptual portability is maintained in spite of this.
+
+Major benefit of the original code base is low SRAM requirement. LED Panels are mostly sequential elements. With high bandwidth DRAM, only about 2 shift registers lengths are required to be stored in SRAM using ping-pong. Memory represents one of the largest costs for LED Matrix. Computation is fairly easy to accelerate with FPGAs however the memory bandwidth requirements can be extreme using this approach. Moving to cheap DRAM with higher density can actually reduce the bandwidth requirements and possibly the computation requirements. While you can save on the density with brute force computation you may end up paying more in power consumption or IO bus width. Cost of DRAM allows high density with high bandwidth using SRAM as FIFO to maintain the pipeline used to multiplex the LED panel.
+
 ## Building
 Note this is a hack for now. Currently it builds both the Raspberry Pi and Rock Pi S.
 
