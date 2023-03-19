@@ -132,7 +132,7 @@ namespace rgb_matrix {
 
   template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
     T *pixel = (*shared_mapper_)->get(*(*shared_mapper_)->get(x, y));
-    MapColors(red, green, blue, &pixel->r_bit, &pixel->g_bit, &pixel->b_bit);
+    MapColors(x, y, red, green, blue, &pixel->r_bit, &pixel->g_bit, &pixel->b_bit);
   }
 
   // TODO: Fix this

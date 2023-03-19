@@ -1,6 +1,8 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <stdint.h>
+
 namespace rgb_matrix {
     class CFG;
 
@@ -9,7 +11,7 @@ namespace rgb_matrix {
     };
 
     struct GAMMA {
-        GAMMA() : red(2.2), green(2.2), blue (2.2) {}
+        GAMMA(float red = 2.2, float green = 2.2, float blue = 2.2) : red(red), green(green), blue (blue) {}
 
         float red;
         float green;
@@ -21,8 +23,8 @@ namespace rgb_matrix {
         DOTCorrect(int rows, int cols);
         ~DOTCorrect();
 
-        bool set(int x, int y, float red, float green, float blue);
-        void get(int x, int y, float *red, float *green, float *blue);
+        bool set(int x, int y, uint8_t r, uint8_t g, uint8_t b, float red, float green, float blue);
+        void get(int x, int y, uint8_t r, uint8_t g, uint8_t b, float *red, float *green, float *blue);
 
         // TODO: Limit access
         int rows;
