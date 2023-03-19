@@ -32,7 +32,7 @@ Issues found within the original code (most could be fixed or mitigated):
 * kBitPlanes is actually the recommended way to configure the number of PWM bits at compile time rather than run time
 * BCM is used for reducing computational latency of bit plane generation for frames however this may still be an issue for some applications desiring a high frame rate
 * Shift length and indirectly pixel density are limited by clock fanout
-  * Extending this beyond the fanout limit requires a repeater, which is not common or useful expect for panels with LED drivers using RAM buffers
+  * Extending this beyond the fanout limit requires a repeater, which is not common or useful except for panels with LED drivers using RAM buffers
 
 The approach used in the original code base is in fact possible. However it somewhat champions a different hardware architecture or use of the Raspberry Pi as a hardware module. Using the original code base as a library in generic applications is not completely recommended. Again certain hardware and/or software mitigations are required. Conceptual portability is maintained in spite of this.
 
