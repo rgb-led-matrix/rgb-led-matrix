@@ -19,6 +19,7 @@ Issues found within the original code (most could be fixed or mitigated):
 * Memory accesses can be blocking and/or non-deterministic if bus arbitration or contention occurs
 * Multicore is required for preventing the operating system from blocking LED multiplexing
 * Multicore can be used to manage cache and fight memory access issues but this could reduce useful core count from 3 to 2
+  * Prefetch was not found to be capable of mitigating this
 * Bit plane timing is easy to misconfigure, which could be resolved in runtime potentally
 * High refresh rate is not supported as it does not account for ghosting due to small capacitances built into the display
   * This likely can be address with a uS timer or tight assembly
