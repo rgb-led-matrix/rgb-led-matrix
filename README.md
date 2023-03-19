@@ -30,6 +30,7 @@ Issues found within the original code (most could be fixed or mitigated):
 * Documentation of interference, signal stability (transmission lines), power supply response, etc. is not present
 * Misconfiguration of timing will effect accuracy, which is generally more common in larger displays
 * kBitPlanes is actually the recommended way to configure the number of PWM bits at compile time rather than run time
+  * This could possibly be done automatically at run time along with bit plane timing
 * BCM is used for reducing computational latency of bit plane generation for frames however this may still be an issue for some applications desiring a high frame rate
 * Shift length and indirectly pixel density are limited by clock fanout
   * Extending this beyond the fanout limit requires a repeater, which is not common or useful except for panels with LED drivers using RAM buffers
