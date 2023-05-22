@@ -9,7 +9,7 @@ Work in progress. Code is licensed under GPL 2. The original code base was https
 There is no warranty for this. Work is free to use according to the [GPL 2 license](COPYING). I am not responsible or liable for any damages or issues as a result of this in any way. User is responsible for all laws and regulations as required. Work is AS-IS and it is the respiblity of any user to address any shortages discovered in this code base before using it.
 
 ## Differences from fork
-See [this](https://github.com/daveythacher/rgb-led-matrix/blob/master/doc/difference_from_fork.md)
+See [this](Differences_from_fork.md) for more informantion.
 
 ## Building
 Note this is a hack for now. Currently it builds both the Raspberry Pi and Rock Pi S.
