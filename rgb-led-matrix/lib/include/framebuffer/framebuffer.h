@@ -54,9 +54,7 @@ namespace rgb_matrix {
       virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 
       CFG *cfg_;
-
-      // TODO: Remove double pointer
-      PixelDesignatorMap<T> **shared_mapper_;
+      PixelDesignatorMap<T> *shared_mapper_;
   };
 }
 #endif

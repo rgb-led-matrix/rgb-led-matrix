@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "types.h"
+#include "CFG/types.h"
 
 namespace rgb_matrix {
   class Canvas {

@@ -16,7 +16,7 @@ namespace rgb_matrix {
       virtual void show(Canvas *c);
 
     protected:
-      RGBMatrix() : _options(Options(nullptr)) {}
+      RGBMatrix() : _options(Options(nullptr, 0, nullptr)) {}
       RGBMatrix(Options o);
 
       Options _options;
