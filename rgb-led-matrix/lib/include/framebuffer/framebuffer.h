@@ -35,11 +35,7 @@ namespace rgb_matrix {
 
       static Framebuffer *CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper);
 
-      virtual int width() const;
-      virtual int height() const;
       virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
-      virtual void Serialize(const char **data, size_t *len, Canvas_ID *id);
-      virtual bool Deserialize(const char *data, size_t len, Canvas_ID id);
 
       virtual void DumpToMatrix() = 0;
 

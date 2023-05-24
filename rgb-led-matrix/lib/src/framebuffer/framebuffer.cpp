@@ -48,9 +48,6 @@ namespace rgb_matrix {
     shared_mapper_ = new PixelDesignatorMap<T>(cfg->get_dot().cols, cfg->get_dot().rows);
   }
 
-  template <typename T> int Framebuffer<T>::width() const { return shared_mapper_->width(); }
-  template <typename T> int Framebuffer<T>::height() const { return shared_mapper_->height(); }
-
   template <typename T> bool Framebuffer<T>::ApplyPixelMapper(const PixelMapper *mapper) {
     if (mapper == NULL) 
       return true;
@@ -106,21 +103,6 @@ namespace rgb_matrix {
   template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
     T *pixel = shared_mapper_->get(*shared_mapper_->get(x, y));
     MapColors(x, y, red, green, blue, &pixel->r_bit, &pixel->g_bit, &pixel->b_bit);
-  }
-
-  // TODO: Fix this
-  template <typename T> void Framebuffer<T>::Serialize(const char **data, size_t *len, Canvas_ID *id) {
-    *data = reinterpret_cast<const char*>(shared_mapper_->buffer());
-    *len = sizeof(T) * shared_mapper_->height() * shared_mapper_->width();
-    *id = cfg_->get_id();
-  }
-
-  // TODO: Fix this
-  template <typename T> bool Framebuffer<T>::Deserialize(const char *data, size_t len, Canvas_ID id) {
-    if (len != (sizeof(T) * shared_mapper_->height() * shared_mapper_->width()) || id != cfg_->get_id()) 
-      return false;
-    memcpy(shared_mapper_->buffer(), data, len);
-    return true;
   }
 
   template class Framebuffer<PixelDesignator>;
