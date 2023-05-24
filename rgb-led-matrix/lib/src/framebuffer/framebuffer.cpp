@@ -52,7 +52,7 @@ namespace rgb_matrix {
   template <typename T> int Framebuffer<T>::width() const { return shared_mapper_->width(); }
   template <typename T> int Framebuffer<T>::height() const { return shared_mapper_->height(); }
 
-  template <typename T> void Framebuffer<T>::ApplyNamedPixelMappers(PixelMapper_LUT *lut, const char *pixel_mapper_config) {
+  template <typename T> void Framebuffer<T>::ApplyNamedPixelMappers(PixelMapper_LUT *lut, const char *pixel_mapper_config, int chains) {
     if (pixel_mapper_config == NULL || strlen(pixel_mapper_config) == 0)
       return;
     char *const writeable_copy = strdup(pixel_mapper_config);
@@ -69,7 +69,7 @@ namespace rgb_matrix {
         fprintf(stderr, "Stray parameter ':%s' without mapper name ?\n", optional_param_start);
       }
       if (*s) {
-        ApplyPixelMapper(lut->FindPixelMapper(s, 1, 1, optional_param_start));
+        ApplyPixelMapper(lut->FindPixelMapper(s, 1, chains, optional_param_start));
       }
       s = semicolon + 1;
     }
@@ -113,9 +113,9 @@ namespace rgb_matrix {
     return true;
   }
 
-  template <typename T> void Framebuffer<T>::InitSharedMapper(PixelMapper_LUT *lut, const MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
+  template <typename T> void Framebuffer<T>::InitSharedMapper(PixelMapper_LUT *lut, const MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config, int chains) {
     ApplyPixelMapper(multiplex_mapper);
-    ApplyNamedPixelMappers(lut, pixel_mapper_config);
+    ApplyNamedPixelMappers(lut, pixel_mapper_config, chains);
   }
 
   template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
@@ -123,7 +123,7 @@ namespace rgb_matrix {
       case Canvas_ID::RP2040_SPI_ID:
         Framebuffer<PixelDesignator> *buf = new RP2040_SPI<PixelDesignator>(options.get_cfg());
         // TODO: Fix nullptr
-        buf->InitSharedMapper(nullptr, multiplex_mapper, options.get_pixel_mapper_config());
+        buf->InitSharedMapper(nullptr, multiplex_mapper, options.get_pixel_mapper_config(), options.get_cfg()->get_chains());
         return buf;
     }
 

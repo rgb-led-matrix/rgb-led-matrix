@@ -11,7 +11,7 @@ namespace rgb_matrix {
     };
 
     struct GAMMA {
-        GAMMA(float red = 2.2, float green = 2.2, float blue = 2.2) : red_(red), green_(green), blue_(blue) {}
+        GAMMA(float red, float green, float blue) : red_(red), green_(green), blue_(blue) {}
 
         inline float get_red() { return red_; }
         inline float get_green() { return green_; }

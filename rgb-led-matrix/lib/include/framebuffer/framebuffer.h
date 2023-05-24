@@ -45,8 +45,8 @@ namespace rgb_matrix {
       virtual void DumpToMatrix() = 0;
 
       bool ApplyPixelMapper(const PixelMapper *mapper);
-      void ApplyNamedPixelMappers(PixelMapper_LUT *lut, const char *pixel_mapper_config);
-      void InitSharedMapper(PixelMapper_LUT *lut, const MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config);
+      void ApplyNamedPixelMappers(PixelMapper_LUT *lut, const char *pixel_mapper_config, int chains);
+      void InitSharedMapper(PixelMapper_LUT *lut, const MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config, int chains);
 
     protected:
       Framebuffer();
