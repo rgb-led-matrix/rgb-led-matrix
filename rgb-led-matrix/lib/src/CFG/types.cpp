@@ -2,8 +2,6 @@
 
 namespace rgb_matrix {
 
-    Options::Options(const CFG *config) : cfg(config), multiplexing(0), pixel_mapper_config(NULL) {}
-
     DOTCorrect::DOTCorrect(int r, int c) : rows(r), cols(c) {
         table_ = new float[256 * 3 * rows * cols];
 
