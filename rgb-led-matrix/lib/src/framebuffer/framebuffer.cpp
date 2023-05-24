@@ -9,7 +9,6 @@
 
 #include "CFG/CFG.h"
 #include "framebuffer/external/RP2040/RP2040_SPI.h"
-#include "mappers/pixel/pixel-mapper.h"
 
 namespace rgb_matrix {
 
@@ -46,42 +45,15 @@ namespace rgb_matrix {
     : cfg_(cfg) {
     assert(cfg != nullptr);
 
-    *shared_mapper_ = new PixelDesignatorMap<T>(cfg->dot.cols, cfg->dot.rows);
+    shared_mapper_ = new PixelDesignatorMap<T>(cfg->get_dot().cols, cfg->get_dot().rows);
   }
 
-  template <typename T> int Framebuffer<T>::width() const { return (*shared_mapper_)->width(); }
-  template <typename T> int Framebuffer<T>::height() const { return (*shared_mapper_)->height(); }
-
-  template <typename T> void Framebuffer<T>::ApplyNamedPixelMappers(PixelMapper_LUT *lut, const char *pixel_mapper_config) {
-    if (pixel_mapper_config == NULL || strlen(pixel_mapper_config) == 0)
-      return;
-    char *const writeable_copy = strdup(pixel_mapper_config);
-    const char *const end = writeable_copy + strlen(writeable_copy);
-    char *s = writeable_copy;
-    while (s < end) {
-      char *const semicolon = strchrnul(s, ';');
-      *semicolon = '\0';
-      char *optional_param_start = strchr(s, ':');
-      if (optional_param_start) {
-        *optional_param_start++ = '\0';
-      }
-      if (*s == '\0' && optional_param_start && *optional_param_start != '\0') {
-        fprintf(stderr, "Stray parameter ':%s' without mapper name ?\n", optional_param_start);
-      }
-      if (*s) {
-        ApplyPixelMapper(lut->FindPixelMapper(s, 1, 1, optional_param_start));
-      }
-      s = semicolon + 1;
-    }
-    free(writeable_copy);
-  }
-
-  template <typename T> bool Framebuffer<T>::ApplyPixelMapper(const PixelMapper *mapper) {
+  template <typename T> bool Framebuffer<T>::ApplyPixelMapper(const MultiplexMapper *mapper) {
     if (mapper == NULL) 
       return true;
 
-    const int old_width = (*shared_mapper_)->width();
-    const int old_height = (*shared_mapper_)->height();
+    const int old_width = shared_mapper_->width();
+    const int old_height = shared_mapper_->height();
     int new_width, new_height;
 
     if (!mapper->GetSizeMapping(old_width, old_height, &new_width, &new_height))
@@ -103,27 +75,25 @@ namespace rgb_matrix {
         }
 
         const uint32_t *orig_designator;
-        orig_designator = (*shared_mapper_)->get(orig_x, orig_y);
+        orig_designator = shared_mapper_->get(orig_x, orig_y);
         *new_mapper->get(x, y) = *orig_designator;
       }
     }
 
-    delete (*shared_mapper_);
-    (*shared_mapper_) = new_mapper;
+    delete shared_mapper_;
+    shared_mapper_ = new_mapper;
     return true;
   }
 
-  template <typename T> void Framebuffer<T>::InitSharedMapper(PixelMapper_LUT *lut, const MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config) {
+  template <typename T> void Framebuffer<T>::InitSharedMapper(const MultiplexMapper *multiplex_mapper) {
     ApplyPixelMapper(multiplex_mapper);
-    ApplyNamedPixelMappers(lut, pixel_mapper_config);
   }
 
   template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
-    switch (options.cfg->get_id()) {
+    switch (options.get_cfg()->get_id()) {
       case Canvas_ID::RP2040_SPI_ID:
-        Framebuffer<PixelDesignator> *buf = new RP2040_SPI<PixelDesignator>(options.cfg);
-        // TODO: Fix nullptr
-        buf->InitSharedMapper(nullptr, multiplex_mapper, options.pixel_mapper_config);
+        Framebuffer<PixelDesignator> *buf = new RP2040_SPI<PixelDesignator>(options.get_cfg());
+        buf->InitSharedMapper(multiplex_mapper);
         return buf;
     }
 
@@ -131,23 +101,8 @@ namespace rgb_matrix {
   }
 
   template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
-    T *pixel = (*shared_mapper_)->get(*(*shared_mapper_)->get(x, y));
+    T *pixel = shared_mapper_->get(*shared_mapper_->get(x, y));
     MapColors(x, y, red, green, blue, &pixel->r_bit, &pixel->g_bit, &pixel->b_bit);
-  }
-
-  // TODO: Fix this
-  template <typename T> void Framebuffer<T>::Serialize(const char **data, size_t *len, Canvas_ID *id) {
-    *data = reinterpret_cast<const char*>((*shared_mapper_)->buffer());
-    *len = sizeof(T) * (*shared_mapper_)->height() * (*shared_mapper_)->width();
-    *id = cfg_->get_id();
-  }
-
-  // TODO: Fix this
-  template <typename T> bool Framebuffer<T>::Deserialize(const char *data, size_t len, Canvas_ID id) {
-    if (len != (sizeof(T) * (*shared_mapper_)->height() * (*shared_mapper_)->width()) || id != cfg_->get_id()) 
-      return false;
-    memcpy((*shared_mapper_)->buffer(), data, len);
-    return true;
   }
 
   template class Framebuffer<PixelDesignator>;
