@@ -3,11 +3,10 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include "canvas.h"
-#include "led-matrix.h"
+#include "Panel.h"
+#include "RGBMatrix.h"
 #include "external/external.h"
 #include "mappers/multiplex/multiplex-mapper.h"
-#include "mappers/pixel/PixelMapper_LUT.h"
 
 namespace rgb_matrix {
   template <typename T> struct PixelDesignatorMap {
@@ -45,8 +44,7 @@ namespace rgb_matrix {
       virtual void DumpToMatrix() = 0;
 
       bool ApplyPixelMapper(const PixelMapper *mapper);
-      void ApplyNamedPixelMappers(PixelMapper_LUT *lut, const char *pixel_mapper_config, int parallel);
-      void InitSharedMapper(PixelMapper_LUT *lut, const MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config, int parallel);
+      void InitSharedMapper(const MultiplexMapper *multiplex_mapper);
 
     protected:
       Framebuffer();

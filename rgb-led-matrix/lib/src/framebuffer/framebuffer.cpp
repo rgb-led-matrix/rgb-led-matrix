@@ -9,7 +9,6 @@
 
 #include "CFG/CFG.h"
 #include "framebuffer/external/RP2040/RP2040_SPI.h"
-#include "mappers/pixel/pixel-mapper.h"
 
 namespace rgb_matrix {
 
@@ -46,35 +45,11 @@ namespace rgb_matrix {
     : cfg_(cfg) {
     assert(cfg != nullptr);
 
-    shared_mapper_ = new PixelDesignatorMap<T>(cfg->get_dot().cols, cfg->get_dot().rows * cfg->get_parallel_num());
+    shared_mapper_ = new PixelDesignatorMap<T>(cfg->get_dot().cols, cfg->get_dot().rows);
   }
 
   template <typename T> int Framebuffer<T>::width() const { return shared_mapper_->width(); }
   template <typename T> int Framebuffer<T>::height() const { return shared_mapper_->height(); }
-
-  template <typename T> void Framebuffer<T>::ApplyNamedPixelMappers(PixelMapper_LUT *lut, const char *pixel_mapper_config, int parallel) {
-    if (pixel_mapper_config == NULL || strlen(pixel_mapper_config) == 0)
-      return;
-    char *const writeable_copy = strdup(pixel_mapper_config);
-    const char *const end = writeable_copy + strlen(writeable_copy);
-    char *s = writeable_copy;
-    while (s < end) {
-      char *const semicolon = strchrnul(s, ';');
-      *semicolon = '\0';
-      char *optional_param_start = strchr(s, ':');
-      if (optional_param_start) {
-        *optional_param_start++ = '\0';
-      }
-      if (*s == '\0' && optional_param_start && *optional_param_start != '\0') {
-        fprintf(stderr, "Stray parameter ':%s' without mapper name ?\n", optional_param_start);
-      }
-      if (*s) {
-        ApplyPixelMapper(lut->FindPixelMapper(s, 1, parallel, optional_param_start));
-      }
-      s = semicolon + 1;
-    }
-    free(writeable_copy);
-  }
 
   template <typename T> bool Framebuffer<T>::ApplyPixelMapper(const PixelMapper *mapper) {
     if (mapper == NULL) 
@@ -113,17 +88,15 @@ namespace rgb_matrix {
     return true;
   }
 
-  template <typename T> void Framebuffer<T>::InitSharedMapper(PixelMapper_LUT *lut, const MultiplexMapper *multiplex_mapper, const char *pixel_mapper_config, int parallel) {
+  template <typename T> void Framebuffer<T>::InitSharedMapper(const MultiplexMapper *multiplex_mapper) {
     ApplyPixelMapper(multiplex_mapper);
-    ApplyNamedPixelMappers(lut, pixel_mapper_config, parallel);
   }
 
   template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
     switch (options.get_cfg()->get_id()) {
       case Canvas_ID::RP2040_SPI_ID:
         Framebuffer<PixelDesignator> *buf = new RP2040_SPI<PixelDesignator>(options.get_cfg());
-        // TODO: Fix nullptr
-        buf->InitSharedMapper(nullptr, multiplex_mapper, options.get_pixel_mapper_config(), options.get_cfg()->get_parallel_num());
+        buf->InitSharedMapper(multiplex_mapper);
         return buf;
     }
 

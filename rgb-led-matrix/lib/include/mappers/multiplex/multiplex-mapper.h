@@ -2,7 +2,7 @@
 #define MULTIPLEX_H
 
 #include <vector>
-#include "mappers/pixel/pixel-mapper.h"
+#include "mappers/multiplex/pixel-mapper.h"
 
 namespace rgb_matrix {
   class MultiplexMapper : public PixelMapper {

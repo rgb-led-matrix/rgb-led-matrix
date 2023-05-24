@@ -12,33 +12,13 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "led-matrix.h"
+#include "RGBMatrix.h"
 #include "CFG/CFG.h"
-#include "framecanvas.h"
+#include "LEDPanel.h"
 #include "framebuffer/framebuffer.h"
 
 namespace rgb_matrix {
-  RGBMatrix *RGBMatrix::_ptr = nullptr;
-
-  RGBMatrix::RGBMatrix(Options o) :_options(o) {
-    // Do Nothing
-  }
-
-  RGBMatrix::~RGBMatrix() {
-    if (_ptr != nullptr)
-      delete _ptr;
-    _ptr = nullptr;
-  }
-
-  RGBMatrix *RGBMatrix::CreateFromOptions(Options &options) {
-    if (_ptr == nullptr) {
-      _ptr = new RGBMatrix(options);
-    }
-
-    return _ptr;
-  }
-
-  Canvas *RGBMatrix::CreateCanvas() {
+  Panel *RGBMatrix::CreateCanvas() {
     const MultiplexMapper *multiplex_mapper = NULL;
 
     if (_options.get_multiplexing() > 0) {
@@ -53,14 +33,10 @@ namespace rgb_matrix {
 
     switch (_options.get_cfg()->get_id()) {
       case Canvas_ID::RP2040_SPI_ID:
-        return new FrameCanvas<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(_options, multiplex_mapper));
+        return new LEDPanel<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(_options, multiplex_mapper));
       default:
         return nullptr;
     }
     
-  }
-
-  void RGBMatrix::show(Canvas *c) {
-    c->show();
   }
 };
