@@ -6,9 +6,9 @@
 namespace rgb_matrix {
   class RP2040_SPI_CFG : public CFG {
     public:
-      RP2040_SPI_CFG(int rows, int cols, int chains, float red, float green, float blue, int pwm_bits, int brightness, bool use_CIE1931, 
+      RP2040_SPI_CFG(int rows, int cols, int parallel, float red, float green, float blue, int pwm_bits, int brightness, bool use_CIE1931, 
         bool use_gamma_correction, bool use_dot_correction, bool use_brightness, const char *spidev_path) : 
-          CFG(rows, cols, chains, red, green, blue), spidev_path_(spidev_path), pwm_bits_(pwm_bits), brightness_(brightness), use_CIE1931_(use_CIE1931), 
+          CFG(rows, cols, parallel, red, green, blue), spidev_path_(spidev_path), pwm_bits_(pwm_bits), brightness_(brightness), use_CIE1931_(use_CIE1931), 
           use_gamma_correction_(use_gamma_correction), use_dot_correction_(use_dot_correction), use_brightness_(use_brightness) { 
             id_ = Canvas_ID::RP2040_SPI_ID; 
       }
