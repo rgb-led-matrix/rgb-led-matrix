@@ -48,7 +48,7 @@ namespace rgb_matrix {
     shared_mapper_ = new PixelDesignatorMap<T>(cfg->get_dot().cols, cfg->get_dot().rows);
   }
 
-  template <typename T> bool Framebuffer<T>::ApplyPixelMapper(const PixelMapper *mapper) {
+  template <typename T> bool Framebuffer<T>::ApplyPixelMapper(const MultiplexMapper *mapper) {
     if (mapper == NULL) 
       return true;
 
