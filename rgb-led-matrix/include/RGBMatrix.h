@@ -3,24 +3,20 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "canvas.h"
+#include "Panel.h"
 
 namespace rgb_matrix {
   class RGBMatrix {
     public:
-      virtual ~RGBMatrix();
+      RGBMatrix(Options o) :_options(o) {}
+      virtual ~RGBMatrix() {}
 
-      static RGBMatrix *CreateFromOptions(Options &options);
-
-      virtual Canvas *CreateCanvas();
-      virtual void show(Canvas *c);
+      virtual Panel *CreateCanvas();
 
     protected:
       RGBMatrix() : _options(Options(nullptr, 0, nullptr)) {}
-      RGBMatrix(Options o);
 
       Options _options;
-      static RGBMatrix *_ptr;
   };
 }
 #endif
