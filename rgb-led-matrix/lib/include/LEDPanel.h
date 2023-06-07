@@ -1,8 +1,9 @@
 #ifndef LEDPANEL_H
 #define LEDPANEL_H
 
+#include <mutex>
 #include "Panel.h"
-#include "framebuffer/framebuffer.h"
+#include "framebuffer/Framebuffer.h"
 
 namespace rgb_matrix {
   template <typename T> class LEDPanel : public Panel {
@@ -17,6 +18,7 @@ namespace rgb_matrix {
 
     protected:
       Framebuffer<T> *const frame_;
+      std::mutex lock_;
   };
 }
 #endif

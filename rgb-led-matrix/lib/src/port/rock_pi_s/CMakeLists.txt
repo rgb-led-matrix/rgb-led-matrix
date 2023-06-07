@@ -7,4 +7,5 @@ set(CMAKE_CXX_COMPILER /opt/rock-pi-s/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-li
 
 target_link_libraries(rock_pi_s
     multiplex-mapper
-    framebuffer)
+    framebuffer
+    io)

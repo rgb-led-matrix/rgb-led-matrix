@@ -2,8 +2,6 @@
 #define PANEL_H
 
 #include <stdint.h>
-#include <stddef.h>
-#include "CFG/types.h"
 
 namespace rgb_matrix {
   class Panel {
