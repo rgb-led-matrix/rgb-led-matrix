@@ -2,7 +2,7 @@
 #define RP2040_H
 
 #include <vector>
-#include "framebuffer/framebuffer.h"
+#include "framebuffer/Framebuffer.h"
 #include "CFG/RP2040_SPI_CFG.h"
 
 namespace rgb_matrix {

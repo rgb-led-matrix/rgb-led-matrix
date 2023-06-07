@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
+#include "framebuffer/external/external.h"
 #include "framebuffer/external/RP2040/RP2040_SPI.h"
 
 namespace rgb_matrix {

@@ -1,8 +1,8 @@
 #ifndef CFG_H
 #define CFG_H
 
-#include "types.h"
 #include <vector>
+#include "types.h"
 using namespace rgb_matrix;
 
 namespace rgb_matrix {
