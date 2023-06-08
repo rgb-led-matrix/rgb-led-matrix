@@ -1,6 +1,6 @@
 #include <assert.h>
 #include <stdio.h>
-#include "framebuffer/external/RP2040/RP2040_UART/RP2040_SPI.h"
+#include "framebuffer/external/RP2040/RP2040_UART/RP2040_UART.h"
 #include "framebuffer/external/external.h"
 
 namespace rgb_matrix {
@@ -58,8 +58,8 @@ namespace rgb_matrix {
 
   template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper) {
     switch (options.get_cfg()->get_id()) {
-      case Canvas_ID::RP2040_SPI_ID:
-        Framebuffer<PixelDesignator> *buf = new RP2040_SPI<PixelDesignator>(options.get_cfg());
+      case Canvas_ID::RP2040_UART_ID:
+        Framebuffer<PixelDesignator> *buf = new RP2040_UART<PixelDesignator>(options.get_cfg());
         buf->InitSharedMapper(multiplex_mapper);
         return buf;
     }

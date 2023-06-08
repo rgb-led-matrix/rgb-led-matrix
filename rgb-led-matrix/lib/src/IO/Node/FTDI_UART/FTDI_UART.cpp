@@ -7,6 +7,8 @@ namespace rgb_matrix {
     }
 
     void FTDI_UART::write(char *buf, uint32_t len) {
+        lock_.lock();
 
+        lock_.unlock();
     }
 }

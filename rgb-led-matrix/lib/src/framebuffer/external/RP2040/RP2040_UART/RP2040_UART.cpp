@@ -6,13 +6,13 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 #include "framebuffer/external/external.h"
-#include "framebuffer/external/RP2040/RP2040_UART/RP2040_SPI.h"
+#include "framebuffer/external/RP2040/RP2040_UART/RP2040_UART.h"
 
 namespace rgb_matrix {
-    template <typename T> RP2040_SPI<T>::RP2040_SPI(CFG *cfg) 
+    template <typename T> RP2040_UART<T>::RP2040_UART(CFG *cfg) 
         : Framebuffer<T>(cfg) {
-            if (cfg->get_id() == Canvas_ID::RP2040_SPI_ID)
-                cfg_ = static_cast<RP2040_SPI_CFG *>(cfg);
+            if (cfg->get_id() == Canvas_ID::RP2040_UART_ID)
+                cfg_ = static_cast<RP2040_UART_CFG *>(cfg);
             else
                 throw cfg;
 
@@ -20,23 +20,14 @@ namespace rgb_matrix {
                 build_table(cfg->get_gamma(), cfg_->use_CIE1931());
             else
                 build_table(GAMMA(1.0, 1.0, 1.0), cfg_->use_CIE1931());
-
-            init_spi(cfg_->get_spidev_path());
-    }
-
-    template <typename T> RP2040_SPI<T>::~RP2040_SPI() {
-        close(fd);
     }
     
-    template <typename T> void RP2040_SPI<T>::DumpToMatrix() {
-        // TODO: Send buffer to RP2040 external hardware module via spidev
-
-        char str[] = "Hello World\n";
-        write((uint8_t *) str, strlen(str));
+    template <typename T> void RP2040_UART<T>::DumpToMatrix() {
+        // TODO: Send buffer to RP2040 external hardware module via Node
     }
 
     // Handles dot correction and PWM bit scaling
-    template <typename T> inline void  RP2040_SPI<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
+    template <typename T> inline void  RP2040_UART<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
         float fr, fg, fb;
         uint8_t bright = cfg_->use_brightness() ? cfg_->get_brightness() % 100 : 100;
 
@@ -54,7 +45,7 @@ namespace rgb_matrix {
     }
 
     // Handles brightness, gamma and CIE1931
-    template <typename T> void RP2040_SPI<T>::build_table(GAMMA g, bool use_CIE1931) {
+    template <typename T> void RP2040_UART<T>::build_table(GAMMA g, bool use_CIE1931) {
         if (!use_CIE1931) {
             for (uint32_t i = 0; i < 256; i++) {
                 for (int j = 0; j < 100; j++) {
@@ -80,40 +71,5 @@ namespace rgb_matrix {
         }
     }
 
-    template <typename T> void RP2040_SPI<T>::init_spi(const char *spi) {
-        uint32_t temp;
-        
-        fd = open(spi, O_SYNC | O_RDWR);
-        if (fd < 0)
-            throw spi;
-
-        temp = 8;
-        if (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &temp) == -1)
-            throw spi;
-        
-        temp = 10 * 1000 * 1000;
-        if (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &temp) == -1)
-            throw spi;
-
-        temp = SPI_MODE_1;
-        if (ioctl(fd, SPI_IOC_WR_MODE, &temp) == -1)
-            throw spi;
-    }
-
-    template <typename T> void RP2040_SPI<T>::write(uint8_t *buf, uint32_t len) {
-        struct spi_ioc_transfer tr = {
-            .tx_buf = (unsigned long) buf,
-            .rx_buf = 0,
-            .len = len,
-            .speed_hz = 10 * 1000 * 1000,
-            .delay_usecs = 10,
-            .bits_per_word = 8,
-            .cs_change = 0,
-        };
-
-        if (ioctl(fd, SPI_IOC_MESSAGE(1), &tr) == -1)
-            throw this;
-    }
-
-    template class RP2040_SPI<PixelDesignator>;
+    template class RP2040_UART<PixelDesignator>;
 }
