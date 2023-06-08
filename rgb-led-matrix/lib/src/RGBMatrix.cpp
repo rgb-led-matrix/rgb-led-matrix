@@ -1,6 +1,6 @@
 #include "RGBMatrix.h"
 #include "CFG/CFG.h"
-#include "LEDPanel.h"
+#include "Panel/LEDPanel/LEDPanel.h"
 #include "framebuffer/Framebuffer.h"
 #include "framebuffer/external/external.h"
 

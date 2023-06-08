@@ -2,8 +2,8 @@
 #define CFG_H
 
 #include <vector>
+#include <IO/Node/Node.h>
 #include "types.h"
-#include "../IO/Node.h"
 using namespace rgb_matrix;
 
 namespace rgb_matrix {

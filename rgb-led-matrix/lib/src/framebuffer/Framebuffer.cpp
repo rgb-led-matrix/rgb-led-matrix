@@ -1,6 +1,6 @@
 #include <assert.h>
 #include <stdio.h>
-#include "framebuffer/external/RP2040/RP2040_SPI.h"
+#include "framebuffer/external/RP2040/RP2040_UART/RP2040_SPI.h"
 #include "framebuffer/external/external.h"
 
 namespace rgb_matrix {

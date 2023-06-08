@@ -6,7 +6,7 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 #include "framebuffer/external/external.h"
-#include "framebuffer/external/RP2040/RP2040_SPI.h"
+#include "framebuffer/external/RP2040/RP2040_UART/RP2040_SPI.h"
 
 namespace rgb_matrix {
     template <typename T> RP2040_SPI<T>::RP2040_SPI(CFG *cfg) 

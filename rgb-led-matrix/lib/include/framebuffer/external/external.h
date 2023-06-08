@@ -1,7 +1,7 @@
 #ifndef EXTERNAL_FRAMEBUFFER_H
 #define EXTERNAL_FRAMEBUFFER_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 namespace rgb_matrix {
     struct PixelDesignator {

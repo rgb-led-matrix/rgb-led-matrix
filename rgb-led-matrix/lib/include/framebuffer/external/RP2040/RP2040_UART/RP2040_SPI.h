@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "framebuffer/Framebuffer.h"
-#include "CFG/RP2040_SPI_CFG.h"
+#include "CFG/RP2040_UART/RP2040_SPI_CFG.h"
 
 namespace rgb_matrix {
     template <typename T> class RP2040_SPI: public Framebuffer<T> {
