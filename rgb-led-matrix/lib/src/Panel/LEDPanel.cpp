@@ -1,4 +1,4 @@
-#include "LEDPanel.h"
+#include "Panel/LEDPanel/LEDPanel.h"
 #include "framebuffer/external/external.h"
 
 namespace rgb_matrix {
@@ -12,9 +12,7 @@ namespace rgb_matrix {
   }
 
   template <typename T> void LEDPanel<T>::show() {
-    lock_.lock();
     frame_->DumpToMatrix();
-    lock_.unlock();
   }
 
   template class LEDPanel<PixelDesignator>;

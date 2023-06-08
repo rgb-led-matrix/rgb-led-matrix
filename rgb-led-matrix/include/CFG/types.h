@@ -7,7 +7,7 @@ namespace rgb_matrix {
     class CFG;
 
     enum Canvas_ID {
-        RP2040_SPI_ID = 0,
+        RP2040_ID = 0,
     };
 
     struct GAMMA {
