@@ -2,7 +2,7 @@
 #include "IO/Node/FTDI_UART/FTDI_UART.h"
 
 namespace rgb_matrix {
-    FTDI_UART::FTDI_UART(const char *serial_number) {
+    FTDI_UART::FTDI_UART(const char *serial_number, uint8_t chan_num) {
 
     }
 

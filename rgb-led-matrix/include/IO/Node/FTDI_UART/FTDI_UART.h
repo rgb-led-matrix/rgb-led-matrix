@@ -6,7 +6,7 @@
 namespace rgb_matrix {
   class FTDI_UART : public Node {
     public:
-        FTDI_UART(const char *serial_number);
+        FTDI_UART(const char *serial_number, uint8_t chan_num);
 
         void write(char *buf, uint32_t len);
   };

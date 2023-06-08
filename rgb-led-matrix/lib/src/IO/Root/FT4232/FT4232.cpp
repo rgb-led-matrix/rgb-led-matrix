@@ -4,7 +4,7 @@
 namespace rgb_matrix {
     FT4232::FT4232(const char *serial_number) {
         for (int i = 0; i < (sizeof(nodes_) / sizeof(Node *)); i++)
-            nodes_[i] = new FTDI_UART(serial_number);
+            nodes_[i] = new FTDI_UART(serial_number, i);
     }
 
     FT4232::~FT4232() {
