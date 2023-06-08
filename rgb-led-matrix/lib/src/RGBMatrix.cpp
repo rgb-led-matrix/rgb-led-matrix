@@ -20,7 +20,7 @@ namespace rgb_matrix {
     }
 
     switch (_options.get_cfg()->get_id()) {
-      case Canvas_ID::RP2040_UART_ID:
+      case Canvas_ID::RP2040_ID:
         return new LEDPanel<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(_options, multiplex_mapper));
       default:
         return nullptr;
