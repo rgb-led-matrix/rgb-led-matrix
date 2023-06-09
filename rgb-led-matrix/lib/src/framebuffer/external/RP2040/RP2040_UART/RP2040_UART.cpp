@@ -6,13 +6,13 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 #include "framebuffer/external/external.h"
-#include "framebuffer/external/RP2040/RP2040.h"
+#include "framebuffer/external/RP2040/RP2040_UART/RP2040_UART.h"
 
 namespace rgb_matrix {
-    template <typename T> RP2040<T>::RP2040(CFG *cfg) 
+    template <typename T> RP2040_UART<T>::RP2040_UART(CFG *cfg) 
         : Framebuffer<T>(cfg) {
-            if (cfg->get_id() == Canvas_ID::RP2040_ID)
-                cfg_ = static_cast<RP2040_CFG *>(cfg);
+            if (cfg->get_id() == Canvas_ID::RP2040_UART_ID)
+                cfg_ = static_cast<RP2040_UART_CFG *>(cfg);
             else
                 throw cfg;
 
@@ -22,14 +22,14 @@ namespace rgb_matrix {
                 build_table(GAMMA(1.0, 1.0, 1.0), cfg_->use_CIE1931());
     }
     
-    template <typename T> void RP2040<T>::DumpToMatrix() {
+    template <typename T> void RP2040_UART<T>::DumpToMatrix() {
         uint32_t size = sizeof(T) * Framebuffer<T>::shared_mapper_->width() * Framebuffer<T>::shared_mapper_->height();
 
         cfg_->get_node()->write((char *) Framebuffer<T>::shared_mapper_->buffer(), size);
     }
 
     // Handles dot correction and PWM bit scaling
-    template <typename T> inline void  RP2040<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
+    template <typename T> inline void  RP2040_UART<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
         float fr, fg, fb;
         uint8_t bright = cfg_->use_brightness() ? cfg_->get_brightness() % 100 : 100;
 
@@ -47,7 +47,7 @@ namespace rgb_matrix {
     }
 
     // Handles brightness, gamma and CIE1931
-    template <typename T> void RP2040<T>::build_table(GAMMA g, bool use_CIE1931) {
+    template <typename T> void RP2040_UART<T>::build_table(GAMMA g, bool use_CIE1931) {
         if (!use_CIE1931) {
             for (uint32_t i = 0; i < 256; i++) {
                 for (int j = 0; j < 100; j++) {
@@ -73,5 +73,5 @@ namespace rgb_matrix {
         }
     }
 
-    template class RP2040<PixelDesignator>;
+    template class RP2040_UART<PixelDesignator>;
 }

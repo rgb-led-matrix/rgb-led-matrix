@@ -1,16 +1,16 @@
-#ifndef RP2040_CFG_H
-#define RP2040_CFG_H
+#ifndef RP2040_UART_CFG_H
+#define RP2040_UART_CFG_H
 
 #include "CFG/CFG.h"
 
 namespace rgb_matrix {
-  class RP2040_CFG : public CFG {
+  class RP2040_UART_CFG : public CFG {
     public:
-      RP2040_CFG(int rows, int cols, Node *node, float red, float green, float blue, int pwm_bits, int brightness, bool use_CIE1931, 
+      RP2040_UART_CFG(int rows, int cols, Node *node, float red, float green, float blue, int pwm_bits, int brightness, bool use_CIE1931, 
         bool use_gamma_correction, bool use_dot_correction, bool use_brightness) : 
           CFG(rows, cols, node, red, green, blue), pwm_bits_(pwm_bits), brightness_(brightness), use_CIE1931_(use_CIE1931), 
           use_gamma_correction_(use_gamma_correction), use_dot_correction_(use_dot_correction), use_brightness_(use_brightness) { 
-            id_ = Canvas_ID::RP2040_ID; 
+            id_ = Canvas_ID::RP2040_UART_ID; 
       }
 
       inline bool use_brightness() { return use_brightness_; }
