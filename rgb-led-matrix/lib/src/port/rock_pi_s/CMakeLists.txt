@@ -6,11 +6,16 @@ set(CMAKE_CXX_COMPILER /opt/rock-pi-s/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-li
 
 target_include_directories(rock_pi_s PRIVATE
     ../../../../include/
-    ../../../include/)
+    ../../../include/
+    ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv8_hard-float/)
+
+target_link_directories(rock_pi_s PRIVATE
+    ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv8_hard-float/build)
 
 target_link_libraries(rock_pi_s
     multiplex-mapper
     framebuffer
     CFG
     Panel
-    io-armv8-hf)
+    IO
+    ftd2xx)
