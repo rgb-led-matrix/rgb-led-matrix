@@ -13,4 +13,12 @@ namespace rgb_matrix {
 
         lock_.unlock();
     }
+
+    int FTDI_UART::read(char **buf, uint32_t len, uint32_t timeout_us) {
+        lock_.lock();
+
+        // TODO:
+
+        lock_.unlock();
+    }
 }

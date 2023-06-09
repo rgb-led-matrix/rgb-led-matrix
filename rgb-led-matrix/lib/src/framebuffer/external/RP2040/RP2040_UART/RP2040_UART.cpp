@@ -11,6 +11,8 @@
 namespace rgb_matrix {
     template <typename T> RP2040_UART<T>::RP2040_UART(CFG *cfg) 
         : Framebuffer<T>(cfg) {
+            thread_ = nullptr; 
+
             if (cfg->get_id() == Canvas_ID::RP2040_UART_ID)
                 cfg_ = static_cast<RP2040_UART_CFG *>(cfg);
             else
@@ -20,12 +22,23 @@ namespace rgb_matrix {
                 build_table(cfg->get_gamma(), cfg_->use_CIE1931());
             else
                 build_table(GAMMA(1.0, 1.0, 1.0), cfg_->use_CIE1931());
+            
+            shutdown_ = false;
+            start_ = false;
+            thread_ = new std::thread(&RP2040_UART<T>::worker_thread, this);
+    }
+
+    template <typename T> RP2040_UART<T>::~RP2040_UART() {
+        shutdown_ = true;
+
+        if (thread_ != nullptr)
+            thread_->join();
     }
     
     template <typename T> void RP2040_UART<T>::DumpToMatrix() {
-        uint32_t size = sizeof(T) * Framebuffer<T>::shared_mapper_->width() * Framebuffer<T>::shared_mapper_->height();
+        start_ = true;
 
-        cfg_->get_node()->write((char *) Framebuffer<T>::shared_mapper_->buffer(), size);
+        while (start_);
     }
 
     // Handles dot correction and PWM bit scaling
@@ -69,6 +82,35 @@ namespace rgb_matrix {
                     temp = pow(i / 255.0, 1 / g.get_blue()) * j;
                     lut[i][j][2] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
                 }
+            }
+        }
+    }
+
+    template <typename T> void RP2040_UART<T>::worker_thread(RP2040_UART<T> *object) {
+        uint32_t size = sizeof(T) * object->shared_mapper_->width() * object->shared_mapper_->height();
+        char *start = (char *) "s";
+        char *idle = (char *) "i";
+
+        while (object->shutdown_) {
+            if (object->start_) {
+                // Send active tocken to get buss out of idle
+                object->cfg_->get_node()->write(start, 1);
+
+                // Wait for bus to become active (timout after 100uS and drop frame)
+                for (int i = 0; i < 10; i++) {
+                    // If it times out then the bus is idle, send frame
+                    if (object->cfg_->get_node()->read(&idle, 1, 10) == 0) {
+                        object->cfg_->get_node()->write((char *) object->shared_mapper_->buffer(), size);
+
+                        // Check for idle loop, recover if still active
+                        while (object->cfg_->get_node()->read(&idle, 1, 100) == 0)
+                            object->cfg_->get_node()->write(idle, 1);
+                    
+                        break;
+                    }
+                }
+
+                object->start_ = false;
             }
         }
     }
