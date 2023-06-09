@@ -10,8 +10,7 @@ target_include_directories(rock_pi_s PRIVATE
     ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv8_hard-float/)
 
 target_link_directories(rock_pi_s PRIVATE
-    ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv8_hard-float/build
-)
+    ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv8_hard-float/build)
 
 target_link_libraries(rock_pi_s
     multiplex-mapper

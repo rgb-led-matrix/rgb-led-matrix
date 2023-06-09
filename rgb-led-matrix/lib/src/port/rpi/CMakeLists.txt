@@ -9,9 +9,8 @@ target_include_directories(rpi PRIVATE
     ../../../include/
     ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv8_hard-float/)
 
-    target_link_directories(rpi PRIVATE
-        ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv8_hard-float/build
-    )
+target_link_directories(rpi PRIVATE
+    ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv8_hard-float/build)
 
 target_link_libraries(rpi
     multiplex-mapper
