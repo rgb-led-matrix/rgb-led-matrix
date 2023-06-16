@@ -2,6 +2,7 @@
 #define FTDI_UART_H
 
 #include <mutex>
+#include <string>
 #include "IO/Node/Node.h"
 
 namespace rgb_matrix {
@@ -11,9 +12,11 @@ namespace rgb_matrix {
 
       void write(char *buf, uint32_t len);
       int read(char **buf, uint32_t len, uint32_t timeout_us);
+      void set_baud(uint32_t baud);
 
     protected:
       std::mutex lock_;
+      std::string serial_number_;
   };
 }
 #endif
