@@ -10,7 +10,7 @@ namespace rgb_matrix {
         FT_HANDLE handle;
         char str[100];
 
-        sprintf(str, "%s%u", serial_number, chan_num);
+        snprintf(str, "%s%u", sizeof(str), serial_number, chan_num);
         serial_number_ = str;
 
         set_baud(4000000);
