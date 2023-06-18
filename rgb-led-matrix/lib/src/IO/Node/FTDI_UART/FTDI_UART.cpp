@@ -6,23 +6,21 @@
 
 namespace rgb_matrix {
     FTDI_UART::FTDI_UART(const char *serial_number, uint8_t chan_num) {
-        FT_STATUS status;
         FT_HANDLE handle;
         char str[100];
 
-        snprintf(str, "%s%u", sizeof(str), serial_number, chan_num);
+        snprintf(str, sizeof(str), "%s%u", serial_number, chan_num);
         serial_number_ = str;
 
         set_baud(4000000);
 
         lock_.lock();
-        status = FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle);
 
-        if (status == FT_OK) {
+        if (FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle) == FT_OK) {
             FT_SetLatencyTimer(handle, 2);
+            FT_Close(handle);
         }
 
-        FT_Close(handle);
         lock_.unlock();
     }
 
@@ -48,9 +46,10 @@ namespace rgb_matrix {
 
                 break;
             }
+
+            FT_Close(handle);
         }
 
-        FT_Close(handle);
         lock_.unlock();
     }
 
@@ -85,26 +84,25 @@ namespace rgb_matrix {
 
                 break;
             }
+
+            FT_Close(handle);
         }
 
-        FT_Close(handle);
         lock_.unlock();
 
         return 0;
     }
 
     void FTDI_UART::set_baud(uint32_t baud) {
-        FT_STATUS status;
         FT_HANDLE handle;
 
         lock_.lock();
-        status = FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle);
 
-        if (status == FT_OK) {
+        if (FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle) == FT_OK) {
             FT_SetBaudRate(handle, baud);
+            FT_Close(handle);
         }
 
-        FT_Close(handle);
         lock_.unlock();
     }
 }
