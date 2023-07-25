@@ -16,6 +16,8 @@ Mapping red to red, green to green and blue to blue. This is to be handled by th
 
 Mapping panels into a larger application. this is to be handled by the application or some other higher level library. One of these may be available at some point.
 
+Higher level applications and features of said applications. Some of these may become available at some point, however the focus here is to create abstraction for interacting with LED Panels. A code base for managing demos and features for applications using LED panels is outside the intended scope. A higher level repository may exist where this is a submodule to that. However such a code base could be implemented in a manner which is portable which requires the actual application to integrate this code base and said high level repository logic.
+
 ## Building
 Note this is a hack for now. Currently it builds both the Raspberry Pi and Rock Pi S.
 
