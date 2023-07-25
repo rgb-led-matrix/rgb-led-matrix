@@ -11,6 +11,11 @@ There is no warranty for this. Work is free to use according to the [GPL 2 licen
 ## Differences from fork
 See [this](Differences_from_fork.md) for more informantion.
 
+## Features not supported by this code base
+Mapping red to red, green to green and blue to blue. This is to be handled by the application or some other higher level library.
+
+Mapping panels into a larger application. this is to be handled by the application or some other higher level library. One of these may be available at some point.
+
 ## Building
 Note this is a hack for now. Currently it builds both the Raspberry Pi and Rock Pi S.
 
