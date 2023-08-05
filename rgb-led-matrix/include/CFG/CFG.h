@@ -24,11 +24,13 @@ namespace rgb_matrix {
       }
 
       inline Panel_ID get_id() { return id_; }
-      inline DOTCorrect& get_dot() { return dot_; }
-      inline GAMMA& get_gamma() { return gamma_; }
       inline Node *get_node() { return node_; }
       inline int get_rows() { return rows_; }
       inline int get_cols() { return cols_; }
+
+      // TODO: Move these to Framebuffer and Panel
+      inline DOTCorrect& get_dot() { return dot_; }
+      inline GAMMA& get_gamma() { return gamma_; }
     
     protected:
       virtual bool isValid() = 0; 
