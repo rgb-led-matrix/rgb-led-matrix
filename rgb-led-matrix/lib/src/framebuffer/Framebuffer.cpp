@@ -26,10 +26,15 @@ namespace rgb_matrix {
     return nullptr;
   }
 
-  // TODO: Fix this
   template <> void Framebuffer<PixelDesignator>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
-    PixelDesignator *pixel = shared_mapper_->get(*shared_mapper_->get(x, y));
-    MapColors(x, y, red, green, blue, &pixel->r_bit, &pixel->g_bit, &pixel->b_bit);
+    uint32_t *location = shared_mapper_->get(x, y);
+    
+    if (location != NULL) {
+      PixelDesignator *pixel = shared_mapper_->get(*location);
+
+      if (pixel != nullptr)
+        MapColors(x, y, red, green, blue, &pixel->r_bit, &pixel->g_bit, &pixel->b_bit);
+    }
   }
 
   template class Framebuffer<PixelDesignator>;
