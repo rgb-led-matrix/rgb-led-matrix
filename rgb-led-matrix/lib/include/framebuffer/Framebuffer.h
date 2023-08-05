@@ -19,10 +19,13 @@ namespace rgb_matrix {
     protected:
       Framebuffer();
 
+      void build_table(GAMMA g, bool use_CIE1931);
+
       virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *color) = 0;
 
       CFG *cfg_;
       T **buffer_;
+      T lut[256][100];
       volatile uint8_t brightness_;
   };
 }

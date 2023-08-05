@@ -35,33 +35,6 @@ namespace rgb_matrix {
         pixel->blue = (uint16_t) round(lut[b][bright].blue / 65535.0 * fb * cfg_->get_pwm_bits());
     }
 
-    // Handles brightness, gamma and CIE1931
-    template <> void RP2040_UART<RGB48>::build_table(GAMMA g, bool use_CIE1931) {
-        if (!use_CIE1931) {
-            for (uint32_t i = 0; i < 256; i++) {
-                for (int j = 0; j < 100; j++) {
-                    constexpr uint32_t lim = 65535;
-                    lut[i][j].red = (uint16_t) round(pow(i / 255.0, 1 / g.get_red()) * lim * j / 99.0);
-                    lut[i][j].green = (uint16_t) round(pow(i / 255.0, 1 / g.get_green()) * lim * j / 99.0);
-                    lut[i][j].blue = (uint16_t) round(pow(i / 255.0, 1 / g.get_blue()) * lim * j / 99.0);
-                }
-            }
-        }
-        else {
-            for (uint32_t i = 0; i < 256; i++) {
-                for (int j = 0; j < 100; j++) {
-                    constexpr uint32_t lim = 65535;
-                    float temp = pow(i / 255.0, 1 / g.get_red()) * j;
-                    lut[i][j].red = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-                    temp = pow(i / 255.0, 1 / g.get_green()) * j;
-                    lut[i][j].green = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-                    temp = pow(i / 255.0, 1 / g.get_blue()) * j;
-                    lut[i][j].blue = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-                }
-            }
-        }
-    }
-
     template <typename T> void RP2040_UART<T>::worker_thread(RP2040_UART<T> *object) {
         uint32_t size = sizeof(T) * object->cfg_->get_cols() * object->cfg_->get_rows();
         char *start = (char *) "s";

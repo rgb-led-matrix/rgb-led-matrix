@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <stdio.h>
+#include <math.h>
 #include "framebuffer/external/RP2040/RP2040_UART/RP2040_UART.h"
 #include "framebuffer/external/external.h"
 using std::min;
@@ -36,6 +37,33 @@ namespace rgb_matrix {
 
   template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
     brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
+  }
+
+  // Handles brightness, gamma and CIE1931
+  template <> void Framebuffer<RGB48>::build_table(GAMMA g, bool use_CIE1931) {
+    if (!use_CIE1931) {
+      for (uint32_t i = 0; i < 256; i++) {
+        for (int j = 0; j < 100; j++) {
+          constexpr uint32_t lim = 65535;
+          lut[i][j].red = (uint16_t) round(pow(i / 255.0, 1 / g.get_red()) * lim * j / 99.0);
+          lut[i][j].green = (uint16_t) round(pow(i / 255.0, 1 / g.get_green()) * lim * j / 99.0);
+          lut[i][j].blue = (uint16_t) round(pow(i / 255.0, 1 / g.get_blue()) * lim * j / 99.0);
+        }
+      }
+    }
+    else {
+      for (uint32_t i = 0; i < 256; i++) {
+        for (int j = 0; j < 100; j++) {
+          constexpr uint32_t lim = 65535;
+          float temp = pow(i / 255.0, 1 / g.get_red()) * j;
+          lut[i][j].red = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+          temp = pow(i / 255.0, 1 / g.get_green()) * j;
+          lut[i][j].green = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+          temp = pow(i / 255.0, 1 / g.get_blue()) * j;
+          lut[i][j].blue = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+        }
+      }
+    }
   }
 
   template class Framebuffer<RGB48>;
