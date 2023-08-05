@@ -15,7 +15,7 @@ namespace rgb_matrix {
             virtual void show();
 
         protected:
-            virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue);
+            virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *pixel);
 
         private:
             static void worker_thread(RP2040_UART<T> *object);

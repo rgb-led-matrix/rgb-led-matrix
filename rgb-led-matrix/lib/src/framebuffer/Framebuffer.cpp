@@ -14,7 +14,7 @@ namespace rgb_matrix {
 
   template <typename T> Framebuffer<T>::Framebuffer(CFG *cfg) : cfg_(cfg) {
     assert(cfg != nullptr);
-    //buffer_ = new T[cfg->get_cols()][cfg->get_rows()];
+    buffer_ = new T[cfg->get_cols()][cfg->get_rows()];
     brightness_ = 100;
   }
 
@@ -30,10 +30,8 @@ namespace rgb_matrix {
   template <> void Framebuffer<RGB48>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
     RGB48 **ptr = (RGB48 **) buffer_;
 
-    if (x > 0 && x < cfg_->get_cols() && y > 0 && y < cfg_->get_rows()) {
-      RGB48 pixel = ptr[x][y];
-      MapColors(x, y, red, green, blue, &pixel.red, &pixel.green, &pixel.blue);
-    }
+    if (x > 0 && x < cfg_->get_cols() && y > 0 && y < cfg_->get_rows())
+      MapColors(x, y, red, green, blue, &ptr[x][y]);
   }
 
   template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
