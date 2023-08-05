@@ -5,9 +5,9 @@
 #include "framebuffer/external/external.h"
 
 namespace rgb_matrix {
-  Panel *RGBMatrix::CreateCanvas() {
+  Panel *RGBMatrix::CreatePanel() {
     switch (_cfg->get_id()) {
-      case Canvas_ID::RP2040_UART_ID:
+      case Panel_ID::RP2040_UART_ID:
         return new LEDPanel<RGB48>(Framebuffer<RGB48>::CreateFramebuffer(_cfg));
       default:
         return nullptr;

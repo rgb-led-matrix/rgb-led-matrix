@@ -25,7 +25,7 @@ namespace rgb_matrix {
       int cols_;
       DOTCorrect dot_;
       GAMMA gamma_;
-      Canvas_ID id_;
+      Panel_ID id_;
       Node *node_;
   };
 }

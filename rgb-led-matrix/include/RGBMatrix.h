@@ -11,7 +11,7 @@ namespace rgb_matrix {
       RGBMatrix(CFG *cfg) :_cfg(cfg) {}
       virtual ~RGBMatrix() {}
 
-      virtual Panel *CreateCanvas();
+      virtual Panel *CreatePanel();
 
     protected:
       RGBMatrix() : _cfg(nullptr) {}
