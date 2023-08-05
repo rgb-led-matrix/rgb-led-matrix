@@ -9,7 +9,19 @@ using namespace rgb_matrix;
 namespace rgb_matrix {
   class CFG {
     public:
-      CFG(int rows, int cols, Node *node) : rows_(rows), cols_(cols), dot_(rows, cols), node_(node) {}
+      CFG(int rows, int cols, Node *node, bool isHUB75, uint8_t scan) : dot_(rows, cols) {
+        if (isHUB75) {
+          rows_ = scan * 2;
+          cols_ = rows / (scan * 2) * cols;
+        }
+        else {
+          rows_ = rows;
+          cols_ = cols;
+        }
+
+        dot_ = DOTCorrect(rows_, cols_);
+        node_ = node;
+      }
 
       inline Panel_ID get_id() { return id_; }
       inline DOTCorrect& get_dot() { return dot_; }
