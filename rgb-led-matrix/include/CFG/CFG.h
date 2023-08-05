@@ -11,7 +11,7 @@ namespace rgb_matrix {
     public:
       CFG(int rows, int cols, Node *node) : rows_(rows), cols_(cols), dot_(rows, cols), node_(node) {}
 
-      inline Canvas_ID get_id() { return id_; }
+      inline Panel_ID get_id() { return id_; }
       inline DOTCorrect& get_dot() { return dot_; }
       inline GAMMA& get_gamma() { return gamma_; }
       inline Node *get_node() { return node_; }
