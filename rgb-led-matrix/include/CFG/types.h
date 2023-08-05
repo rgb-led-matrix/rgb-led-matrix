@@ -7,7 +7,7 @@ namespace rgb_matrix {
     class CFG;
 
     enum Panel_ID {
-        RP2040_UART_ID = 0,
+        RP2040_UART_RGB48_ID = 0,
     };
 
     struct GAMMA {

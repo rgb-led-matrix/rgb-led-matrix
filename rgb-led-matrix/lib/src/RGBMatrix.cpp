@@ -7,7 +7,7 @@
 namespace rgb_matrix {
   Panel *RGBMatrix::CreatePanel() {
     switch (_cfg->get_id()) {
-      case Panel_ID::RP2040_UART_ID:
+      case Panel_ID::RP2040_UART_RGB48_ID:
         return new LEDPanel<RGB48>(Framebuffer<RGB48>::CreateFramebuffer(_cfg));
       default:
         return nullptr;
