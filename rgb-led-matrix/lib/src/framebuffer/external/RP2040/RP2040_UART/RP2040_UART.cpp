@@ -3,19 +3,8 @@
 #include "framebuffer/external/RP2040/RP2040_UART/RP2040_UART.h"
 
 namespace rgb_matrix {
-    template <typename T> RP2040_UART<T>::RP2040_UART(CFG *cfg) 
-        : Framebuffer<T>(cfg) {
-            thread_ = nullptr; 
-
-            if (cfg->get_id() == Canvas_ID::RP2040_UART_ID)
-                cfg_ = static_cast<RP2040_UART_CFG *>(cfg);
-            else
-                throw cfg;
-
-            if (cfg_->use_gamma_correction())
-                build_table(cfg->get_gamma(), cfg_->use_CIE1931());
-            else
-                build_table(GAMMA(1.0, 1.0, 1.0), cfg_->use_CIE1931());
+    template <typename T> RP2040_UART<T>::RP2040_UART(CFG *cfg) : Framebuffer<T>(cfg) {
+            build_table(cfg->get_gamma(), cfg_->use_CIE1931());
             
             shutdown_ = false;
             start_ = false;
@@ -40,17 +29,10 @@ namespace rgb_matrix {
         float fr, fg, fb;
         uint8_t bright =  brightness_;
 
-        if (cfg_->use_dot_correction()) {
-            cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
-            *red = (uint16_t) round(lut[r][bright].red / 65535.0 * fr * cfg_->get_pwm_bits());
-            *green = (uint16_t) round(lut[g][bright].green / 65535.0 * fg * cfg_->get_pwm_bits());
-            *blue = (uint16_t) round(lut[b][bright].blue / 65535.0 * fb * cfg_->get_pwm_bits());
-        }
-        else {
-            *red = lut[r][bright].red * cfg_->get_pwm_bits() / 65535;
-            *green = lut[g][bright].green * cfg_->get_pwm_bits() / 65535;
-            *blue = lut[b][bright].blue * cfg_->get_pwm_bits() / 65535;
-        }
+        cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
+        *red = (uint16_t) round(lut[r][bright].red / 65535.0 * fr * cfg_->get_pwm_bits());
+        *green = (uint16_t) round(lut[g][bright].green / 65535.0 * fg * cfg_->get_pwm_bits());
+        *blue = (uint16_t) round(lut[b][bright].blue / 65535.0 * fb * cfg_->get_pwm_bits());
     }
 
     // Handles brightness, gamma and CIE1931

@@ -9,7 +9,7 @@ using namespace rgb_matrix;
 namespace rgb_matrix {
   class CFG {
     public:
-      CFG(int rows, int cols, Node *node, float red = 2.2, float green = 2.2, float blue = 2.2) : rows_(rows), cols_(cols), dot_(rows, cols), node_(node), gamma_(red, green, blue) {}
+      CFG(int rows, int cols, Node *node) : rows_(rows), cols_(cols), dot_(rows, cols), node_(node) {}
 
       inline Canvas_ID get_id() { return id_; }
       inline DOTCorrect& get_dot() { return dot_; }
