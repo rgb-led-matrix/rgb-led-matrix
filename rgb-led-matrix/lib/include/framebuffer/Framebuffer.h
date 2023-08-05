@@ -14,6 +14,7 @@ namespace rgb_matrix {
 
       virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
       virtual void show() = 0;
+      virtual void set_brightness(uint8_t brightness);
 
     protected:
       Framebuffer();
@@ -22,6 +23,7 @@ namespace rgb_matrix {
 
       CFG *cfg_;
       T **buffer_;
+      volatile uint8_t brightness_;
   };
 }
 #endif

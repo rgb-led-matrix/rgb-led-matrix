@@ -15,5 +15,9 @@ namespace rgb_matrix {
     frame_->show();
   }
 
+  template <typename T> void LEDPanel<T>::set_brightness(uint8_t brightness) {
+    frame_->set_brightness(brightness);
+  }
+
   template class LEDPanel<RGB48>;
 }
