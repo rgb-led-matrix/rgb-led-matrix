@@ -25,7 +25,7 @@ namespace rgb_matrix {
         node_ = node;
       }
 
-      inline Panel_ID get_id() { return id_; }
+      inline External_ID get_id() { return id_; }
       inline DOTCorrect& get_dot() { return dot_; }
       inline GAMMA& get_gamma() { return gamma_; }
       inline Node *get_node() { return node_; }
@@ -39,7 +39,7 @@ namespace rgb_matrix {
       int cols_;
       DOTCorrect dot_;
       GAMMA gamma_;
-      Panel_ID id_;
+      External_ID id_;
       Node *node_;
   };
 }

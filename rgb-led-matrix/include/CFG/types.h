@@ -11,7 +11,7 @@ namespace rgb_matrix {
         HUB75 = 1,
     };
 
-    enum Panel_ID {
+    enum External_ID {
         RP2040_UART_RGB48_ID = 0,
         RP2040_UART_RGB24_ID = 1,
     };

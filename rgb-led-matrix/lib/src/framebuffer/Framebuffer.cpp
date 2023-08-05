@@ -24,7 +24,7 @@ namespace rgb_matrix {
 
   template <> Framebuffer<RGB48> *Framebuffer<RGB48>::CreateFramebuffer(CFG *cfg) {
     switch (cfg->get_id()) {
-      case Panel_ID::RP2040_UART_RGB48_ID:
+      case External_ID::RP2040_UART_RGB48_ID:
         return new RP2040_UART<RGB48>(cfg);
     }
 
@@ -33,7 +33,7 @@ namespace rgb_matrix {
 
   template <> Framebuffer<RGB24> *Framebuffer<RGB24>::CreateFramebuffer(CFG *cfg) {
     switch (cfg->get_id()) {
-      case Panel_ID::RP2040_UART_RGB24_ID:
+      case External_ID::RP2040_UART_RGB24_ID:
         return new RP2040_UART<RGB24>(cfg);
     }
 
