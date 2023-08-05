@@ -11,6 +11,14 @@ namespace rgb_matrix {
         uint16_t green;
         uint16_t blue;
     };
+
+    struct RGB24 {
+        RGB24() : red(0), green(0), blue(0) {}
+
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
+    };
 }
 
 #endif

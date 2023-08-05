@@ -8,6 +8,7 @@ namespace rgb_matrix {
 
     enum Panel_ID {
         RP2040_UART_RGB48_ID = 0,
+        RP2040_UART_RGB24_ID = 1,
     };
 
     struct GAMMA {

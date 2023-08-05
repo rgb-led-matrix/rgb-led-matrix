@@ -35,6 +35,17 @@ namespace rgb_matrix {
         pixel->blue = (uint16_t) round(lut[b][bright].blue / 65535.0 * fb * cfg_->get_pwm_bits());
     }
 
+        // Handles dot correction and PWM bit scaling
+    template <> inline void  RP2040_UART<RGB24>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, RGB24 *pixel) {
+        float fr, fg, fb;
+        uint8_t bright =  brightness_;
+
+        cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
+        pixel->red = (uint8_t) round(lut[r][bright].red / 255.0 * fr * cfg_->get_pwm_bits());
+        pixel->green = (uint8_t) round(lut[g][bright].green / 255.0 * fg * cfg_->get_pwm_bits());
+        pixel->blue = (uint8_t) round(lut[b][bright].blue / 255.0 * fb * cfg_->get_pwm_bits());
+    }
+
     template <typename T> void RP2040_UART<T>::worker_thread(RP2040_UART<T> *object) {
         uint32_t size = sizeof(T) * object->cfg_->get_cols() * object->cfg_->get_rows();
         char *start = (char *) "s";
@@ -65,4 +76,5 @@ namespace rgb_matrix {
     }
 
     template class RP2040_UART<RGB48>;
+    template class RP2040_UART<RGB24>;
 }
