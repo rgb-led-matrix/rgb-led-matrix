@@ -41,19 +41,6 @@ namespace rgb_matrix {
 
             float *table_;
     };
-
-    struct Options {
-        Options(CFG *config, int multiplexing, const char *pixel_mapper_config) : cfg_(config), multiplexing_(multiplexing), pixel_mapper_config_(pixel_mapper_config) {}
-
-        inline CFG *get_cfg() { return cfg_; }
-        inline int get_multiplexing() { return multiplexing_; }
-        inline const char *get_pixel_mapper_config() { return pixel_mapper_config_; }
-
-        protected:
-            CFG *cfg_;
-            int multiplexing_;
-            const char *pixel_mapper_config_;
-    };
 }
 
 #endif

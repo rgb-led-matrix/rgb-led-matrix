@@ -13,7 +13,6 @@ target_link_directories(rpi PRIVATE
     ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv6_hard-float/build)
 
 target_link_libraries(rpi
-    multiplex-mapper
     framebuffer
     CFG
     Panel

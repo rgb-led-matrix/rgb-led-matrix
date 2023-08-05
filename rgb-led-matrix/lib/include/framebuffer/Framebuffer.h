@@ -2,7 +2,6 @@
 #define FRAMEBUFFER_H
 
 #include <stdint.h>
-#include "mappers/MultiplexMapper.h"
 #include "PixelDesignatorMap.h"
 #include "CFG/CFG.h"
 
@@ -12,14 +11,10 @@ namespace rgb_matrix {
       Framebuffer(CFG *cfg);
       virtual ~Framebuffer() {}
 
-      static Framebuffer *CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper);
+      static Framebuffer *CreateFramebuffer(CFG *cfg);
 
       virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
-
-      virtual void DumpToMatrix() = 0;
-
-      bool ApplyPixelMapper(const MultiplexMapper *mapper);
-      void InitSharedMapper(const MultiplexMapper *multiplex_mapper);
+      virtual void show() = 0;
 
     protected:
       Framebuffer();

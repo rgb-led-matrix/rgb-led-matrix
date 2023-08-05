@@ -12,7 +12,7 @@ namespace rgb_matrix {
   }
 
   template <typename T> void LEDPanel<T>::show() {
-    frame_->DumpToMatrix();
+    frame_->show();
   }
 
   template class LEDPanel<PixelDesignator>;

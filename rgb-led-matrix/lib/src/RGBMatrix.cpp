@@ -6,25 +6,11 @@
 
 namespace rgb_matrix {
   Panel *RGBMatrix::CreateCanvas() {
-    const MultiplexMapper *multiplex_mapper = NULL;
-
-    if (_options.get_multiplexing() > 0) {
-      const MuxMapperList &multiplexers = GetRegisteredMultiplexMappers();
-      
-      if (_options.get_multiplexing() <= (int) multiplexers.size())
-        multiplex_mapper = multiplexers[_options.get_multiplexing() - 1];
-    }
-
-    if (multiplex_mapper) {
-      multiplex_mapper->EditColsRows(&_options.get_cfg()->get_dot().cols, &_options.get_cfg()->get_dot().rows);
-    }
-
-    switch (_options.get_cfg()->get_id()) {
+    switch (_cfg->get_id()) {
       case Canvas_ID::RP2040_UART_ID:
-        return new LEDPanel<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(_options, multiplex_mapper));
+        return new LEDPanel<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(_cfg));
       default:
         return nullptr;
     }
-    
   }
 };

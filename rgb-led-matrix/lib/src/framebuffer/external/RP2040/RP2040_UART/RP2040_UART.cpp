@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <assert.h>
 #include <math.h>
 #include <string.h>
@@ -7,6 +8,8 @@
 #include <linux/spi/spidev.h>
 #include "framebuffer/external/external.h"
 #include "framebuffer/external/RP2040/RP2040_UART/RP2040_UART.h"
+using std::min;
+using std::max;
 
 namespace rgb_matrix {
     template <typename T> RP2040_UART<T>::RP2040_UART(CFG *cfg) 
@@ -35,16 +38,16 @@ namespace rgb_matrix {
             thread_->join();
     }
     
-    template <typename T> void RP2040_UART<T>::DumpToMatrix() {
+    template <typename T> void RP2040_UART<T>::show() {
         start_ = true;
 
         while (start_);
     }
 
     // Handles dot correction and PWM bit scaling
-    template <typename T> inline void  RP2040_UART<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
+    template <> inline void  RP2040_UART<PixelDesignator>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
         float fr, fg, fb;
-        uint8_t bright = cfg_->use_brightness() ? cfg_->get_brightness() % 100 : 100;
+        uint8_t bright = cfg_->use_brightness() ? max(min(cfg_->get_brightness(), 100), 0) : 100;
 
         if (cfg_->use_dot_correction()) {
             cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
@@ -60,7 +63,7 @@ namespace rgb_matrix {
     }
 
     // Handles brightness, gamma and CIE1931
-    template <typename T> void RP2040_UART<T>::build_table(GAMMA g, bool use_CIE1931) {
+    template <> void RP2040_UART<PixelDesignator>::build_table(GAMMA g, bool use_CIE1931) {
         if (!use_CIE1931) {
             for (uint32_t i = 0; i < 256; i++) {
                 for (int j = 0; j < 100; j++) {

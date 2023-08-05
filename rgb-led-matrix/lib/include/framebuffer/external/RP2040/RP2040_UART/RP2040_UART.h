@@ -12,7 +12,7 @@ namespace rgb_matrix {
             RP2040_UART(CFG *cfg);
             ~RP2040_UART();
 
-            virtual void DumpToMatrix();
+            virtual void show();
 
         protected:
             virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue);

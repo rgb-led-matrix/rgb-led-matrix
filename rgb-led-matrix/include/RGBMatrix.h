@@ -8,15 +8,15 @@
 namespace rgb_matrix {
   class RGBMatrix {
     public:
-      RGBMatrix(Options o) :_options(o) {}
+      RGBMatrix(CFG *cfg) :_cfg(cfg) {}
       virtual ~RGBMatrix() {}
 
       virtual Panel *CreateCanvas();
 
     protected:
-      RGBMatrix() : _options(Options(nullptr, 0, nullptr)) {}
+      RGBMatrix() : _cfg(nullptr) {}
 
-      Options _options;
+      CFG *_cfg;
   };
 }
 #endif
