@@ -4,12 +4,12 @@
 #include <stdint.h>
 
 namespace rgb_matrix {
-    struct PixelDesignator {
-        PixelDesignator() : r_bit(0), g_bit(0), b_bit(0) {}
+    struct RGB48 {
+        RGB48() : red(0), green(0), blue(0) {}
 
-        uint16_t r_bit;
-        uint16_t g_bit;
-        uint16_t b_bit;
+        uint16_t red;
+        uint16_t green;
+        uint16_t blue;
     };
 }
 

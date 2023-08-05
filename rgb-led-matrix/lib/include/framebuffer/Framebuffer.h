@@ -2,7 +2,6 @@
 #define FRAMEBUFFER_H
 
 #include <stdint.h>
-#include "PixelDesignatorMap.h"
 #include "CFG/CFG.h"
 
 namespace rgb_matrix {
@@ -22,7 +21,7 @@ namespace rgb_matrix {
       virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
 
       CFG *cfg_;
-      PixelDesignatorMap<T> *shared_mapper_;
+      T **buffer_;
   };
 }
 #endif

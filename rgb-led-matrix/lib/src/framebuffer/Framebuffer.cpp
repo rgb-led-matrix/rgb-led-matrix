@@ -5,38 +5,32 @@
 
 namespace rgb_matrix {
   // Don't use this!    
-  template <typename T> Framebuffer<T>::Framebuffer()
-    : cfg_(nullptr), shared_mapper_(NULL) {
-    assert(shared_mapper_ != NULL);
+  template <typename T> Framebuffer<T>::Framebuffer() : cfg_(nullptr), buffer_(NULL) {
+    assert(buffer_ != NULL);
   }
 
-  template <typename T> Framebuffer<T>::Framebuffer(CFG *cfg)
-    : cfg_(cfg) {
+  template <typename T> Framebuffer<T>::Framebuffer(CFG *cfg) : cfg_(cfg) {
     assert(cfg != nullptr);
-
-    shared_mapper_ = new PixelDesignatorMap<T>(cfg->get_dot().cols, cfg->get_dot().rows);
+    //buffer_ = new T[cfg->get_cols()][cfg->get_rows()];
   }
 
-  template <> Framebuffer<PixelDesignator> *Framebuffer<PixelDesignator>::CreateFramebuffer(CFG *cfg) {
+  template <typename T> Framebuffer<T> *Framebuffer<T>::CreateFramebuffer(CFG *cfg) {
     switch (cfg->get_id()) {
       case Canvas_ID::RP2040_UART_ID:
-        return new RP2040_UART<PixelDesignator>(cfg);
+        return new RP2040_UART<T>(cfg);
     }
 
     return nullptr;
   }
 
-  template <> void Framebuffer<PixelDesignator>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
-    uint32_t *location = shared_mapper_->get(x, y);
-    
-    if (location != NULL) {
-      PixelDesignator *pixel = shared_mapper_->get(*location);
+  template <> void Framebuffer<RGB48>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+    RGB48 **ptr = (RGB48 **) buffer_;
 
-      if (pixel != nullptr)
-        MapColors(x, y, red, green, blue, &pixel->r_bit, &pixel->g_bit, &pixel->b_bit);
+    if (x > 0 && x < cfg_->get_cols() && y > 0 && y < cfg_->get_rows()) {
+      RGB48 pixel = ptr[x][y];
+      MapColors(x, y, red, green, blue, &pixel.red, &pixel.green, &pixel.blue);
     }
   }
 
-  template class Framebuffer<PixelDesignator>;
-
+  template class Framebuffer<RGB48>;
 }  // namespace rgb_matrix

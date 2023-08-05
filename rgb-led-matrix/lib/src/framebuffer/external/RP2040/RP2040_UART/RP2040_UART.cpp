@@ -1,11 +1,5 @@
 #include <algorithm>
-#include <assert.h>
 #include <math.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <linux/spi/spidev.h>
 #include "framebuffer/external/external.h"
 #include "framebuffer/external/RP2040/RP2040_UART/RP2040_UART.h"
 using std::min;
@@ -45,7 +39,7 @@ namespace rgb_matrix {
     }
 
     // Handles dot correction and PWM bit scaling
-    template <> inline void  RP2040_UART<PixelDesignator>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
+    template <> inline void  RP2040_UART<RGB48>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
         float fr, fg, fb;
         uint8_t bright = cfg_->use_brightness() ? max(min(cfg_->get_brightness(), 100), 0) : 100;
 
@@ -63,7 +57,7 @@ namespace rgb_matrix {
     }
 
     // Handles brightness, gamma and CIE1931
-    template <> void RP2040_UART<PixelDesignator>::build_table(GAMMA g, bool use_CIE1931) {
+    template <> void RP2040_UART<RGB48>::build_table(GAMMA g, bool use_CIE1931) {
         if (!use_CIE1931) {
             for (uint32_t i = 0; i < 256; i++) {
                 for (int j = 0; j < 100; j++) {
@@ -90,7 +84,7 @@ namespace rgb_matrix {
     }
 
     template <typename T> void RP2040_UART<T>::worker_thread(RP2040_UART<T> *object) {
-        uint32_t size = sizeof(T) * object->shared_mapper_->width() * object->shared_mapper_->height();
+        uint32_t size = sizeof(T) * object->cfg_->get_cols() * object->cfg_->get_rows();
         char *start = (char *) "s";
         char *idle = (char *) "i";
 
@@ -103,7 +97,7 @@ namespace rgb_matrix {
                 for (int i = 0; i < 10; i++) {
                     // If it times out then the bus is idle, send frame
                     if (object->cfg_->get_node()->read(&idle, 1, 10) == 0) {
-                        object->cfg_->get_node()->write((char *) object->shared_mapper_->buffer(), size);
+                        object->cfg_->get_node()->write((char *) object->buffer_, size);
 
                         // Check for idle loop, recover if still active
                         while (object->cfg_->get_node()->read(&idle, 1, 100) == 0)
@@ -118,5 +112,5 @@ namespace rgb_matrix {
         }
     }
 
-    template class RP2040_UART<PixelDesignator>;
+    template class RP2040_UART<RGB48>;
 }

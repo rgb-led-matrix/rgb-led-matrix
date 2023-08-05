@@ -30,15 +30,12 @@ namespace rgb_matrix {
 
         bool set(int x, int y, uint8_t r, uint8_t g, uint8_t b, float red, float green, float blue);
         void get(int x, int y, uint8_t r, uint8_t g, uint8_t b, float *red, float *green, float *blue);
-
-
-        // TODO: Limit access
-        int rows;
-        int cols;
         
         private:
             bool check(float f);
 
+            int rows;
+            int cols;
             float *table_;
     };
 }

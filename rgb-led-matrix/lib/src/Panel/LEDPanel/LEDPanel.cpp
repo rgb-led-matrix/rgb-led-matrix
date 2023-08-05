@@ -15,6 +15,5 @@ namespace rgb_matrix {
     frame_->show();
   }
 
-  template class LEDPanel<PixelDesignator>;
-
+  template class LEDPanel<RGB48>;
 }

@@ -8,7 +8,7 @@ namespace rgb_matrix {
   Panel *RGBMatrix::CreateCanvas() {
     switch (_cfg->get_id()) {
       case Canvas_ID::RP2040_UART_ID:
-        return new LEDPanel<PixelDesignator>(Framebuffer<PixelDesignator>::CreateFramebuffer(_cfg));
+        return new LEDPanel<RGB48>(Framebuffer<RGB48>::CreateFramebuffer(_cfg));
       default:
         return nullptr;
     }
