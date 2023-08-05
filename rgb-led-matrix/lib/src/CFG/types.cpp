@@ -22,7 +22,7 @@ namespace rgb_matrix {
 
     bool DOTCorrect::set(int x, int y, uint8_t r, uint8_t g, uint8_t b, float red, float green, float blue) {
         if (check(red) || check(green) || check(blue))
-        return false;
+            return false;
 
         table_[(3 * rows * cols * r) + (3 * ((y * cols) + x))] = red;
         table_[(3 * rows * cols * g) + (3 * ((y * cols) + x)) + 1] = green;
