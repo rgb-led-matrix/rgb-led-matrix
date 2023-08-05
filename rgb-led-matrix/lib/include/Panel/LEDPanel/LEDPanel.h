@@ -1,7 +1,7 @@
 #ifndef LEDPANEL_H
 #define LEDPANEL_H
 
-#include "Panel.h"
+#include "Panel/Panel.h"
 #include "framebuffer/Framebuffer.h"
 
 namespace rgb_matrix {
