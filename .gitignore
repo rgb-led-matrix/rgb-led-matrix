@@ -4,3 +4,4 @@
 *.so
 
 rgb-led-matrix/build
+.vscode
