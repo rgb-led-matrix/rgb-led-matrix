@@ -13,6 +13,9 @@ namespace rgb_matrix {
 
       // Applies to SetPixel calls after set
       virtual void set_brightness(uint8_t brightness) = 0;
+
+      // TODO: Add color mapping
+      // TODO: Add multiplex mapping
   };
 }
 #endif

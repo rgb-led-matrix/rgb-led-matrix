@@ -21,7 +21,7 @@ namespace rgb_matrix {
             static void worker_thread(RP2040_UART<T> *object);
             void build_table(GAMMA g, bool use_CIE1931);
 
-            uint16_t lut[256][100][3];
+            T lut[256][100];
             RP2040_UART_CFG *cfg_;
             std::thread *thread_;
             volatile bool shutdown_;

@@ -3,6 +3,10 @@
 
 namespace rgb_matrix {
 
+  template <typename T> LEDPanel<T>::LEDPanel(Framebuffer<T> *frame) : frame_(frame) {
+
+  }
+
   template <typename T> LEDPanel<T>::~LEDPanel() { 
     delete frame_; 
   }

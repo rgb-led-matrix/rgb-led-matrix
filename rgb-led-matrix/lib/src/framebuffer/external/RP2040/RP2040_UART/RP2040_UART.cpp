@@ -42,14 +42,14 @@ namespace rgb_matrix {
 
         if (cfg_->use_dot_correction()) {
             cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
-            *red = (uint16_t) round(lut[r][bright][0] / 65535.0 * fr * cfg_->get_pwm_bits());
-            *green = (uint16_t) round(lut[g][bright][1] / 65535.0 * fg * cfg_->get_pwm_bits());
-            *blue = (uint16_t) round(lut[b][bright][2] / 65535.0 * fb * cfg_->get_pwm_bits());
+            *red = (uint16_t) round(lut[r][bright].red / 65535.0 * fr * cfg_->get_pwm_bits());
+            *green = (uint16_t) round(lut[g][bright].green / 65535.0 * fg * cfg_->get_pwm_bits());
+            *blue = (uint16_t) round(lut[b][bright].blue / 65535.0 * fb * cfg_->get_pwm_bits());
         }
         else {
-            *red = lut[r][bright][0] * cfg_->get_pwm_bits() / 65535;
-            *green = lut[g][bright][1] * cfg_->get_pwm_bits() / 65535;
-            *blue = lut[b][bright][2] * cfg_->get_pwm_bits() / 65535;
+            *red = lut[r][bright].red * cfg_->get_pwm_bits() / 65535;
+            *green = lut[g][bright].green * cfg_->get_pwm_bits() / 65535;
+            *blue = lut[b][bright].blue * cfg_->get_pwm_bits() / 65535;
         }
     }
 
@@ -59,9 +59,9 @@ namespace rgb_matrix {
             for (uint32_t i = 0; i < 256; i++) {
                 for (int j = 0; j < 100; j++) {
                     constexpr uint32_t lim = 65535;
-                    lut[i][j][0] = (uint16_t) round(pow(i / 255.0, 1 / g.get_red()) * lim * j / 99.0);
-                    lut[i][j][1] = (uint16_t) round(pow(i / 255.0, 1 / g.get_green()) * lim * j / 99.0);
-                    lut[i][j][2] = (uint16_t) round(pow(i / 255.0, 1 / g.get_blue()) * lim * j / 99.0);
+                    lut[i][j].red = (uint16_t) round(pow(i / 255.0, 1 / g.get_red()) * lim * j / 99.0);
+                    lut[i][j].green = (uint16_t) round(pow(i / 255.0, 1 / g.get_green()) * lim * j / 99.0);
+                    lut[i][j].blue = (uint16_t) round(pow(i / 255.0, 1 / g.get_blue()) * lim * j / 99.0);
                 }
             }
         }
@@ -70,11 +70,11 @@ namespace rgb_matrix {
                 for (int j = 0; j < 100; j++) {
                     constexpr uint32_t lim = 65535;
                     float temp = pow(i / 255.0, 1 / g.get_red()) * j;
-                    lut[i][j][0] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+                    lut[i][j].red = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
                     temp = pow(i / 255.0, 1 / g.get_green()) * j;
-                    lut[i][j][1] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+                    lut[i][j].green = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
                     temp = pow(i / 255.0, 1 / g.get_blue()) * j;
-                    lut[i][j][2] = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
+                    lut[i][j].blue = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
                 }
             }
         }
