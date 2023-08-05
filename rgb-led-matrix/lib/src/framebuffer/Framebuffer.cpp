@@ -37,7 +37,7 @@ namespace rgb_matrix {
   }
 
   template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
-    brightness_ = max(min(brightness, 100), 0);
+    brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
   }
 
   template class Framebuffer<RGB48>;
