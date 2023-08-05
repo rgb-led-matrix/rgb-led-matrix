@@ -1,9 +1,6 @@
-#include <algorithm>
 #include <math.h>
 #include "framebuffer/external/external.h"
 #include "framebuffer/external/RP2040/RP2040_UART/RP2040_UART.h"
-using std::min;
-using std::max;
 
 namespace rgb_matrix {
     template <typename T> RP2040_UART<T>::RP2040_UART(CFG *cfg) 
@@ -41,7 +38,7 @@ namespace rgb_matrix {
     // Handles dot correction and PWM bit scaling
     template <> inline void  RP2040_UART<RGB48>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) {
         float fr, fg, fb;
-        uint8_t bright = cfg_->use_brightness() ? max(min(cfg_->get_brightness(), 100), 0) : 100;
+        uint8_t bright =  brightness_;
 
         if (cfg_->use_dot_correction()) {
             cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);

@@ -1,7 +1,10 @@
+#include <algorithm>
 #include <assert.h>
 #include <stdio.h>
 #include "framebuffer/external/RP2040/RP2040_UART/RP2040_UART.h"
 #include "framebuffer/external/external.h"
+using std::min;
+using std::max;
 
 namespace rgb_matrix {
   // Don't use this!    
@@ -34,7 +37,7 @@ namespace rgb_matrix {
   }
 
   template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
-    brightness_ = brightness;
+    brightness_ = max(min(brightness, 100), 0);
   }
 
   template class Framebuffer<RGB48>;
