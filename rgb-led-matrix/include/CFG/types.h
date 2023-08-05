@@ -6,6 +6,11 @@
 namespace rgb_matrix {
     class CFG;
 
+    enum Panel_Type {
+        STANDARD = 0,
+        HUB75 = 1,
+    };
+
     enum Panel_ID {
         RP2040_UART_RGB48_ID = 0,
         RP2040_UART_RGB24_ID = 1,

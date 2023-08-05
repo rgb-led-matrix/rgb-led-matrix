@@ -9,14 +9,16 @@ using namespace rgb_matrix;
 namespace rgb_matrix {
   class CFG {
     public:
-      CFG(int rows, int cols, Node *node, bool isHUB75, uint8_t scan) : dot_(rows, cols) {
-        if (isHUB75) {
-          rows_ = scan * 2;
-          cols_ = rows / (scan * 2) * cols;
-        }
-        else {
-          rows_ = rows;
-          cols_ = cols;
+      CFG(int rows, int cols, Node *node, Panel_Type type, uint8_t scan) : dot_(rows, cols) {
+        switch (type) {
+          case Panel_Type::HUB75:
+            rows_ = scan * 2;
+            cols_ = rows / (scan * 2) * cols;
+            break;
+          default:
+            rows_ = rows;
+            cols_ = cols;
+            break;
         }
 
         dot_ = DOTCorrect(rows_, cols_);
