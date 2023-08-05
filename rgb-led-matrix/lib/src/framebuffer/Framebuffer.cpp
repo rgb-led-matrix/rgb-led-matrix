@@ -15,7 +15,10 @@ namespace rgb_matrix {
 
   template <typename T> Framebuffer<T>::Framebuffer(CFG *cfg) : cfg_(cfg) {
     assert(cfg != nullptr);
-    buffer_ = new T[cfg->get_cols()][cfg->get_rows()];
+
+    for (int i = 0; i < cfg->get_cols(); i++)
+      buffer_[i] = new T[cfg->get_rows()];
+      
     brightness_ = 100;
   }
 
