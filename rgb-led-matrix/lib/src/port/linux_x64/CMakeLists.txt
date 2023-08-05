@@ -12,6 +12,5 @@ target_link_directories(linux_x64 PRIVATE
 target_link_libraries(linux_x64
     framebuffer
     CFG
-    Panel
     IO
     ftd2xx)

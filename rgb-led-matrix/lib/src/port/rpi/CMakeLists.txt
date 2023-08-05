@@ -15,6 +15,5 @@ target_link_directories(rpi PRIVATE
 target_link_libraries(rpi
     framebuffer
     CFG
-    Panel
     IO
     ftd2xx)

@@ -15,6 +15,5 @@ target_link_directories(rock_pi_s PRIVATE
 target_link_libraries(rock_pi_s
     framebuffer
     CFG
-    Panel
     IO
     ftd2xx)

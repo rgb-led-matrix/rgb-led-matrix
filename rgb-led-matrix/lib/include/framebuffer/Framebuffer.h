@@ -3,11 +3,11 @@
 
 #include <stdint.h>
 #include "CFG/CFG.h"
+#include "Panel/Panel.h"
 
 namespace rgb_matrix {
-  template <typename T> class Framebuffer {
+  template <typename T> class Framebuffer : public Panel {
     public:
-      Framebuffer(CFG *cfg);
       virtual ~Framebuffer() {}
 
       static Framebuffer *CreateFramebuffer(CFG *cfg);
@@ -18,6 +18,7 @@ namespace rgb_matrix {
 
     protected:
       Framebuffer();
+      Framebuffer(CFG *cfg);
 
       void build_table(GAMMA g, bool use_CIE1931);
 
