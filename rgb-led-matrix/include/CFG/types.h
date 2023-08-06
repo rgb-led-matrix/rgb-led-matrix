@@ -11,6 +11,26 @@ namespace rgb_matrix {
         HUB75 = 1,
     };
 
+    struct cord_t {
+        int x;
+        int y;
+    };
+
+    enum Color_Order {
+        RGB = 0,
+        RBG = 1,
+        BRG = 2,
+        BGR = 3,
+        GRB = 4,
+        GBR = 5,
+    };
+
+    struct pixel_t {
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
+    };
+
     enum External_ID {
         RP2040_UART_RGB48_ID = 0,
         RP2040_UART_RGB24_ID = 1,

@@ -22,4 +22,13 @@ namespace rgb_matrix {
   template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
     brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
   }
+
+  template <typename T> cord_t Framebuffer<T>::get_size() {
+    cord_t result;
+
+    result.x = cfg_->get_cols();
+    result.y = cfg_->get_rows();
+
+    return result;
+  }
 }  // namespace rgb_matrix
