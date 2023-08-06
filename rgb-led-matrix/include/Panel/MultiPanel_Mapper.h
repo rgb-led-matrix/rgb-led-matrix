@@ -2,8 +2,10 @@
 #define MULTIPANEL_MAPPER_H
 
 #include <list>
+#include <thread>
 #include "Panel/Panel_Pixel_Mapper.h"
 using std::list;
+using std::thread;
 
 namespace rgb_matrix {
   class MultiPanel_Mapper : public Panel {
@@ -31,6 +33,7 @@ namespace rgb_matrix {
         };
 
         list<Panel_t *> *panel_;
+        list_t<thread *> *threads_;
   };
 }
 #endif
