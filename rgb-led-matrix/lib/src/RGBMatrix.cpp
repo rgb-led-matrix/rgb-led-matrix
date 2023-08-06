@@ -1,7 +1,8 @@
 #include "RGBMatrix.h"
 #include "CFG/CFG.h"
 #include "framebuffer/Framebuffer.h"
-#include "framebuffer/external/external.h"
+#include "framebuffer/RGB/RGB24.h"
+#include "framebuffer/RGB/RGB48.h"
 
 namespace rgb_matrix {
   Panel *RGBMatrix::CreatePanel() {

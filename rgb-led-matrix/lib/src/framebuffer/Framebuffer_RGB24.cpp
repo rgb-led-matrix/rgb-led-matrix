@@ -1,6 +1,6 @@
 #include <math.h>
 #include "framebuffer/external/RP2040/RP2040_UART/RP2040_UART.h"
-#include "framebuffer/external/external.h"
+#include "framebuffer/RGB/RGB24.h"
 
 namespace rgb_matrix {
 
