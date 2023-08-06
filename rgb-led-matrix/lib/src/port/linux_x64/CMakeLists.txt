@@ -10,9 +10,8 @@ target_link_directories(linux_x64 PRIVATE
     ../../../../../external/FTDI/FTDI_D2XX/Linux/x64/build)
 
 target_link_libraries(linux_x64
-    multiplex-mapper
     framebuffer
     CFG
-    Panel
     IO
+    Panel
     ftd2xx)

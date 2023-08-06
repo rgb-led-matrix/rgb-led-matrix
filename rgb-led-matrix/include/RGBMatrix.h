@@ -2,21 +2,21 @@
 #define RGBMATRIX_H
 
 #include <stddef.h>
-#include "Panel.h"
+#include "Panel/Panel.h"
 #include "CFG/types.h"
 
 namespace rgb_matrix {
   class RGBMatrix {
     public:
-      RGBMatrix(Options o) :_options(o) {}
+      RGBMatrix(CFG *cfg) :_cfg(cfg) {}
       virtual ~RGBMatrix() {}
 
-      virtual Panel *CreateCanvas();
+      virtual Panel *CreatePanel();
 
     protected:
-      RGBMatrix() : _options(Options(nullptr, 0, nullptr)) {}
+      RGBMatrix() : _cfg(nullptr) {}
 
-      Options _options;
+      CFG *_cfg;
   };
 }
 #endif

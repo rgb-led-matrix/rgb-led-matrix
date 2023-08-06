@@ -1,33 +1,38 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
+#include <mutex>
 #include <stdint.h>
-#include "mappers/MultiplexMapper.h"
-#include "PixelDesignatorMap.h"
 #include "CFG/CFG.h"
+#include "Panel/Panel.h"
+using std::mutex;
 
 namespace rgb_matrix {
-  template <typename T> class Framebuffer {
+  template <typename T> class Framebuffer : public Panel {
     public:
-      Framebuffer(CFG *cfg);
-      virtual ~Framebuffer() {}
+      virtual ~Framebuffer();
 
-      static Framebuffer *CreateFramebuffer(Options options, const MultiplexMapper *multiplex_mapper);
+      static Framebuffer *CreateFramebuffer(CFG *cfg);
 
-      virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
-
-      virtual void DumpToMatrix() = 0;
-
-      bool ApplyPixelMapper(const MultiplexMapper *mapper);
-      void InitSharedMapper(const MultiplexMapper *multiplex_mapper);
+      void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
+      void show();
+      void set_brightness(uint8_t brightness);
+      cord_t get_size();
 
     protected:
       Framebuffer();
+      Framebuffer(CFG *cfg);
 
-      virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue) = 0;
+      void build_table(GAMMA g, bool use_CIE1931);  // TODO: Update to only call once per RGBMatrix factory?
+
+      virtual void show_internal() = 0;
+      virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *color) = 0;
 
       CFG *cfg_;
-      PixelDesignatorMap<T> *shared_mapper_;
+      T **buffer_;
+      T lut[256][100];  // TODO: Switch to lut[100][256]
+      volatile uint8_t brightness_;
+      mutex lock_;
   };
 }
 #endif

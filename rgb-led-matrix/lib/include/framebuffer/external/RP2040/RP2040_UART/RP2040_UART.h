@@ -12,16 +12,14 @@ namespace rgb_matrix {
             RP2040_UART(CFG *cfg);
             ~RP2040_UART();
 
-            virtual void DumpToMatrix();
-
         protected:
-            virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint16_t *red, uint16_t *green, uint16_t *blue);
+            virtual void show_internal();
+            virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *pixel);
 
         private:
             static void worker_thread(RP2040_UART<T> *object);
             void build_table(GAMMA g, bool use_CIE1931);
 
-            uint16_t lut[256][100][3];
             RP2040_UART_CFG *cfg_;
             std::thread *thread_;
             volatile bool shutdown_;

@@ -1,6 +1,4 @@
-add_subdirectory(LEDPanel)
-
 add_library(Panel INTERFACE)
 
-target_link_libraries(Panel INTERFACE
-    LEDPanel)
+target_sources(Panel INTERFACE
+    Panel_Pixel_Mapper.cpp)

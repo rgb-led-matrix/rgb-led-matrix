@@ -6,16 +6,43 @@
 namespace rgb_matrix {
     class CFG;
 
-    enum Canvas_ID {
-        RP2040_UART_ID = 0,
+    enum Panel_Type {
+        STANDARD = 0,
+        HUB75 = 1,
+    };
+
+    struct cord_t {
+        int x;
+        int y;
+    };
+
+    enum Color_Order {
+        RGB = 0,
+        RBG = 1,
+        BRG = 2,
+        BGR = 3,
+        GRB = 4,
+        GBR = 5,
+    };
+
+    struct pixel_t {
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
+    };
+
+    enum External_ID {
+        RP2040_UART_RGB48_ID = 0,
+        RP2040_UART_RGB24_ID = 1,
     };
 
     struct GAMMA {
-        GAMMA(float red, float green, float blue) : red_(red), green_(green), blue_(blue) {}
+        public:
+            GAMMA(float red = 1.0, float green = 1.0, float blue = 1.0) : red_(red), green_(green), blue_(blue) {}
 
-        inline float get_red() { return red_; }
-        inline float get_green() { return green_; }
-        inline float get_blue() { return blue_; }
+            inline float get_red() { return red_; }
+            inline float get_green() { return green_; }
+            inline float get_blue() { return blue_; }
 
         protected:
             float red_;
@@ -25,34 +52,18 @@ namespace rgb_matrix {
 
     struct DOTCorrect {
         public:
-        DOTCorrect(int rows, int cols);
-        ~DOTCorrect();
+            DOTCorrect(int rows, int cols);
+            ~DOTCorrect();
 
-        bool set(int x, int y, uint8_t r, uint8_t g, uint8_t b, float red, float green, float blue);
-        void get(int x, int y, uint8_t r, uint8_t g, uint8_t b, float *red, float *green, float *blue);
-
-
-        // TODO: Limit access
-        int rows;
-        int cols;
+            bool set(int x, int y, uint8_t r, uint8_t g, uint8_t b, float red, float green, float blue);
+            void get(int x, int y, uint8_t r, uint8_t g, uint8_t b, float *red, float *green, float *blue);
         
         private:
             bool check(float f);
 
+            int rows;
+            int cols;
             float *table_;
-    };
-
-    struct Options {
-        Options(CFG *config, int multiplexing, const char *pixel_mapper_config) : cfg_(config), multiplexing_(multiplexing), pixel_mapper_config_(pixel_mapper_config) {}
-
-        inline CFG *get_cfg() { return cfg_; }
-        inline int get_multiplexing() { return multiplexing_; }
-        inline const char *get_pixel_mapper_config() { return pixel_mapper_config_; }
-
-        protected:
-            CFG *cfg_;
-            int multiplexing_;
-            const char *pixel_mapper_config_;
     };
 }
 
