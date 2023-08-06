@@ -7,9 +7,9 @@ namespace rgb_matrix {
     switch (cfg->get_id()) {
       case External_ID::RP2040_UART_RGB48_ID:
         return new RP2040_UART<RGB48>(cfg);
+      default:
+        return nullptr;
     }
-
-    return nullptr;
   }
 
   template <> void Framebuffer<RGB48>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {

@@ -13,4 +13,5 @@ target_link_libraries(linux_x64
     framebuffer
     CFG
     IO
+    Panel
     ftd2xx)

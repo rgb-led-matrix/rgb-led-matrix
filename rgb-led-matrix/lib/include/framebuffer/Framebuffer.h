@@ -8,7 +8,7 @@
 namespace rgb_matrix {
   template <typename T> class Framebuffer : public Panel {
     public:
-      virtual ~Framebuffer() {}
+      virtual ~Framebuffer();
 
       static Framebuffer *CreateFramebuffer(CFG *cfg);
 

@@ -19,6 +19,11 @@ namespace rgb_matrix {
     brightness_ = 100;
   }
 
+  template <typename T> Framebuffer<T>::~Framebuffer() {
+    for (int i = 0; i < cfg_->get_cols(); i++)
+      delete buffer_[i];
+  }
+
   template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
     brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
   }

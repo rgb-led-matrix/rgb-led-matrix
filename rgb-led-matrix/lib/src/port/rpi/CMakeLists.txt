@@ -16,4 +16,5 @@ target_link_libraries(rpi
     framebuffer
     CFG
     IO
+    Panel
     ftd2xx)

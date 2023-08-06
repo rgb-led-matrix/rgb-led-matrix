@@ -16,4 +16,5 @@ target_link_libraries(rock_pi_s
     framebuffer
     CFG
     IO
+    Panel
     ftd2xx)
