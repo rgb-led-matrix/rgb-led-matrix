@@ -81,6 +81,10 @@ namespace rgb_matrix {
         panel_->set_brightness(brightness);
     }
 
+    cord_t Panel_Pixel_Mapper::get_size() {
+        return panel_->get_size();
+    }
+
     void Panel_Pixel_Mapper::map() {
         for (int i = 0; i < panel_->get_size().x; i++) {
             for (int j = 0; j < panel_->get_size().y; j++) {
