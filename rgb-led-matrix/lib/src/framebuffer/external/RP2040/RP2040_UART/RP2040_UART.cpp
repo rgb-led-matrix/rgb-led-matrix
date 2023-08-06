@@ -49,6 +49,9 @@ namespace rgb_matrix {
 
                 object->start_ = false;
             }
+
+            // Sink idle tokens
+            object->cfg_->get_node()->read(&idle, 1, 10);
         }
     }
 }
