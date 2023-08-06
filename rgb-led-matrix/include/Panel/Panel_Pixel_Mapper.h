@@ -6,7 +6,7 @@
 #include "CFG/types.h"
 
 namespace rgb_matrix {
-  class Panel_Pixel_Mapper {
+  class Panel_Pixel_Mapper : public Panel {
     public:
       Panel_Pixel_Mapper(Panel *panel);
       virtual ~Panel_Pixel_Mapper();
@@ -21,11 +21,14 @@ namespace rgb_matrix {
     protected:
       Panel_Pixel_Mapper();
 
-      void map();
-      virtual cord_t map_location(cord_t cur_cord) = 0;
-      virtual void map_color(cord_t cord, Color_Order order) = 0;
+      virtual cord_t map_location(int x, int y) = 0;
+      virtual Color_Order map_color(int x, int y) = 0;
 
       Panel *panel_;
+
+    private:
+      void map();
+
       cord_t **locations_;
       Color_Order **orders_;
   };

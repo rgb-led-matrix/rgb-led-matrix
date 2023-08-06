@@ -15,7 +15,7 @@ namespace rgb_matrix {
             locations_[i] = new cord_t[size.y];
             orders_[i] = new Color_Order[size.y];
         }
-
+        
         map();
     }   
 
@@ -82,6 +82,11 @@ namespace rgb_matrix {
     }
 
     void Panel_Pixel_Mapper::map() {
-        // TODO:
+        for (int i = 0; i < panel_->get_size().x; i++) {
+            for (int j = 0; j < panel_->get_size().y; j++) {
+                locations_[i][j] = map_location(i, j);
+                orders_[i][j] = map_color(i, j);
+            }
+        }
     }
 }  // namespace rgb_matrix
