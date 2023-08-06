@@ -81,7 +81,7 @@ namespace rgb_matrix {
     }
 
     void Panel_Pixel_Mapper::map() {
-
+        // TODO:
     }
 
 }  // namespace rgb_matrix
