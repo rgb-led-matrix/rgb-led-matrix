@@ -1,9 +1,10 @@
+#include <assert.h>
 #include "Panel/Panel_Pixel_Mapper.h"
 
 namespace rgb_matrix {
     // Don't use this!    
-    Panel_Pixel_Mapper::Panel_Pixel_Mapper() {
-
+    Panel_Pixel_Mapper::Panel_Pixel_Mapper() :panel_(nullptr) {
+        assert(panel_ != nullptr);
     }
 
     Panel_Pixel_Mapper::Panel_Pixel_Mapper(Panel *panel) {
@@ -83,5 +84,4 @@ namespace rgb_matrix {
     void Panel_Pixel_Mapper::map() {
         // TODO:
     }
-
 }  // namespace rgb_matrix
