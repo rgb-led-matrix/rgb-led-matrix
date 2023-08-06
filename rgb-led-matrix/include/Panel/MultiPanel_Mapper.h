@@ -3,9 +3,11 @@
 
 #include <list>
 #include <thread>
+#include <mutex>
 #include "Panel/Panel_Pixel_Mapper.h"
 using std::list;
 using std::thread;
+using std::mutex;
 
 namespace rgb_matrix {
   class MultiPanel_Mapper : public Panel {
@@ -34,6 +36,7 @@ namespace rgb_matrix {
         int width_;
         int height_;
         int thread_count_;
+        mutex lock_;
         list<Panel_t *> *panel_;
         list_t<thread *> *threads_;
   };

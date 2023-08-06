@@ -17,7 +17,7 @@ namespace rgb_matrix {
             thread_->join();
     }
     
-    template <typename T> void RP2040_UART<T>::show() {
+    template <typename T> void RP2040_UART<T>::show_internal() {
         start_ = true;
 
         while (start_);

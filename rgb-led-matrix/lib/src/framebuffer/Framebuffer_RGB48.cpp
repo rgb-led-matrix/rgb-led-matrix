@@ -15,8 +15,10 @@ namespace rgb_matrix {
   template <> void Framebuffer<RGB48>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
     RGB48 **ptr = (RGB48 **) buffer_;
 
+    lock_.lock();
     if (x > 0 && x < cfg_->get_cols() && y > 0 && y < cfg_->get_rows())
       MapColors(x, y, red, green, blue, &ptr[x][y]);
+    lock_.unlock();
   }
 
   // Handles brightness, gamma and CIE1931

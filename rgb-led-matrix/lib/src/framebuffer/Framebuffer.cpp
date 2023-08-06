@@ -25,7 +25,9 @@ namespace rgb_matrix {
   }
 
   template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
+    lock_.lock();
     brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
+    lock_.unlock();
   }
 
   template <typename T> cord_t Framebuffer<T>::get_size() {
@@ -35,5 +37,11 @@ namespace rgb_matrix {
     result.y = cfg_->get_rows();
 
     return result;
+  }
+
+  template<typename T> void Framebuffer<T>::show() {
+    lock_.lock();
+    show_internal();
+    lock_.unlock();
   }
 }  // namespace rgb_matrix
