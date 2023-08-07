@@ -25,7 +25,7 @@ namespace rgb_matrix {
         // TODO:
     }
 
-    // TODO: Check for duplicates?
+    // TODO: Check for duplicates!
     void MultiPanel_Mapper::map_panel(int x, int y, Panel_Pixel_Mapper *panel) {
         Panel_t *ptr = new Panel_t;
 
@@ -70,7 +70,20 @@ namespace rgb_matrix {
         bool done = false;
 
         lock_.lock();
-        // TODO: Submit jobs
+        // TODO: Submit SetPixel jobs
+
+        while (!done) {
+            queue_lock_.lock();
+
+            if (!queue_.empty())
+                done = true;
+
+            queue_lock_.unlock();
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+
+        // TODO: Submit show jobs
 
         while (!done) {
             queue_lock_.lock();
