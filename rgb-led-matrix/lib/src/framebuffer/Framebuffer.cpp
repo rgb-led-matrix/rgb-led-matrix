@@ -48,22 +48,23 @@ namespace rgb_matrix {
     lock_.unlock();
   }
 
-    template <> Framebuffer<RGB48> *Framebuffer<RGB48>::CreateFramebuffer(CFG *cfg) {
-    switch (cfg->get_id()) {
-      case External_ID::RP2040_UART_RGB48_ID:
-        return new RP2040_UART<RGB48>(cfg);
-      default:
-        return nullptr;
-    }
-  }
-
-  template <> void Framebuffer<RGB48>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
-    RGB48 **ptr = (RGB48 **) buffer_;
+  template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+    T **ptr = (T **) buffer_;
 
     lock_.lock();
     if (x > 0 && x < cfg_->get_cols() && y > 0 && y < cfg_->get_rows())
       MapColors(x, y, red, green, blue, &ptr[x][y]);
     lock_.unlock();
+  }
+
+  template <typename T> Framebuffer<T> *Framebuffer<T>::CreateFramebuffer(CFG *cfg) {
+    switch (cfg->get_id()) {
+      case External_ID::RP2040_UART_RGB48_ID:
+      case External_ID::RP2040_UART_RGB24_ID:
+        return new RP2040_UART<T>(cfg);
+      default:
+        return nullptr;
+    }
   }
 
   // Handles brightness, gamma and CIE1931
@@ -91,24 +92,6 @@ namespace rgb_matrix {
         }
       }
     }
-  }
-
-  template <> Framebuffer<RGB24> *Framebuffer<RGB24>::CreateFramebuffer(CFG *cfg) {
-    switch (cfg->get_id()) {
-      case External_ID::RP2040_UART_RGB24_ID:
-        return new RP2040_UART<RGB24>(cfg);
-      default:
-        return nullptr;
-    }
-  }
-
-  template <> void Framebuffer<RGB24>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
-    RGB24 **ptr = (RGB24 **) buffer_;
-
-    lock_.lock();
-    if (x > 0 && x < cfg_->get_cols() && y > 0 && y < cfg_->get_rows())
-      MapColors(x, y, red, green, blue, &ptr[x][y]);
-    lock_.unlock();
   }
 
   // Handles brightness, gamma and CIE1931
