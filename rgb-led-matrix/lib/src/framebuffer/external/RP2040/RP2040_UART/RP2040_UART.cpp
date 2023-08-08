@@ -41,6 +41,8 @@ namespace rgb_matrix {
                 for (int i = 0; i < 10; i++) {
                     // If it times out then the bus is idle, send frame
                     if (object->cfg_->get_node()->read(&idle, 1, 10) == 0) {
+                        // TODO: Send checksum of data using CRC-32/MPEG-2
+
                         object->cfg_->get_node()->write((char *) object->buffer_, size);
 
                         // Check for idle loop, recover if still active
