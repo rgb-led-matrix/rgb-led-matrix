@@ -5,7 +5,7 @@
 #include "framebuffer/RGB/RGB24.h"
 #include "framebuffer/RGB/RGB48.h"
 #include "framebuffer/RGB/RGB_555.h"
-#include "framebuffer/RGB/RGB_232.h"
+#include "framebuffer/RGB/RGB_222.h"
 using std::min;
 using std::max;
 
@@ -165,7 +165,7 @@ namespace rgb_matrix {
     }
   }
 
-    template <> Framebuffer<RGB_232> *Framebuffer<RGB_232>::CreateFramebuffer(CFG *cfg) {
+    template <> Framebuffer<RGB_222> *Framebuffer<RGB_222>::CreateFramebuffer(CFG *cfg) {
     switch (cfg->get_id()) {
       default:
         return nullptr;
@@ -173,7 +173,7 @@ namespace rgb_matrix {
   }
 
   // Handles brightness, gamma and CIE1931
-  template <> void Framebuffer<RGB_232>::build_table(GAMMA g, bool use_CIE1931) {
+  template <> void Framebuffer<RGB_222>::build_table(GAMMA g, bool use_CIE1931) {
     if (!use_CIE1931) {
       for (uint32_t i = 0; i < 256; i++) {
         for (int j = 0; j < 100; j++) {
@@ -206,5 +206,5 @@ namespace rgb_matrix {
   template class Framebuffer<RGB48>;
   template class Framebuffer<RGB24>;
   template class Framebuffer<RGB_555>;
-  template class Framebuffer<RGB_232>;
+  template class Framebuffer<RGB_222>;
 }  // namespace rgb_matrix
