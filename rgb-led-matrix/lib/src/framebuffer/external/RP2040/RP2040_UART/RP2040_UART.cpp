@@ -5,7 +5,7 @@
 
 namespace rgb_matrix {
     template <typename T> RP2040_UART<T>::RP2040_UART(CFG *cfg) : Framebuffer<T>(cfg) {
-            Framebuffer<T>::build_table(cfg->get_gamma(), cfg_->use_CIE1931());
+            Framebuffer<T>::build_table(cfg->get_gamma());
             
             shutdown_ = false;
             start_ = false;

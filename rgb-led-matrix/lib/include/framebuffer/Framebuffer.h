@@ -23,7 +23,7 @@ namespace rgb_matrix {
       Framebuffer();
       Framebuffer(CFG *cfg);
 
-      void build_table(GAMMA g, bool use_CIE1931);  // TODO: Update to only call once per RGBMatrix factory?
+      void build_table(GAMMA g);  // TODO: Update to only call once per RGBMatrix factory?
 
       virtual void show_internal() = 0;
       virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *color) = 0;

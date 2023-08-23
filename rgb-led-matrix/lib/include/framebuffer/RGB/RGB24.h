@@ -10,6 +10,10 @@ namespace rgb_matrix {
         uint8_t red;
         uint8_t green;
         uint8_t blue;
+
+        static constexpr uint32_t red_lim = 8;
+        static constexpr uint32_t green_lim = 8;
+        static constexpr uint32_t blue_lim = 8;
     };
 }
 
