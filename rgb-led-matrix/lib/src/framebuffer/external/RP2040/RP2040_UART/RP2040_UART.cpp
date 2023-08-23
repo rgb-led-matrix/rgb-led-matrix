@@ -4,9 +4,7 @@
 #include "framebuffer/RGB/RGB48.h"
 
 namespace rgb_matrix {
-    template <typename T> RP2040_UART<T>::RP2040_UART(CFG *cfg) : Framebuffer<T>(cfg) {
-            Framebuffer<T>::build_table(cfg->get_gamma());
-            
+    template <typename T> RP2040_UART<T>::RP2040_UART(CFG *cfg) : Framebuffer<T>(cfg) {            
             shutdown_ = false;
             start_ = false;
             thread_ = new std::thread(&RP2040_UART<T>::worker_thread, this);
