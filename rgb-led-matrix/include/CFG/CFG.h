@@ -25,6 +25,8 @@ namespace rgb_matrix {
         node_ = node;
       }
 
+      // TODO: Add color mappers for red, green and blue?
+
       inline External_ID get_id() { return id_; }
       inline DOTCorrect& get_dot() { return dot_; }
       inline GAMMA& get_gamma() { return gamma_; }
