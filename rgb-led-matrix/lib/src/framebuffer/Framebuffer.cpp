@@ -72,6 +72,7 @@ namespace rgb_matrix {
     }
   }
 
+  // Note this may need to change to individual factories per Data_Format_ID in the future.
   template <typename T> Framebuffer<T> *Framebuffer<T>::CreateFramebuffer(CFG *cfg) {
     switch (cfg->get_id()) {
       case External_ID::RP2040_UART_ID:
