@@ -15,7 +15,7 @@ namespace rgb_matrix {
       void show();
       cord_t get_size();
 
-      // Applies to SetPixel calls after set
+      // Applies to SetPixel calls after set/map
       void set_brightness(uint8_t brightness);
       void map_wavelength(uint8_t color, Color index, uint16_t value);
 
