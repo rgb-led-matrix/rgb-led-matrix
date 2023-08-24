@@ -16,7 +16,7 @@ namespace rgb_matrix {
 
       // Applies to SetPixel calls after set/map
       virtual void set_brightness(uint8_t brightness) = 0;
-      virtual void map_wavelength(uint8_t color, uint16_t value) = 0;
+      virtual void map_wavelength(uint8_t color, Color index, uint16_t value) = 0;
   };
 }
 #endif

@@ -25,6 +25,12 @@ namespace rgb_matrix {
         GBR = 5,
     };
 
+    enum Color {
+        Red = 0,
+        Green = 1,
+        Blue = 2,
+    };
+
     struct pixel_t {
         uint8_t red;
         uint8_t green;

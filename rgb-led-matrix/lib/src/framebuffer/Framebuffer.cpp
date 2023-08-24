@@ -37,8 +37,8 @@ namespace rgb_matrix {
     lock_.unlock();
   }
 
-  template <typename T> void Framebuffer<T>::map_wavelength(uint8_t color, uint16_t value) {
-    
+  template <typename T> void Framebuffer<T>::map_wavelength(uint8_t color, Color index, uint16_t value) {
+    // TODO:
   }
 
   template <typename T> cord_t Framebuffer<T>::get_size() {

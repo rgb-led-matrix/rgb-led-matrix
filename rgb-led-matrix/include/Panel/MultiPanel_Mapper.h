@@ -25,6 +25,7 @@ namespace rgb_matrix {
 
         // Applies to show calls after set
         virtual void set_brightness(uint8_t brightness);
+        virtual void map_wavelength(uint8_t color, Color index, uint16_t value);
 
     protected:
         MultiPanel_Mapper();

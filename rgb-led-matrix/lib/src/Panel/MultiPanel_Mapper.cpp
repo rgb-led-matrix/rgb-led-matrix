@@ -106,6 +106,13 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
+    void MultiPanel_Mapper::map_wavelength(uint8_t color, Color index, uint16_t value) {
+        lock_.lock();
+        for (int i = 0; i < panel_->size(); i++)
+            panel_->at(i)->panel->map_wavelength(color, index, value);
+        lock_.unlock();
+    }
+
     void MultiPanel_Mapper::thread(void *args) {
         MultiPanel_Mapper *ptr = (MultiPanel_Mapper *) args;
 

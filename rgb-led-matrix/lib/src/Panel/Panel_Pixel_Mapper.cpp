@@ -81,8 +81,8 @@ namespace rgb_matrix {
         panel_->set_brightness(brightness);
     }
 
-    void Panel_Pixel_Mapper::map_wavelength(uint8_t color, uint16_t value) {
-        panel_->map_wavelength(color, value);
+    void Panel_Pixel_Mapper::map_wavelength(uint8_t color, Color index, uint16_t value) {
+        panel_->map_wavelength(color, index, value);
     }
 
     cord_t Panel_Pixel_Mapper::get_size() {
