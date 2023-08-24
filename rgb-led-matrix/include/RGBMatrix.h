@@ -8,15 +8,7 @@
 namespace rgb_matrix {
   class RGBMatrix {
     public:
-      RGBMatrix(CFG *cfg) :_cfg(cfg) {}
-      virtual ~RGBMatrix() {}
-
-      virtual Panel *CreatePanel();
-
-    protected:
-      RGBMatrix() : _cfg(nullptr) {}
-
-      CFG *_cfg;
+      static Panel *CreatePanel(CFG *cfg);
   };
 }
 #endif
