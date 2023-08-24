@@ -4,7 +4,7 @@
 #include <vector>
 #include <thread>
 #include "framebuffer/Framebuffer.h"
-#include "CFG/RP2040/RP2040_UART/RP2040_UART_CFG.h"
+#include "CFG/external/RP2040/RP2040_UART/RP2040_UART_CFG.h"
 
 namespace rgb_matrix {
     template <typename T> class RP2040_UART: public Framebuffer<T> {

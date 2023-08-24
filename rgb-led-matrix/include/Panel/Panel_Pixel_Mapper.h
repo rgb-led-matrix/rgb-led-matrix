@@ -17,6 +17,7 @@ namespace rgb_matrix {
 
       // Applies to SetPixel calls after set
       void set_brightness(uint8_t brightness);
+      void map_wavelength(uint8_t color, uint16_t value);
 
     protected:
       Panel_Pixel_Mapper();
