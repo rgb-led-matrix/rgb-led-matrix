@@ -18,7 +18,7 @@ namespace rgb_matrix {
   template <typename T> Framebuffer<T>::Framebuffer(CFG *cfg) : cfg_(cfg) {
     assert(cfg != nullptr);
 
-    build_table(cfg_->get_gamma());
+    build_table();
 
     for (int i = 0; i < cfg->get_cols(); i++)
       buffer_[i] = new T[cfg->get_rows()];
@@ -38,7 +38,23 @@ namespace rgb_matrix {
   }
 
   template <typename T> void Framebuffer<T>::map_wavelength(uint8_t color, Color index, uint16_t value) {
-    // TODO:
+    GAMMA g = cfg_->get_gamma();
+
+    for (int j = 0; j < 100; j++) {
+      switch (index) {
+        case Color::Red:
+          lut[j][color].red = (uint16_t) round(pow(value / 65535.0, 1 / g.get_red()) * T::red_lim * j / 99.0);
+          break;
+        case Color::Green:
+          lut[j][color].green = (uint16_t) round(pow(value / 65535.0, 1 / g.get_green()) * T::green_lim * j / 99.0);
+          break;
+        case Color::Blue:
+          lut[j][color].blue = (uint16_t) round(pow(value / 65535.0, 1 / g.get_blue()) * T::blue_lim * j / 99.0);
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   template <typename T> cord_t Framebuffer<T>::get_size() {
@@ -66,13 +82,11 @@ namespace rgb_matrix {
   }
 
   // Handles brightness and gamma
-  template <typename T> void Framebuffer<T>::build_table(GAMMA g) {
+  template <typename T> void Framebuffer<T>::build_table() {
     for (uint32_t i = 0; i < 256; i++) {
-      for (int j = 0; j < 100; j++) {
-        lut[j][i].red = (uint8_t) round(pow(i / 255.0, 1 / g.get_red()) * T::red_lim * j / 99.0);
-        lut[j][i].green = (uint8_t) round(pow(i / 255.0, 1 / g.get_green()) * T::green_lim * j / 99.0);
-        lut[j][i].blue = (uint8_t) round(pow(i / 255.0, 1 / g.get_blue()) * T::blue_lim * j / 99.0);
-      }
+      map_wavelength(i, Color::Red, i * 65536 / 256);
+      map_wavelength(i, Color::Green, i * 65536 / 256);
+      map_wavelength(i, Color::Blue, i * 65536 / 256);
     }
   }
 
