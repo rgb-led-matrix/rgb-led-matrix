@@ -31,7 +31,7 @@ namespace rgb_matrix {
 
       CFG *cfg_;
       T **buffer_;
-      T lut[256][100];  // TODO: Switch to lut[100][256]
+      T lut[100][256];
       volatile uint8_t brightness_;
       mutex lock_;
   };

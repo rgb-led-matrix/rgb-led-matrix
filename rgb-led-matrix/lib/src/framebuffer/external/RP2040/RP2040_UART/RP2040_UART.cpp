@@ -67,9 +67,9 @@ namespace rgb_matrix {
         uint8_t bright =  this->brightness_;
 
         cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
-        pixel->red = (uint16_t) round(this->lut[r][bright].red / T::red_max * fr * cfg_->get_pwm_bits());
-        pixel->green = (uint16_t) round(this->lut[g][bright].green / T::green_max * fg * cfg_->get_pwm_bits());
-        pixel->blue = (uint16_t) round(this->lut[b][bright].blue / T::blue_max * fb * cfg_->get_pwm_bits());
+        pixel->red = (uint16_t) round(this->lut[bright][r].red / T::red_max * fr * cfg_->get_pwm_bits());
+        pixel->green = (uint16_t) round(this->lut[bright][g].green / T::green_max * fg * cfg_->get_pwm_bits());
+        pixel->blue = (uint16_t) round(this->lut[bright][b].blue / T::blue_max * fb * cfg_->get_pwm_bits());
     }
 
     template class RP2040_UART<RGB24>;

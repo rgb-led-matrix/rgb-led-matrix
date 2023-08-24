@@ -69,9 +69,9 @@ namespace rgb_matrix {
   template <typename T> void Framebuffer<T>::build_table(GAMMA g) {
     for (uint32_t i = 0; i < 256; i++) {
       for (int j = 0; j < 100; j++) {
-        lut[i][j].red = (uint8_t) round(pow(i / 255.0, 1 / g.get_red()) * T::red_lim * j / 99.0);
-        lut[i][j].green = (uint8_t) round(pow(i / 255.0, 1 / g.get_green()) * T::green_lim * j / 99.0);
-        lut[i][j].blue = (uint8_t) round(pow(i / 255.0, 1 / g.get_blue()) * T::blue_lim * j / 99.0);
+        lut[j][i].red = (uint8_t) round(pow(i / 255.0, 1 / g.get_red()) * T::red_lim * j / 99.0);
+        lut[j][i].green = (uint8_t) round(pow(i / 255.0, 1 / g.get_green()) * T::green_lim * j / 99.0);
+        lut[j][i].blue = (uint8_t) round(pow(i / 255.0, 1 / g.get_blue()) * T::blue_lim * j / 99.0);
       }
     }
   }
