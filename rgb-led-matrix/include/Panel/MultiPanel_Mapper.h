@@ -12,7 +12,7 @@ using std::mutex;
 using std::queue;
 
 namespace rgb_matrix {
-  class MultiPanel_Mapper : public Panel {
+  class MultiPanel_Mapper {
     public:
         MultiPanel_Mapper(int width, int height, int threads = 1);
         virtual ~MultiPanel_Mapper();
