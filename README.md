@@ -1,7 +1,7 @@
 # rgb-led-matrix
 This repository creates a library for top level applications and graphics. This repository will be a sub-module to that repository. The purpose of this code base is to allow better support for different small form factor boards regardless of hardware, operating system, etc. It also allows for support of different implementations.
 
-Currently all bit-bang implementations have been removed. Only external implementations are used. This may change, however these should enable better performance and portability, despite possibly being more expensive.
+Only external implementations are used. These should enable better performance and portability, despite possibly being more expensive.
 
 ## Status
 Work in progress. 
