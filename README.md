@@ -11,9 +11,6 @@ Code is licensed under GPL 3. The original code base was https://github.com/hzel
 
 There is no warranty for this. Work is free to use according to the [GPL 3 license](LICENSE). I am not responsible or liable for any damages or issues as a result of this in any way. User is responsible for all laws and regulations as required. Work is AS-IS and it is the respiblity of any user to address any shortages discovered in this code base before using it.
 
-## Differences from fork
-See [this](Differences_from_fork.md) for more informantion.
-
 ## Features not supported by this code base
 Mapping red to red, green to green and blue to blue. This is to be handled by the application or some other higher level library.
 
