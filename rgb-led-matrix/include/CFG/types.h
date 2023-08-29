@@ -25,6 +25,12 @@ namespace rgb_matrix {
         GBR = 5,
     };
 
+    enum Color {
+        Red = 0,
+        Green = 1,
+        Blue = 2,
+    };
+
     struct pixel_t {
         uint8_t red;
         uint8_t green;
@@ -32,8 +38,14 @@ namespace rgb_matrix {
     };
 
     enum External_ID {
-        RP2040_UART_RGB48_ID = 0,
-        RP2040_UART_RGB24_ID = 1,
+        RP2040_UART_ID = 0,
+    };
+
+    enum Data_Format_ID {
+        RGB48_ID = 0,
+        RGB24_ID = 1,
+        RGB_222_ID = 2,
+        RGB_555_ID = 3,
     };
 
     struct GAMMA {

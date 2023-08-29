@@ -12,7 +12,7 @@ using std::mutex;
 using std::queue;
 
 namespace rgb_matrix {
-  class MultiPanel_Mapper : public Panel {
+  class MultiPanel_Mapper {
     public:
         MultiPanel_Mapper(int width, int height, int threads = 1);
         virtual ~MultiPanel_Mapper();
@@ -23,8 +23,9 @@ namespace rgb_matrix {
         virtual cord_t get_size();
         virtual void show();
 
-        // Applies to show calls after set
+        // Applies to show calls after set/map
         virtual void set_brightness(uint8_t brightness);
+        virtual void map_wavelength(uint8_t color, Color index, uint16_t value);
 
     protected:
         MultiPanel_Mapper();

@@ -5,7 +5,7 @@
 #include "framebuffer/RGB/RGB24.h"
 #include "framebuffer/RGB/RGB48.h"
 #include "framebuffer/RGB/RGB_555.h"
-#include "framebuffer/RGB/RGB_232.h"
+#include "framebuffer/RGB/RGB_222.h"
 using std::min;
 using std::max;
 
@@ -17,6 +17,8 @@ namespace rgb_matrix {
 
   template <typename T> Framebuffer<T>::Framebuffer(CFG *cfg) : cfg_(cfg) {
     assert(cfg != nullptr);
+
+    build_table();
 
     for (int i = 0; i < cfg->get_cols(); i++)
       buffer_[i] = new T[cfg->get_rows()];
@@ -33,6 +35,26 @@ namespace rgb_matrix {
     lock_.lock();
     brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
     lock_.unlock();
+  }
+
+  template <typename T> void Framebuffer<T>::map_wavelength(uint8_t color, Color index, uint16_t value) {
+    GAMMA g = cfg_->get_gamma();
+
+    for (int j = 0; j < 100; j++) {
+      switch (index) {
+        case Color::Red:
+          lut[j][color].red = (uint16_t) round(pow(value / 65535.0, 1 / g.get_red()) * T::red_lim * j / 99.0);
+          break;
+        case Color::Green:
+          lut[j][color].green = (uint16_t) round(pow(value / 65535.0, 1 / g.get_green()) * T::green_lim * j / 99.0);
+          break;
+        case Color::Blue:
+          lut[j][color].blue = (uint16_t) round(pow(value / 65535.0, 1 / g.get_blue()) * T::blue_lim * j / 99.0);
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   template <typename T> cord_t Framebuffer<T>::get_size() {
@@ -59,152 +81,27 @@ namespace rgb_matrix {
     lock_.unlock();
   }
 
-  template <> Framebuffer<RGB48> *Framebuffer<RGB48>::CreateFramebuffer(CFG *cfg) {
+  // Handles brightness and gamma
+  template <typename T> void Framebuffer<T>::build_table() {
+    for (uint32_t i = 0; i < 256; i++) {
+      map_wavelength(i, Color::Red, i * 65536 / 256);
+      map_wavelength(i, Color::Green, i * 65536 / 256);
+      map_wavelength(i, Color::Blue, i * 65536 / 256);
+    }
+  }
+
+  // Note this may need to change to individual factories per Data_Format_ID in the future.
+  template <typename T> Framebuffer<T> *Framebuffer<T>::CreateFramebuffer(CFG *cfg) {
     switch (cfg->get_id()) {
-      case External_ID::RP2040_UART_RGB48_ID:
-        return new RP2040_UART<RGB48>(cfg);
+      case External_ID::RP2040_UART_ID:
+        return new RP2040_UART<T>(cfg);
       default:
         return nullptr;
-    }
-  }
-
-  // Handles brightness, gamma and CIE1931
-  template <> void Framebuffer<RGB48>::build_table(GAMMA g, bool use_CIE1931) {
-    if (!use_CIE1931) {
-      for (uint32_t i = 0; i < 256; i++) {
-        for (int j = 0; j < 100; j++) {
-          constexpr uint32_t lim = 65535;
-          lut[i][j].red = (uint16_t) round(pow(i / 255.0, 1 / g.get_red()) * lim * j / 99.0);
-          lut[i][j].green = (uint16_t) round(pow(i / 255.0, 1 / g.get_green()) * lim * j / 99.0);
-          lut[i][j].blue = (uint16_t) round(pow(i / 255.0, 1 / g.get_blue()) * lim * j / 99.0);
-        }
-      }
-    }
-    else {
-      for (uint32_t i = 0; i < 256; i++) {
-        for (int j = 0; j < 100; j++) {
-          constexpr uint32_t lim = 65535;
-          float temp = pow(i / 255.0, 1 / g.get_red()) * j;
-          lut[i][j].red = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-          temp = pow(i / 255.0, 1 / g.get_green()) * j;
-          lut[i][j].green = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-          temp = pow(i / 255.0, 1 / g.get_blue()) * j;
-          lut[i][j].blue = (uint16_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-        }
-      }
-    }
-  }
-
-  template <> Framebuffer<RGB24> *Framebuffer<RGB24>::CreateFramebuffer(CFG *cfg) {
-    switch (cfg->get_id()) {
-      case External_ID::RP2040_UART_RGB24_ID:
-        return new RP2040_UART<RGB24>(cfg);
-      default:
-        return nullptr;
-    }
-  }
-
-  // Handles brightness, gamma and CIE1931
-  template <> void Framebuffer<RGB24>::build_table(GAMMA g, bool use_CIE1931) {
-    if (!use_CIE1931) {
-      for (uint32_t i = 0; i < 256; i++) {
-        for (int j = 0; j < 100; j++) {
-          constexpr uint32_t lim = 255;
-          lut[i][j].red = (uint8_t) round(pow(i / 255.0, 1 / g.get_red()) * lim * j / 99.0);
-          lut[i][j].green = (uint8_t) round(pow(i / 255.0, 1 / g.get_green()) * lim * j / 99.0);
-          lut[i][j].blue = (uint8_t) round(pow(i / 255.0, 1 / g.get_blue()) * lim * j / 99.0);
-        }
-      }
-    }
-    else {
-      for (uint32_t i = 0; i < 256; i++) {
-        for (int j = 0; j < 100; j++) {
-          constexpr uint32_t lim = 255;
-          float temp = pow(i / 255.0, 1 / g.get_red()) * j;
-          lut[i][j].red = (uint8_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-          temp = pow(i / 255.0, 1 / g.get_green()) * j;
-          lut[i][j].green = (uint8_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-          temp = pow(i / 255.0, 1 / g.get_blue()) * j;
-          lut[i][j].blue = (uint8_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-        }
-      }
-    }
-  }
-
-  template <> Framebuffer<RGB_555> *Framebuffer<RGB_555>::CreateFramebuffer(CFG *cfg) {
-    switch (cfg->get_id()) {
-      default:
-        return nullptr;
-    }
-  }
-
-  // Handles brightness, gamma and CIE1931
-  template <> void Framebuffer<RGB_555>::build_table(GAMMA g, bool use_CIE1931) {
-    if (!use_CIE1931) {
-      for (uint32_t i = 0; i < 256; i++) {
-        for (int j = 0; j < 100; j++) {
-          constexpr uint32_t lim = 31;
-          lut[i][j].red = (uint8_t) round(pow(i / 255.0, 1 / g.get_red()) * lim * j / 99.0);
-          lut[i][j].green = (uint8_t) round(pow(i / 255.0, 1 / g.get_green()) * lim * j / 99.0);
-          lut[i][j].blue = (uint8_t) round(pow(i / 255.0, 1 / g.get_blue()) * lim * j / 99.0);
-        }
-      }
-    }
-    else {
-      for (uint32_t i = 0; i < 256; i++) {
-        for (int j = 0; j < 100; j++) {
-          constexpr uint32_t lim = 31;
-          float temp = pow(i / 255.0, 1 / g.get_red()) * j;
-          lut[i][j].red = (uint8_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-          temp = pow(i / 255.0, 1 / g.get_green()) * j;
-          lut[i][j].green = (uint8_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-          temp = pow(i / 255.0, 1 / g.get_blue()) * j;
-          lut[i][j].blue = (uint8_t) round(lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-        }
-      }
-    }
-  }
-
-    template <> Framebuffer<RGB_232> *Framebuffer<RGB_232>::CreateFramebuffer(CFG *cfg) {
-    switch (cfg->get_id()) {
-      default:
-        return nullptr;
-    }
-  }
-
-  // Handles brightness, gamma and CIE1931
-  template <> void Framebuffer<RGB_232>::build_table(GAMMA g, bool use_CIE1931) {
-    if (!use_CIE1931) {
-      for (uint32_t i = 0; i < 256; i++) {
-        for (int j = 0; j < 100; j++) {
-          constexpr uint32_t red_lim = 3;
-          constexpr uint32_t green_lim = 7;
-          constexpr uint32_t blue_lim = 3;
-          lut[i][j].red = (uint8_t) round(pow(i / 255.0, 1 / g.get_red()) * red_lim * j / 99.0);
-          lut[i][j].green = (uint8_t) round(pow(i / 255.0, 1 / g.get_green()) * green_lim * j / 99.0);
-          lut[i][j].blue = (uint8_t) round(pow(i / 255.0, 1 / g.get_blue()) * blue_lim * j / 99.0);
-        }
-      }
-    }
-    else {
-      for (uint32_t i = 0; i < 256; i++) {
-        for (int j = 0; j < 100; j++) {
-          constexpr uint32_t red_lim = 3;
-          constexpr uint32_t green_lim = 7;
-          constexpr uint32_t blue_lim = 3;
-          float temp = pow(i / 255.0, 1 / g.get_red()) * j;
-          lut[i][j].red = (uint8_t) round(red_lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-          temp = pow(i / 255.0, 1 / g.get_green()) * j;
-          lut[i][j].green = (uint8_t) round(green_lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-          temp = pow(i / 255.0, 1 / g.get_blue()) * j;
-          lut[i][j].blue = (uint8_t) round(blue_lim * ((temp <= 8) ? temp / 902.3 : pow((temp + 16) / 116.0, 3)));
-        }
-      }
     }
   }
 
   template class Framebuffer<RGB48>;
   template class Framebuffer<RGB24>;
   template class Framebuffer<RGB_555>;
-  template class Framebuffer<RGB_232>;
+  template class Framebuffer<RGB_222>;
 }  // namespace rgb_matrix

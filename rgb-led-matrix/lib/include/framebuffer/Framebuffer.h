@@ -18,19 +18,20 @@ namespace rgb_matrix {
       void show();
       void set_brightness(uint8_t brightness);
       cord_t get_size();
+      void map_wavelength(uint8_t color, Color index, uint16_t value);
 
     protected:
       Framebuffer();
       Framebuffer(CFG *cfg);
 
-      void build_table(GAMMA g, bool use_CIE1931);  // TODO: Update to only call once per RGBMatrix factory?
+      void build_table();
 
       virtual void show_internal() = 0;
       virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *color) = 0;
 
       CFG *cfg_;
       T **buffer_;
-      T lut[256][100];  // TODO: Switch to lut[100][256]
+      T lut[100][256];
       volatile uint8_t brightness_;
       mutex lock_;
   };
