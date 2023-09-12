@@ -104,4 +104,4 @@ namespace rgb_matrix {
   template class Framebuffer<RGB24>;
   template class Framebuffer<RGB_555>;
   template class Framebuffer<RGB_222>;
-}  // namespace rgb_matrix
+}
