@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include "CFG/CFG.h"
 #include "Panel/Panel.h"
-using std::mutex;
 
 namespace rgb_matrix {
   template <typename T> class Framebuffer : public Panel {
@@ -33,7 +32,6 @@ namespace rgb_matrix {
       T **buffer_;
       T lut[100][256];
       volatile uint8_t brightness_;
-      mutex lock_;
   };
 }
 #endif

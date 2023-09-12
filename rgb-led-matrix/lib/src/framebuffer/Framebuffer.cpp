@@ -32,9 +32,7 @@ namespace rgb_matrix {
   }
 
   template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
-    lock_.lock();
     brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
-    lock_.unlock();
   }
 
   template <typename T> void Framebuffer<T>::map_wavelength(uint8_t color, Color index, uint16_t value) {
@@ -67,18 +65,14 @@ namespace rgb_matrix {
   }
 
   template<typename T> void Framebuffer<T>::show() {
-    lock_.lock();
     show_internal();
-    lock_.unlock();
   }
 
   template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
     T **ptr = (T **) buffer_;
 
-    lock_.lock();
     if (x > 0 && x < cfg_->get_cols() && y > 0 && y < cfg_->get_rows())
       MapColors(x, y, red, green, blue, &ptr[x][y]);
-    lock_.unlock();
   }
 
   // Handles brightness and gamma
