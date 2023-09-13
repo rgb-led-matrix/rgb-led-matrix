@@ -5,11 +5,13 @@
 #include <thread>
 #include <mutex>
 #include <queue>
+#include <list>
 #include "Panel/Panel_Pixel_Mapper.h"
 using std::vector;
 using std::thread;
 using std::mutex;
 using std::queue;
+using std::list;
 
 namespace rgb_matrix {
   class MultiPanel_Mapper {
@@ -44,7 +46,7 @@ namespace rgb_matrix {
         int height_;
         int thread_count_;
         mutex lock_;
-        vector<Panel_t *> *panel_;
+        list<Panel_t *> *panel_;
         vector<std::thread> *threads_;
         queue<Panel_t *> queue_;
         mutex queue_lock_;

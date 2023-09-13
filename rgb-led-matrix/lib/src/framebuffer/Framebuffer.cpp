@@ -68,6 +68,10 @@ namespace rgb_matrix {
     show_internal();
   }
 
+  template <typename T> Node *Framebuffer<T>::get_node() {
+    return cfg_->get_node();
+  }
+
   template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
     T **ptr = (T **) buffer_;
 

@@ -29,6 +29,11 @@ namespace rgb_matrix {
     void MultiPanel_Mapper::map_panel(int x, int y, Panel_Pixel_Mapper *panel) {
         Panel_t *ptr = new Panel_t;
 
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
+            if ((*it)->panel->get_node() == panel->get_node())
+                return;
+        }
+
         ptr->panel= panel;
         ptr->x = x;
         ptr->y = y;
@@ -101,15 +106,15 @@ namespace rgb_matrix {
 
     void MultiPanel_Mapper::set_brightness(uint8_t brightness) {
         lock_.lock();
-        for (int i = 0; i < panel_->size(); i++)
-            panel_->at(i)->panel->set_brightness(brightness);
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
+            (*it)->panel->set_brightness(brightness);
         lock_.unlock();
     }
 
     void MultiPanel_Mapper::map_wavelength(uint8_t color, Color index, uint16_t value) {
         lock_.lock();
-        for (int i = 0; i < panel_->size(); i++)
-            panel_->at(i)->panel->map_wavelength(color, index, value);
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
+            (*it)->panel->map_wavelength(color, index, value);
         lock_.unlock();
     }
 
