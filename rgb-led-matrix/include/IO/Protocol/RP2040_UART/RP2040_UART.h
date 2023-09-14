@@ -6,7 +6,7 @@
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
 
 namespace rgb_matrix {
-    class RP2040_UART : public Protocol, FTDI_UART {
+    class RP2040_UART : public Protocol {
         public:
             void send(uint8_t *buf, uint32_t size, uint8_t chunk);
     };
