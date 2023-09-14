@@ -10,11 +10,14 @@ namespace rgb_matrix {
     public:
       FTDI_UART(const char *serial_number, uint8_t chan_num);
 
-      void write(char *buf, uint32_t len);
-      int read(char **buf, uint32_t len, uint32_t timeout_us);
       void set_baud(uint32_t baud);
+      void send(uint8_t *buf, uint32_t size);
+      bool process(uint8_t stages);
 
     protected:
+      void write(char *buf, uint32_t len);
+      int read(char **buf, uint32_t len, uint32_t timeout_us);
+
       std::mutex lock_;
       std::string serial_number_;
   };

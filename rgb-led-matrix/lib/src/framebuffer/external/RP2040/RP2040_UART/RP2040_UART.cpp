@@ -7,27 +7,14 @@
 
 namespace rgb_matrix {
     template <typename T> RP2040_UART<T>::RP2040_UART(CFG *cfg) : Framebuffer<T>(cfg) {            
-        shutdown_ = false;
-        start_ = false;
-        thread_ = new std::thread(&RP2040_UART<T>::worker_thread, this);
+        
     }
 
     template <typename T> RP2040_UART<T>::~RP2040_UART() {
-        shutdown_ = true;
 
-        if (thread_ != nullptr)
-            thread_->join();
-        
-        delete thread_;
-    }
-    
-    template <typename T> void RP2040_UART<T>::show_internal() {
-        start_ = true;
-
-        while (start_);
     }
 
-    template <typename T> void RP2040_UART<T>::worker_thread(RP2040_UART<T> *object) {
+    /*template <typename T> void RP2040_UART<T>::worker_thread(RP2040_UART<T> *object) {
         uint32_t size = sizeof(T) * object->cfg_->get_cols() * object->cfg_->get_rows();
         char *start = (char *) "s";
         char *idle = (char *) "i";
@@ -59,7 +46,7 @@ namespace rgb_matrix {
             // Sink idle tokens
             object->cfg_->get_node()->read(&idle, 1, 10);
         }
-    }
+    }*/
 
     // Handles dot correction and PWM bit scaling
     template <typename T> inline void  RP2040_UART<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {

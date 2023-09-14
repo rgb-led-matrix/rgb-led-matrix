@@ -20,6 +20,7 @@ namespace rgb_matrix {
 
     build_table();
 
+    buffer_ = new T *[cfg->get_cols()];
     for (int i = 0; i < cfg->get_cols(); i++)
       buffer_[i] = new T[cfg->get_rows()];
 
@@ -29,6 +30,7 @@ namespace rgb_matrix {
   template <typename T> Framebuffer<T>::~Framebuffer() {
     for (int i = 0; i < cfg_->get_cols(); i++)
       delete buffer_[i];
+    delete buffer_;
   }
 
   template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
@@ -65,7 +67,7 @@ namespace rgb_matrix {
   }
 
   template<typename T> void Framebuffer<T>::show() {
-    show_internal();
+    cfg_->get_node()->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
   }
 
   template <typename T> Node *Framebuffer<T>::get_node() {

@@ -14,14 +14,10 @@ namespace rgb_matrix {
 
         set_baud(4000000);
 
-        lock_.lock();
-
         if (FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle) == FT_OK) {
             FT_SetLatencyTimer(handle, 2);
             FT_Close(handle);
         }
-
-        lock_.unlock();
     }
 
     void FTDI_UART::write(char *buf, uint32_t len) {
@@ -29,7 +25,6 @@ namespace rgb_matrix {
         FT_HANDLE handle;
         DWORD written;
 
-        lock_.lock();
         status = FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle);
 
         if (status == FT_OK) {
@@ -49,8 +44,6 @@ namespace rgb_matrix {
 
             FT_Close(handle);
         }
-
-        lock_.unlock();
     }
 
     int FTDI_UART::read(char **buf, uint32_t len, uint32_t timeout_us) {
@@ -59,7 +52,6 @@ namespace rgb_matrix {
         DWORD written;
         uint32_t timeout_ms = std::max((uint32_t) 1, timeout_us / 1000);
 
-        lock_.lock();
         auto start = std::chrono::high_resolution_clock::now();
         status = FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle);
 
@@ -88,8 +80,6 @@ namespace rgb_matrix {
             FT_Close(handle);
         }
 
-        lock_.unlock();
-
         return 0;
     }
 
@@ -104,5 +94,19 @@ namespace rgb_matrix {
         }
 
         lock_.unlock();
+    }
+
+
+    void FTDI_UART::send(uint8_t *buf, uint32_t size) {
+        lock_.lock();
+        // TODO:
+        lock_.unlock();
+    }
+    
+    bool FTDI_UART::process(uint8_t stages) {
+        lock_.lock();
+        // TODO:
+        lock_.unlock();
+        return false;
     }
 }
