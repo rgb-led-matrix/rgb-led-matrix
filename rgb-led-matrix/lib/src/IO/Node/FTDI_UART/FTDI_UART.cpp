@@ -2,7 +2,7 @@
 #include <chrono>
 #include <stdio.h>
 #include <ftd2xx.h>
-#include "IO/Node/FTDI_UART/FTDI_UART.h"
+#include <IO/Node/FTDI_UART/FTDI_UART.h>
 using std::min;
 
 namespace rgb_matrix {
@@ -107,10 +107,16 @@ namespace rgb_matrix {
     }
     
     bool FTDI_UART::process(uint8_t stages) {
+        bool result = false;
+
         lock_.lock();
-        uint32_t len = min(counter_ - size_, size_ / stages);
-        // TODO:
+        if (counter_ < size_) {
+            uint32_t len = min(counter_ - size_, size_ / stages);
+            // TODO:
+            counter_ += len;
+        }
         lock_.unlock();
-        return false;
+        
+        return result;
     }
 }
