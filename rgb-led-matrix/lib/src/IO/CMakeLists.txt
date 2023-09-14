@@ -1,5 +1,6 @@
 add_subdirectory(Node)
 add_subdirectory(Root)
+add_subdirectory(Scheduler)
 
 add_library(FTDI INTERFACE)
 
@@ -10,4 +11,5 @@ target_link_libraries(FTDI INTERFACE
 add_library(IO INTERFACE)
 
 target_link_libraries(IO INTERFACE
-    FTDI_UART)
+    FTDI_UART
+    Scheduler)
