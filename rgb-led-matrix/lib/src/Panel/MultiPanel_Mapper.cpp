@@ -17,6 +17,7 @@ namespace rgb_matrix {
 
         // TODO:
 
+        pixel_ = new pixel_t *[width_];
         for (int i = 0; i < width_; i++)
             pixel_[i] = new pixel_t[height_];
     }
@@ -26,12 +27,12 @@ namespace rgb_matrix {
     }
 
     // TODO: Check for duplicates!
-    void MultiPanel_Mapper::map_panel(int x, int y, Panel_Pixel_Mapper *panel) {
+    bool MultiPanel_Mapper::map_panel(int x, int y, Panel_Pixel_Mapper *panel) {
         Panel_t *ptr = new Panel_t;
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
             if ((*it)->panel->get_node() == panel->get_node())
-                return;
+                return false;
         }
 
         ptr->panel= panel;
@@ -41,6 +42,8 @@ namespace rgb_matrix {
         lock_.lock();
         panel_->push_back(ptr);
         lock_.unlock();
+
+        return true;
     }
 
     void MultiPanel_Mapper::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
