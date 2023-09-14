@@ -113,7 +113,7 @@ namespace rgb_matrix {
         lock_.lock();
         if ((counter_ < size_) && (protocol_ != nullptr)) {
             uint32_t len = min(counter_ - size_, size_ / stages);
-            protocol_->send(buf_ + counter_, len, stage_);
+            protocol_->send(buf_ + counter_, len, stage_, this);
             counter_ += len;
             ++stage_;
         }

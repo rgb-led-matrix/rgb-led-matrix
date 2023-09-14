@@ -3,12 +3,12 @@
 
 #include <stdint.h>
 #include <IO/Protocol/Protocol.h>
-#include <IO/Node/FTDI_UART/FTDI_UART.h>
+#include <IO/Node/Node.h>
 
 namespace rgb_matrix {
     class RP2040_UART : public Protocol {
         public:
-            void send(uint8_t *buf, uint32_t size, uint8_t chunk);
+            void send(uint8_t *buf, uint32_t size, uint8_t chunk, Node *node);
     };
 }
 #endif
