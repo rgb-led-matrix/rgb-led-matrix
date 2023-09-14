@@ -26,7 +26,6 @@ namespace rgb_matrix {
 
       void build_table();
 
-      //virtual void send(uint8_t *buf, uint32_t size, uint8_t chunk) = 0;
       virtual void MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *color) = 0;
 
       CFG *cfg_;

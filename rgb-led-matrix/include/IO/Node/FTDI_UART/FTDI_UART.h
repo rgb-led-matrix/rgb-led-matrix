@@ -23,6 +23,7 @@ namespace rgb_matrix {
       uint8_t *buf_;
       uint32_t size_;
       uint32_t counter_;
+      uint8_t stage_;
   };
 }
 #endif

@@ -101,6 +101,7 @@ namespace rgb_matrix {
     void FTDI_UART::send(uint8_t *buf, uint32_t size) {
         lock_.lock();
         counter_ = 0;
+        stage_ = 0;
         size_ = size;
         buf_ = buf;
         lock_.unlock();
@@ -110,10 +111,11 @@ namespace rgb_matrix {
         bool result = false;
 
         lock_.lock();
-        if (counter_ < size_) {
+        if ((counter_ < size_) && (protocol_ != nullptr)) {
             uint32_t len = min(counter_ - size_, size_ / stages);
-            // TODO:
+            protocol_->send(buf_ + counter_, len, stage_);
             counter_ += len;
+            ++stage_;
         }
         lock_.unlock();
         
