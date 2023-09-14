@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <math.h>
-#include "framebuffer/external/RP2040/RP2040_UART/RP2040_UART.h"
+#include "framebuffer/external/RP2040/RP2040.h"
 #include "framebuffer/RGB/RGB24.h"
 #include "framebuffer/RGB/RGB48.h"
 #include "framebuffer/RGB/RGB_555.h"
@@ -93,8 +93,8 @@ namespace rgb_matrix {
   // Note this may need to change to individual factories per Data_Format_ID in the future.
   template <typename T> Framebuffer<T> *Framebuffer<T>::CreateFramebuffer(CFG *cfg) {
     switch (cfg->get_id()) {
-      case External_ID::RP2040_UART_ID:
-        return new RP2040_UART<T>(cfg);
+      case External_ID::RP2040_ID:
+        return new RP2040<T>(cfg);
       default:
         return nullptr;
     }

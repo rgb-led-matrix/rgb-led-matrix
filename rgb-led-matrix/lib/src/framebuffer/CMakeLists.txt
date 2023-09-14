@@ -6,4 +6,4 @@ target_sources(framebuffer INTERFACE
     Framebuffer.cpp)
 
 target_link_libraries(framebuffer INTERFACE
-    RP2040_UART)
+    RP2040)

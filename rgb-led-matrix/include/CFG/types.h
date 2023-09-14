@@ -38,7 +38,7 @@ namespace rgb_matrix {
     };
 
     enum External_ID {
-        RP2040_UART_ID = 0,
+        RP2040_ID = 0,
     };
 
     enum Data_Format_ID {
