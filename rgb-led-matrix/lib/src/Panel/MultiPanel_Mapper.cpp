@@ -1,6 +1,6 @@
 #include <chrono>
 #include <assert.h>
-#include "Panel/MultiPanel_Mapper.h"
+#include <Panel/MultiPanel_Mapper.h>
 
 namespace rgb_matrix {
     MultiPanel_Mapper::MultiPanel_Mapper() {
@@ -17,6 +17,7 @@ namespace rgb_matrix {
 
         // TODO:
 
+        pixel_ = new pixel_t *[width_];
         for (int i = 0; i < width_; i++)
             pixel_[i] = new pixel_t[height_];
     }
@@ -25,9 +26,19 @@ namespace rgb_matrix {
         // TODO:
     }
 
+
+    bool MultiPanel_Mapper::map_panel(int x, int y, Panel_Pixel_Mapper *panel) {
+        return map_panel(x, y, panel);
+    }
+
     // TODO: Check for duplicates!
-    void MultiPanel_Mapper::map_panel(int x, int y, Panel_Pixel_Mapper *panel) {
+    bool MultiPanel_Mapper::map_panel(int x, int y, Panel *panel) {
         Panel_t *ptr = new Panel_t;
+
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
+            if ((*it)->panel->get_node() == panel->get_node())
+                return false;
+        }
 
         ptr->panel= panel;
         ptr->x = x;
@@ -36,6 +47,8 @@ namespace rgb_matrix {
         lock_.lock();
         panel_->push_back(ptr);
         lock_.unlock();
+
+        return true;
     }
 
     void MultiPanel_Mapper::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
@@ -101,15 +114,15 @@ namespace rgb_matrix {
 
     void MultiPanel_Mapper::set_brightness(uint8_t brightness) {
         lock_.lock();
-        for (int i = 0; i < panel_->size(); i++)
-            panel_->at(i)->panel->set_brightness(brightness);
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
+            (*it)->panel->set_brightness(brightness);
         lock_.unlock();
     }
 
     void MultiPanel_Mapper::map_wavelength(uint8_t color, Color index, uint16_t value) {
         lock_.lock();
-        for (int i = 0; i < panel_->size(); i++)
-            panel_->at(i)->panel->map_wavelength(color, index, value);
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
+            (*it)->panel->map_wavelength(color, index, value);
         lock_.unlock();
     }
 

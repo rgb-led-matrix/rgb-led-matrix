@@ -37,10 +37,6 @@ namespace rgb_matrix {
         uint8_t blue;
     };
 
-    enum External_ID {
-        RP2040_UART_ID = 0,
-    };
-
     enum Data_Format_ID {
         RGB48_ID = 0,
         RGB24_ID = 1,

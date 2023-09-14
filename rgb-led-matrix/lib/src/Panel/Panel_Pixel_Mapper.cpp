@@ -1,5 +1,5 @@
 #include <assert.h>
-#include "Panel/Panel_Pixel_Mapper.h"
+#include <Panel/Panel_Pixel_Mapper.h>
 
 namespace rgb_matrix {
     // Don't use this!    
@@ -11,6 +11,8 @@ namespace rgb_matrix {
         cord_t size = panel->get_size();
         panel_ = panel;
 
+        locations_ = new cord_t *[size.x];
+        orders_ = new Color_Order *[size.x];
         for (int i = 0; i < size.x; i++) {
             locations_[i] = new cord_t[size.y];
             orders_[i] = new Color_Order[size.y];
@@ -24,6 +26,8 @@ namespace rgb_matrix {
             delete locations_[i];
             delete orders_[i];
         }
+        delete locations_;
+        delete orders_;
     }
 
     void Panel_Pixel_Mapper::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
@@ -75,6 +79,10 @@ namespace rgb_matrix {
 
     void Panel_Pixel_Mapper::show() {
         panel_->show();
+    }
+
+    Node *Panel_Pixel_Mapper::get_node() {
+        return panel_->get_node();
     }
 
     void Panel_Pixel_Mapper::set_brightness(uint8_t brightness) {
