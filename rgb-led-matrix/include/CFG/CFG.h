@@ -9,7 +9,7 @@ using namespace rgb_matrix;
 namespace rgb_matrix {
     class CFG {
         public:
-            CFG(int rows, int cols, Node *node, Data_Format_ID data_format, Panel_Type type, uint8_t scan) : dot_(rows, cols) {
+            CFG(int rows, int cols, Node *node, Data_Format_ID data_format, Panel_Type type, uint8_t scan, GAMMA gamma) : dot_(rows, cols) {
                 switch (type) {
                     case Panel_Type::HUB75:
                         rows_ = scan * 2;
@@ -25,6 +25,7 @@ namespace rgb_matrix {
                 dot_ = DOTCorrect(rows_, cols_);
                 node_ = node;
                 data_format_ = data_format;
+                gamma_ = gamma;
             }
 
             inline DOTCorrect& get_dot() { return dot_; }
