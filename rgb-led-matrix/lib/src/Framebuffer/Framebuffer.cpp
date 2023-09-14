@@ -90,7 +90,7 @@ namespace rgb_matrix {
         }
     }
 
-    // Handles dot correction and PWM bit scaling
+    // Handles dot correction
     template <typename T> inline void Framebuffer<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
         float fr, fg, fb;
         uint8_t bright =  this->brightness_;
