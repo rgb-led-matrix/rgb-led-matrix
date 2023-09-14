@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <ftd2xx.h>
 #include "IO/Node/FTDI_UART/FTDI_UART.h"
+using std::min;
 
 namespace rgb_matrix {
     FTDI_UART::FTDI_UART(const char *serial_number, uint8_t chan_num) {
@@ -99,12 +100,15 @@ namespace rgb_matrix {
 
     void FTDI_UART::send(uint8_t *buf, uint32_t size) {
         lock_.lock();
-        // TODO:
+        counter_ = 0;
+        size_ = size;
+        buf_ = buf;
         lock_.unlock();
     }
     
     bool FTDI_UART::process(uint8_t stages) {
         lock_.lock();
+        uint32_t len = min(counter_ - size_, size_ / stages);
         // TODO:
         lock_.unlock();
         return false;

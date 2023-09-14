@@ -11,6 +11,8 @@ namespace rgb_matrix {
         cord_t size = panel->get_size();
         panel_ = panel;
 
+        locations_ = new cord_t *[size.x];
+        orders_ = new Color_Order *[size.x];
         for (int i = 0; i < size.x; i++) {
             locations_[i] = new cord_t[size.y];
             orders_[i] = new Color_Order[size.y];
@@ -24,6 +26,8 @@ namespace rgb_matrix {
             delete locations_[i];
             delete orders_[i];
         }
+        delete locations_;
+        delete orders_;
     }
 
     void Panel_Pixel_Mapper::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {

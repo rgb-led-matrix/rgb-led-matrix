@@ -20,6 +20,9 @@ namespace rgb_matrix {
 
       std::mutex lock_;
       std::string serial_number_;
+      uint8_t *buf_;
+      uint32_t size_;
+      uint32_t counter_;
   };
 }
 #endif
