@@ -1,7 +1,7 @@
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
 
 namespace rgb_matrix {
-    void RP2040_UART::send(uint8_t *buf, uint32_t size, uint8_t chunk) {
+    void RP2040_UART::send(uint8_t *buf, uint32_t size, uint8_t chunk, Node *node) {
         /*uint32_t size = sizeof(T) * object->cfg_->get_cols() * object->cfg_->get_rows();
         char *start = (char *) "s";
         char *idle = (char *) "i";

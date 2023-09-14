@@ -13,5 +13,5 @@ target_link_libraries(FTDI INTERFACE
 add_library(IO INTERFACE)
 
 target_link_libraries(IO INTERFACE
-    FTDI_UART
+    FTDI
     Scheduler)

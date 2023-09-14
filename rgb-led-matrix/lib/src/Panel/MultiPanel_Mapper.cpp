@@ -26,8 +26,13 @@ namespace rgb_matrix {
         // TODO:
     }
 
-    // TODO: Check for duplicates!
+
     bool MultiPanel_Mapper::map_panel(int x, int y, Panel_Pixel_Mapper *panel) {
+        return map_panel(x, y, panel);
+    }
+
+    // TODO: Check for duplicates!
+    bool MultiPanel_Mapper::map_panel(int x, int y, Panel *panel) {
         Panel_t *ptr = new Panel_t;
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {

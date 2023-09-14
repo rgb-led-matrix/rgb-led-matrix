@@ -20,6 +20,7 @@ namespace rgb_matrix {
                 virtual ~MultiPanel_Mapper();
 
                 virtual bool map_panel(int x, int y, Panel_Pixel_Mapper *panel);
+                virtual bool map_panel(int x, int y, Panel *panel);
                 virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
                 virtual void SetPixel(cord_t cord, pixel_t pixel);
                 virtual cord_t get_size();
@@ -35,7 +36,7 @@ namespace rgb_matrix {
                 static void thread(void *args);
 
                 struct Panel_t {
-                        Panel_Pixel_Mapper *panel;
+                        Panel *panel;
                         int x;
                         int y;
                 };
