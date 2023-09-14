@@ -13,7 +13,6 @@ namespace rgb_matrix {
             void set_baud(uint32_t baud);
             void send(uint8_t *buf, uint32_t size);
             bool process(uint8_t stages);
-
             void write(char *buf, uint32_t len);
             int read(char **buf, uint32_t len, uint32_t timeout_us);
 
