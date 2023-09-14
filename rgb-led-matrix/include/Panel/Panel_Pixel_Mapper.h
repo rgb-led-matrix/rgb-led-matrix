@@ -1,8 +1,8 @@
 #ifndef PANEL_PIXEL_MAPPER_H
 #define PANEL_PIXEL_MAPPER_H
 
-#include "Panel/Panel.h"
-#include "CFG/types.h"
+#include <Panel/Panel.h>
+#include <CFG/types.h>
 
 namespace rgb_matrix {
   class Panel_Pixel_Mapper : public Panel {

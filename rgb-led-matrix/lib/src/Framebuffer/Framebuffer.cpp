@@ -1,11 +1,11 @@
 #include <algorithm>
 #include <assert.h>
 #include <math.h>
-#include "framebuffer/external/RP2040/RP2040.h"
-#include "framebuffer/RGB/RGB24.h"
-#include "framebuffer/RGB/RGB48.h"
-#include "framebuffer/RGB/RGB_555.h"
-#include "framebuffer/RGB/RGB_222.h"
+#include <Framebuffer/Framebuffer.h>
+#include <Framebuffer/RGB/RGB24.h>
+#include <Framebuffer/RGB/RGB48.h>
+#include <Framebuffer/RGB/RGB_555.h>
+#include <Framebuffer/RGB/RGB_222.h>
 using std::min;
 using std::max;
 
@@ -90,14 +90,15 @@ namespace rgb_matrix {
     }
   }
 
-  // Note this may need to change to individual factories per Data_Format_ID in the future.
-  template <typename T> Framebuffer<T> *Framebuffer<T>::CreateFramebuffer(CFG *cfg) {
-    switch (cfg->get_id()) {
-      case External_ID::RP2040_ID:
-        return new RP2040<T>(cfg);
-      default:
-        return nullptr;
-    }
+  // Handles dot correction and PWM bit scaling
+  template <typename T> inline void Framebuffer<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
+    float fr, fg, fb;
+    uint8_t bright =  this->brightness_;
+
+    cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
+    pixel->red = (uint16_t) round(this->lut[bright][r].red / T::red_max * fr);
+    pixel->green = (uint16_t) round(this->lut[bright][g].green / T::green_max * fg);
+    pixel->blue = (uint16_t) round(this->lut[bright][b].blue / T::blue_max * fb);
   }
 
   template class Framebuffer<RGB48>;

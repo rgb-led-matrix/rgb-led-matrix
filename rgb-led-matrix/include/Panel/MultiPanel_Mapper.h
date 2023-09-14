@@ -6,7 +6,7 @@
 #include <mutex>
 #include <queue>
 #include <list>
-#include "Panel/Panel_Pixel_Mapper.h"
+#include <Panel/Panel_Pixel_Mapper.h>
 using std::vector;
 using std::thread;
 using std::mutex;

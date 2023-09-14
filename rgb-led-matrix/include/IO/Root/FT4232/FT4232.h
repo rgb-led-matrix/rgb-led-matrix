@@ -1,7 +1,7 @@
 #ifndef FT4232_H
 #define FT4232_H
 
-#include "IO/Root/Root.h"
+#include <IO/Root/Root.h>
 
 namespace rgb_matrix {
   class FT4232 : public Root {

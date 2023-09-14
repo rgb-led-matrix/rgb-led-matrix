@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <IO/Node/Node.h>
-#include "types.h"
+#include <CFG/types.h>
 using namespace rgb_matrix;
 
 namespace rgb_matrix {
@@ -27,7 +27,6 @@ namespace rgb_matrix {
         data_format_ = data_format;
       }
 
-      inline External_ID get_id() { return id_; }
       inline DOTCorrect& get_dot() { return dot_; }
       inline GAMMA& get_gamma() { return gamma_; }
       inline Node *get_node() { return node_; }
@@ -36,13 +35,10 @@ namespace rgb_matrix {
       inline Data_Format_ID get_data_format() { return data_format_; }
     
     protected:
-      virtual bool isValid() = 0; 
-
       int rows_;
       int cols_;
       DOTCorrect dot_;
       GAMMA gamma_;
-      External_ID id_;
       Data_Format_ID data_format_;
       Node *node_;
   };

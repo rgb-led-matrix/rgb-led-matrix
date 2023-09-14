@@ -1,5 +1,5 @@
 #include <assert.h>
-#include "Panel/Panel_Pixel_Mapper.h"
+#include <Panel/Panel_Pixel_Mapper.h>
 
 namespace rgb_matrix {
     // Don't use this!    

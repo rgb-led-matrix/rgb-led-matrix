@@ -3,15 +3,15 @@
 
 #include <mutex>
 #include <stdint.h>
-#include "CFG/CFG.h"
-#include "Panel/Panel.h"
+#include <CFG/CFG.h>
+#include <Panel/Panel.h>
 
 namespace rgb_matrix {
   template <typename T> class Framebuffer : public Panel {
     public:
+      Framebuffer();
+      Framebuffer(CFG *cfg);
       virtual ~Framebuffer();
-
-      static Framebuffer *CreateFramebuffer(CFG *cfg);
 
       void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
       void show();
@@ -21,12 +21,8 @@ namespace rgb_matrix {
       Node *get_node();
 
     protected:
-      Framebuffer();
-      Framebuffer(CFG *cfg);
-
       void build_table();
-
-      virtual void MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *color) = 0;
+      void MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *color);
 
       CFG *cfg_;
       T **buffer_;

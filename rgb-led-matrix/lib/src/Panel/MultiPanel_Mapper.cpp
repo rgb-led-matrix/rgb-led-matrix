@@ -1,6 +1,6 @@
 #include <chrono>
 #include <assert.h>
-#include "Panel/MultiPanel_Mapper.h"
+#include <Panel/MultiPanel_Mapper.h>
 
 namespace rgb_matrix {
     MultiPanel_Mapper::MultiPanel_Mapper() {
