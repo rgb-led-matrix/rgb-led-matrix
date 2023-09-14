@@ -16,8 +16,6 @@ namespace rgb_matrix {
             virtual void  MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *pixel);
 
         private:
-            void build_table(GAMMA g, bool use_CIE1931);
-
             RP2040_UART_CFG *cfg_;
     };
 }
