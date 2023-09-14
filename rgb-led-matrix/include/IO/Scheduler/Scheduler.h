@@ -8,19 +8,19 @@ using std::list;
 using std::thread;
 
 namespace rgb_matrix {
-  class Scheduler {
-    public:
-      Scheduler();
-      virtual ~Scheduler();
+    class Scheduler {
+        public:
+            Scheduler();
+            virtual ~Scheduler();
 
-      virtual void add_node(Node *node) = 0;
+            virtual void add_node(Node *node) = 0;
 
-    protected:
-      static void worker_thread(Scheduler *object);
+        protected:
+            static void worker_thread(Scheduler *object);
 
-      list<Node *> nodes_;
-      thread *thread_;
-      bool shutdown_;
-  };
+            list<Node *> nodes_;
+            thread *thread_;
+            bool shutdown_;
+    };
 }
 #endif

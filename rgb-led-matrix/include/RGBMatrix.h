@@ -6,9 +6,9 @@
 #include <CFG/types.h>
 
 namespace rgb_matrix {
-  class RGBMatrix {
-    public:
-      static Panel *CreatePanel(CFG *cfg);
-  };
+    class RGBMatrix {
+        public:
+            static Panel *CreatePanel(CFG *cfg);
+    };
 }
 #endif

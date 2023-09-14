@@ -5,11 +5,11 @@
 #include <IO/Node/Node.h>
 
 namespace rgb_matrix {
-  class Root {
-    public:
-      virtual ~Root() {}
+    class Root {
+        public:
+            virtual ~Root() {}
 
-      virtual Node *GetNode(uint32_t index) = 0;
-  };
+            virtual Node *GetNode(uint32_t index) = 0;
+    };
 }
 #endif
