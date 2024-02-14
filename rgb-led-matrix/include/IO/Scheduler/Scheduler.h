@@ -13,7 +13,9 @@ namespace rgb_matrix {
             Scheduler();
             virtual ~Scheduler();
 
-            virtual void add_node(Node *node);
+            virtual bool add_node(Node *node);
+            bool start();
+            void shutdown();
 
         protected:
             static void worker_thread(Scheduler *object);

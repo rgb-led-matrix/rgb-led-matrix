@@ -107,4 +107,26 @@ namespace rgb_matrix {
         protocol_->send(buf, size, this);
         lock_.unlock();
     }
+
+    Protocol::Status FTDI_UART::get_protocol_status() {
+        Protocol::Status result;
+
+        lock_.lock();
+        if (protocol_ == nullptr)
+            throw Null_Pointer("Protocol");
+
+        result = protocol_->get_protocol_status();
+        lock_.unlock();
+
+        return result;
+    }
+
+    void FTDI_UART::acknowledge(Protocol::Status status) {
+        lock_.lock();
+        if (protocol_ == nullptr)
+            throw Null_Pointer("Protocol");
+
+        protocol_->acknowledge(status);
+        lock_.unlock();
+    }
 }

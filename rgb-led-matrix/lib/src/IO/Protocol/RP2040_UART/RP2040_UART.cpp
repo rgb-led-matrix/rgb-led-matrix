@@ -39,4 +39,8 @@ namespace rgb_matrix {
         // TODO
         return Protocol::Status::NOT_FINISHED;
     }
+
+    void RP2040_UART::acknowledge(Protocol::Status status) {
+        // TODO
+    }
 }

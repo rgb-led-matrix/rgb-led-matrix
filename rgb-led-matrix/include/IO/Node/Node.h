@@ -10,6 +10,7 @@ namespace rgb_matrix {
             Node() : protocol_(nullptr) {}
             virtual ~Node() {}
 
+            // For Protocol
             virtual void write(char *buf, uint32_t len) = 0;
             virtual int read(char **buf, uint32_t len, uint32_t timeout_us) = 0;
 
@@ -18,6 +19,8 @@ namespace rgb_matrix {
 
             // For Scheduler
             virtual void set_protocol(Protocol *protocol) { protocol_ = protocol; }
+            virtual void acknowledge(Protocol::Status) = 0;
+            virtual Protocol::Status get_protocol_status() = 0;
 
         protected:
             Protocol *protocol_;

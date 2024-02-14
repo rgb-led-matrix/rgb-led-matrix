@@ -10,16 +10,16 @@ namespace rgb_matrix {
         public:
             virtual ~Protocol() {}
 
-            virtual void send(uint8_t *buf, uint32_t size, Node *node) = 0;
-
             enum Status {
                 MACRO_FINISHED,
                 MICRO_FINISHED,
                 NOT_FINISHED
             };
 
-            // For Scheduler
+            // For Node
+            virtual void send(uint8_t *buf, uint32_t size, Node *node) = 0;
             virtual Status get_protocol_status() = 0;
+            virtual void acknowledge(Status) = 0;
     };
 }
 #endif

@@ -10,6 +10,7 @@ namespace rgb_matrix {
         public:
             void send(uint8_t *buf, uint32_t size, Node *node);
             Protocol::Status get_protocol_status();
+            void acknowledge(Protocol::Status);
     };
 }
 #endif
