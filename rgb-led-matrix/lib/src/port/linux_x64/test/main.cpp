@@ -1,12 +1,14 @@
 #include <RGBMatrix.h>
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
+#include <IO/Root/FT4232/FT4232.h>
+#include <IO/Scheduler/Scheduler.h>
 #include <Panel/MultiPanel_Mapper.h>
 #include <Panel/Panel_Pixel_Mapper.h>
 #include <Panel/Panel.h>
 #include <CFG/CFG.h>
 
 int main(int argc, char **argv) {
-    /*GAMMA gamma(2.2, 2.2, 2.2);
+    GAMMA gamma(2.2, 2.2, 2.2);
     FT4232 *root = new FT4232("000");
     Node *node = root->GetNode(0);
     CFG *cfg = new CFG(16, 32, node, rgb_matrix::Data_Format_ID::RGB48_ID, rgb_matrix::Panel_Type::HUB75, 8, gamma);
@@ -28,7 +30,7 @@ int main(int argc, char **argv) {
         frame[0]->show();
         x++;
         y++;
-    }*/
+    }
 
     return 0;
 }
