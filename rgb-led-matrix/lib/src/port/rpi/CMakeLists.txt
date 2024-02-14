@@ -14,6 +14,7 @@ target_link_directories(rpi PUBLIC
 
 target_link_libraries(rpi
     Framebuffer
+    Exception
     CFG
     IO
     Panel

@@ -11,6 +11,7 @@ target_link_directories(linux_x64 PUBLIC
 
 target_link_libraries(linux_x64
     Framebuffer
+    Exception
     CFG
     IO
     Panel

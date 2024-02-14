@@ -14,6 +14,7 @@ target_link_directories(rock_pi_s PUBLIC
 
 target_link_libraries(rock_pi_s
     Framebuffer
+    Exception
     CFG
     IO
     Panel
