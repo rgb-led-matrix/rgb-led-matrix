@@ -9,7 +9,6 @@
 namespace rgb_matrix {
     template <typename T> class Framebuffer : public Panel {
         public:
-            Framebuffer();
             Framebuffer(CFG *cfg);
             virtual ~Framebuffer();
 
@@ -21,6 +20,7 @@ namespace rgb_matrix {
             Node *get_node();
 
         protected:
+            Framebuffer();
             void build_table();
             void MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *color);
 

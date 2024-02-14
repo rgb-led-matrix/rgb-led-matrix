@@ -1,6 +1,6 @@
 #include <algorithm>
-#include <assert.h>
 #include <math.h>
+#include <Exception/String_Exception.h>
 #include <Framebuffer/Framebuffer.h>
 #include <Framebuffer/RGB/RGB24.h>
 #include <Framebuffer/RGB/RGB48.h>
@@ -10,13 +10,14 @@ using std::min;
 using std::max;
 
 namespace rgb_matrix {
-    // Don't use this!    
+    // Do not use this!    
     template <typename T> Framebuffer<T>::Framebuffer() : cfg_(nullptr), buffer_(NULL) {
-        assert(buffer_ != NULL);
+        // Do nothing
     }
 
     template <typename T> Framebuffer<T>::Framebuffer(CFG *cfg) : cfg_(cfg) {
-        assert(cfg != nullptr);
+        if (cfg == nullptr)
+            throw String_Exception("CFG is nullptr");
 
         build_table();
 

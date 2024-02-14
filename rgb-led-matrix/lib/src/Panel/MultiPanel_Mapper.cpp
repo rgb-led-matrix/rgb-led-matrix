@@ -1,15 +1,17 @@
 #include <chrono>
-#include <assert.h>
 #include <Panel/MultiPanel_Mapper.h>
 
 namespace rgb_matrix {
+    // Do not use this!
     MultiPanel_Mapper::MultiPanel_Mapper() {
-        assert(false);
+        // Do nothing
     }
 
     MultiPanel_Mapper::MultiPanel_Mapper(int width, int height, int threads) : width_(width), height_(height), thread_count_(threads) {
-        assert(threads > 0);
         shutdown_ = false;
+
+        if (thread_count_ <= 0)
+            thread_count_ = 1;
 
         for (int i = 0; i < thread_count_; i++) {
             // TODO:
