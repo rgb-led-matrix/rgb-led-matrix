@@ -17,7 +17,6 @@ namespace rgb_matrix {
             virtual void send(uint8_t *buf, uint32_t size) = 0;
 
             // For Scheduler
-            virtual bool process(uint8_t stages) = 0;
             virtual void set_protocol(Protocol *protocol) { protocol_ = protocol; }
 
         protected:

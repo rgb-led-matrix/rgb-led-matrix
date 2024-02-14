@@ -2,6 +2,7 @@
 #include <chrono>
 #include <stdio.h>
 #include <ftd2xx.h>
+#include <Exception/String_Exception.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
 using std::min;
 
@@ -100,25 +101,10 @@ namespace rgb_matrix {
 
     void FTDI_UART::send(uint8_t *buf, uint32_t size) {
         lock_.lock();
-        counter_ = 0;
-        stage_ = 0;
-        size_ = size;
-        buf_ = buf;
-        lock_.unlock();
-    }
-    
-    bool FTDI_UART::process(uint8_t stages) {
-        bool result = false;
+        if (protocol_ == nullptr)
+            throw String_Exception("Protocol is nulltptr");
 
-        lock_.lock();
-        if ((counter_ < size_) && (protocol_ != nullptr)) {
-            uint32_t len = min(counter_ - size_, size_ / stages);
-            protocol_->send(buf_ + counter_, len, stage_, this);
-            counter_ += len;
-            ++stage_;
-        }
+        protocol_->send(buf, size, this);
         lock_.unlock();
-        
-        return result;
     }
 }
