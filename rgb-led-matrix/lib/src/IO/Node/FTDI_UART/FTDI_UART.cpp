@@ -2,7 +2,7 @@
 #include <chrono>
 #include <stdio.h>
 #include <ftd2xx.h>
-#include <Exception/String_Exception.h>
+#include <Exception/Null_Pointer.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
 using std::min;
 
@@ -102,7 +102,7 @@ namespace rgb_matrix {
     void FTDI_UART::send(uint8_t *buf, uint32_t size) {
         lock_.lock();
         if (protocol_ == nullptr)
-            throw String_Exception("Protocol is nulltptr");
+            throw Null_Pointer("Protocol");
 
         protocol_->send(buf, size, this);
         lock_.unlock();
