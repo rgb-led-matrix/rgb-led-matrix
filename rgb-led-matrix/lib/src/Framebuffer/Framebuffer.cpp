@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <math.h>
-#include <Exception/String_Exception.h>
+#include <Exception/Null_Pointer.h>
 #include <Framebuffer/Framebuffer.h>
 #include <Framebuffer/RGB/RGB24.h>
 #include <Framebuffer/RGB/RGB48.h>
@@ -17,7 +17,7 @@ namespace rgb_matrix {
 
     template <typename T> Framebuffer<T>::Framebuffer(CFG *cfg) : cfg_(cfg) {
         if (cfg == nullptr)
-            throw String_Exception("CFG is nullptr");
+            throw Null_Pointer("CFG");
 
         build_table();
 
@@ -97,7 +97,7 @@ namespace rgb_matrix {
         uint8_t bright =  this->brightness_;
 
         if (pixel == nullptr)
-            throw String_Exception("Pixel is nullptr");
+            throw Null_Pointer("Pixel");
 
         cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
         pixel->red = (uint16_t) round(this->lut[bright][r].red / T::red_max * fr);

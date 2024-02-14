@@ -1,4 +1,4 @@
-#include <Exception/String_Exception.h>
+#include <Exception/Null_Pointer.h>
 #include <Panel/Panel_Pixel_Mapper.h>
 
 namespace rgb_matrix {
@@ -11,7 +11,7 @@ namespace rgb_matrix {
         cord_t size = panel->get_size();
 
         if (panel == nullptr)
-            throw String_Exception("Panel is nullptr");
+            throw Null_Pointer("Panel");
 
         panel_ = panel;
 
