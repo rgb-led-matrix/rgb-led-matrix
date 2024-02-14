@@ -1,14 +1,18 @@
-#include <assert.h>
+#include <Exception/String_Exception.h>
 #include <Panel/Panel_Pixel_Mapper.h>
 
 namespace rgb_matrix {
-    // Don't use this!    
+    // Do not use this!    
     Panel_Pixel_Mapper::Panel_Pixel_Mapper() :panel_(nullptr) {
-        assert(panel_ != nullptr);
+        // Do nothing
     }
 
     Panel_Pixel_Mapper::Panel_Pixel_Mapper(Panel *panel) {
         cord_t size = panel->get_size();
+
+        if (panel == nullptr)
+            throw String_Exception("Panel is nullptr");
+
         panel_ = panel;
 
         locations_ = new cord_t *[size.x];
