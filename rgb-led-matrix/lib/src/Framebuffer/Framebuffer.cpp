@@ -96,6 +96,9 @@ namespace rgb_matrix {
         float fr, fg, fb;
         uint8_t bright =  this->brightness_;
 
+        if (pixel == nullptr)
+            throw String_Exception("Pixel is nullptr");
+
         cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
         pixel->red = (uint16_t) round(this->lut[bright][r].red / T::red_max * fr);
         pixel->green = (uint16_t) round(this->lut[bright][g].green / T::green_max * fg);
