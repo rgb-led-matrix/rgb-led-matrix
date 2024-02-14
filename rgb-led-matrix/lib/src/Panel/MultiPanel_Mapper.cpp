@@ -1,6 +1,8 @@
 #include <chrono>
 #include <Panel/MultiPanel_Mapper.h>
 
+// TODO: Make this single threaded for now
+
 namespace rgb_matrix {
     // Do not use this!
     MultiPanel_Mapper::MultiPanel_Mapper() {
