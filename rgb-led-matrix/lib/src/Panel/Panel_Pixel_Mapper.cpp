@@ -88,6 +88,10 @@ namespace rgb_matrix {
         panel_->SetPixel(cord.x, cord.y, pixel.red, pixel.green, pixel.blue);
     }
 
+    Panel *Panel_Pixel_Mapper::get_panel() {
+        return panel_;
+    }
+
     void Panel_Pixel_Mapper::map() {
         for (int i = 0; i < panel_->get_size().x; i++) {
             for (int j = 0; j < panel_->get_size().y; j++) {

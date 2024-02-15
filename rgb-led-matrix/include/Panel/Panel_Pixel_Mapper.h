@@ -13,6 +13,8 @@ namespace rgb_matrix {
             void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
             void SetPixel(cord_t cord, pixel_t pixel);
 
+            Panel *get_panel();
+
         protected:
             Panel_Pixel_Mapper();
 
