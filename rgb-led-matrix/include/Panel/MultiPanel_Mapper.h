@@ -19,16 +19,11 @@ namespace rgb_matrix {
                 MultiPanel_Mapper(int width, int height, int threads = 1);
                 virtual ~MultiPanel_Mapper();
 
-                virtual bool map_panel(int x, int y, Panel_Pixel_Mapper *panel);
                 virtual bool map_panel(int x, int y, Panel *panel);
                 virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
                 virtual void SetPixel(cord_t cord, pixel_t pixel);
                 virtual cord_t get_size();
                 virtual void show();
-
-                // Applies to show calls after set/map
-                virtual void set_brightness(uint8_t brightness);
-                virtual void map_wavelength(uint8_t color, Color index, uint16_t value);
 
         protected:
                 MultiPanel_Mapper();

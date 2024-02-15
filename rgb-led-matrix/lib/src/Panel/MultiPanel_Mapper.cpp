@@ -38,11 +38,6 @@ namespace rgb_matrix {
         // TODO:
     }
 
-
-    bool MultiPanel_Mapper::map_panel(int x, int y, Panel_Pixel_Mapper *panel) {
-        return map_panel(x, y, panel);
-    }
-
     // TODO: Check for duplicates!
     bool MultiPanel_Mapper::map_panel(int x, int y, Panel *panel) {
         Panel_t *ptr = new Panel_t;
@@ -124,20 +119,6 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    void MultiPanel_Mapper::set_brightness(uint8_t brightness) {
-        lock_.lock();
-        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
-            (*it)->panel->set_brightness(brightness);
-        lock_.unlock();
-    }
-
-    void MultiPanel_Mapper::map_wavelength(uint8_t color, Color index, uint16_t value) {
-        lock_.lock();
-        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
-            (*it)->panel->map_wavelength(color, index, value);
-        lock_.unlock();
-    }
-
     void MultiPanel_Mapper::thread(void *args) {
         MultiPanel_Mapper *ptr = (MultiPanel_Mapper *) args;
 
@@ -162,4 +143,4 @@ namespace rgb_matrix {
         // TODO:
         //  Support two operations (SetPixel and show)
     }
-}  // namespace rgb_matrix
+}

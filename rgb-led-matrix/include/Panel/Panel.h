@@ -15,7 +15,7 @@ namespace rgb_matrix {
             virtual void show() = 0;
             virtual cord_t get_size() = 0;
 
-            // Applies to SetPixel calls after set/map
+            // Use these before calling SetPixel! (Has no effect until after.)
             virtual void set_brightness(uint8_t brightness) = 0;
             virtual void map_wavelength(uint8_t color, Color index, uint16_t value) = 0;
     };

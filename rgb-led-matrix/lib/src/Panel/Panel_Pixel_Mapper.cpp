@@ -85,22 +85,6 @@ namespace rgb_matrix {
         panel_->SetPixel(cord.x, cord.y, pixel.red, pixel.green, pixel.blue);
     }
 
-    void Panel_Pixel_Mapper::show() {
-        panel_->show();
-    }
-
-    void Panel_Pixel_Mapper::set_brightness(uint8_t brightness) {
-        panel_->set_brightness(brightness);
-    }
-
-    void Panel_Pixel_Mapper::map_wavelength(uint8_t color, Color index, uint16_t value) {
-        panel_->map_wavelength(color, index, value);
-    }
-
-    cord_t Panel_Pixel_Mapper::get_size() {
-        return panel_->get_size();
-    }
-
     void Panel_Pixel_Mapper::map() {
         for (int i = 0; i < panel_->get_size().x; i++) {
             for (int j = 0; j < panel_->get_size().y; j++) {
@@ -109,4 +93,4 @@ namespace rgb_matrix {
             }
         }
     }
-}  // namespace rgb_matrix
+}
