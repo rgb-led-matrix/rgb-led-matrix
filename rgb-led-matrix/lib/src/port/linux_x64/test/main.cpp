@@ -23,6 +23,7 @@ int main(int argc, char **argv) {
     //scheduler[0]->add_node(node);
     //node->set_protocol(protocol);
     frame[0]->set_brightness(50);
+    scheduler[0]->start();
 
     uint8_t x, y;
     while (1) {
