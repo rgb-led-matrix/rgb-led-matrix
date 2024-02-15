@@ -11,6 +11,8 @@ namespace rgb_matrix {
 
     Panel_Pixel_Mapper::Panel_Pixel_Mapper(Panel *panel) {
         cord_t size = panel->get_size();
+        
+        throw String_Exception("Not Finished");
 
         if (panel == nullptr)
             throw Null_Pointer("Panel");
@@ -81,6 +83,7 @@ namespace rgb_matrix {
         SetPixel(locations_[x][y], pixel);
     }
 
+    // TODO: ???
     void Panel_Pixel_Mapper::SetPixel(cord_t cord, pixel_t pixel) {
         panel_->SetPixel(cord.x, cord.y, pixel.red, pixel.green, pixel.blue);
     }
