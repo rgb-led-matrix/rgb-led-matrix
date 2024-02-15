@@ -1,5 +1,6 @@
 #include <chrono>
 #include <Panel/MultiPanel_Mapper.h>
+#include <Exception/String_Exception.h>
 
 // TODO: Make this single threaded for now
 
@@ -11,6 +12,8 @@ namespace rgb_matrix {
 
     MultiPanel_Mapper::MultiPanel_Mapper(int width, int height, int threads) : width_(width), height_(height), thread_count_(threads) {
         shutdown_ = false;
+
+        throw String_Exception("Not finished");
 
         if (thread_count_ <= 0)
             thread_count_ = 1;

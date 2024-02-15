@@ -14,7 +14,7 @@ namespace rgb_matrix {
             void write(char *buf, uint32_t len);
             int read(char **buf, uint32_t len, uint32_t timeout_us);
 
-            // For CFG ?
+            // For Application (main)
             void set_baud(uint32_t baud);
 
         protected:
