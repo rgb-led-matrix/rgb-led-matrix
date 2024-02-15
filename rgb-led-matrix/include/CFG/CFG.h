@@ -36,6 +36,8 @@ namespace rgb_matrix {
             inline Data_Format_ID get_data_format() { return data_format_; }
         
         protected:
+            CFG();
+
             int rows_;
             int cols_;
             DOTCorrect dot_;

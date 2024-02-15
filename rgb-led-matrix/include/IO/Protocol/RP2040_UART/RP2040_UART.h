@@ -13,6 +13,9 @@ namespace rgb_matrix {
             void send(uint8_t *buf, uint32_t size);
             Protocol::Status get_protocol_status();
             void acknowledge(Protocol::Status);
+        
+        protected:
+            RP2040_UART();
     };
 }
 #endif

@@ -2,7 +2,6 @@
 #define NULL_POINTER_H
 
 #include <Exception/String_Exception.h>
-#include <string>
 
 namespace rgb_matrix {
     class Null_Pointer : public String_Exception {

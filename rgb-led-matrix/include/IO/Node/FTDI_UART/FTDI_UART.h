@@ -18,6 +18,8 @@ namespace rgb_matrix {
             void set_baud(uint32_t baud);
 
         protected:
+            FTDI_UART();
+            
             std::mutex lock_;
             std::string serial_number_;
     };

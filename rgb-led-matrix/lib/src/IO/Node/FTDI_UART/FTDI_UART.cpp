@@ -3,10 +3,16 @@
 #include <stdio.h>
 #include <ftd2xx.h>
 #include <Exception/Null_Pointer.h>
+#include <Exception/Illegal.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
 using std::min;
 
 namespace rgb_matrix {
+    // Do not use this!
+    FTDI_UART::FTDI_UART() {
+        throw Illegal("FTDI_UART");
+    }
+
     FTDI_UART::FTDI_UART(const char *serial_number, uint8_t chan_num) {
         FT_HANDLE handle;
         char str[100];

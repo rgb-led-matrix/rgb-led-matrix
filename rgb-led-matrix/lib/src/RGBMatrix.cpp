@@ -1,6 +1,6 @@
 #include <RGBMatrix.h>
 #include <CFG/CFG.h>
-#include <Exception/String_Exception.h>
+#include <Exception/Unknown_Type.h>
 #include <Framebuffer/Framebuffer.h>
 #include <Framebuffer/RGB/RGB24.h>
 #include <Framebuffer/RGB/RGB48.h>
@@ -19,7 +19,7 @@ namespace rgb_matrix {
       case Data_Format_ID::RGB_555_ID:
         return new Framebuffer<RGB_555>(cfg);
       default:
-        throw String_Exception("Unknown Data_Format_ID");
+        throw Unknown_Type("Data_Format_ID");
         break;
     }
   }

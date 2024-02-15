@@ -1,13 +1,13 @@
 #include <chrono>
 #include <Panel/MultiPanel_Mapper.h>
-#include <Exception/String_Exception.h>
+#include <Exception/Illegal.h>
 
 // TODO: Make this single threaded for now
 
 namespace rgb_matrix {
     // Do not use this!
     MultiPanel_Mapper::MultiPanel_Mapper() {
-        // Do nothing
+        throw Illegal("MultiPanel Mapper");
     }
 
     MultiPanel_Mapper::MultiPanel_Mapper(int width, int height, int threads) : width_(width), height_(height), thread_count_(threads) {

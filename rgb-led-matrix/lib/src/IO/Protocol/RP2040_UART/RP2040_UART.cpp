@@ -1,7 +1,12 @@
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
-#include <Exception/String_Exception.h>
+#include <Exception/Illegal.h>
 
 namespace rgb_matrix {
+    // Do not use this!
+    RP2040_UART::RP2040_UART() {
+        throw Illegal("RP2040_UART");
+    }
+
     RP2040_UART::RP2040_UART(Node *node) : Protocol(node) {
         throw String_Exception("Not finsihed");
     }

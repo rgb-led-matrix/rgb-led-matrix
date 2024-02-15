@@ -1,10 +1,12 @@
 #include <Exception/Null_Pointer.h>
+#include <Exception/Illegal.h>
+#include <Exception/Unknown_Type.h>
 #include <Panel/Panel_Pixel_Mapper.h>
 
 namespace rgb_matrix {
     // Do not use this!    
     Panel_Pixel_Mapper::Panel_Pixel_Mapper() :panel_(nullptr) {
-        // Do nothing
+        throw Illegal("Panel Pixel Mapper");
     }
 
     Panel_Pixel_Mapper::Panel_Pixel_Mapper(Panel *panel) {
@@ -72,7 +74,7 @@ namespace rgb_matrix {
                 pixel.blue = blue;
                 break;
             default:
-                throw String_Exception("Unknown Color_Order");
+                throw Unknown_Type("Color_Order");
                 break;
         }
 

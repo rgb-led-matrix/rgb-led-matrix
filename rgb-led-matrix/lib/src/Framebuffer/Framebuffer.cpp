@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <math.h>
 #include <Exception/Null_Pointer.h>
+#include <Exception/Illegal.h>
+#include <Exception/Unknown_Type.h>
 #include <Framebuffer/Framebuffer.h>
 #include <Framebuffer/RGB/RGB24.h>
 #include <Framebuffer/RGB/RGB48.h>
@@ -12,7 +14,7 @@ using std::max;
 namespace rgb_matrix {
     // Do not use this!    
     template <typename T> Framebuffer<T>::Framebuffer() : cfg_(nullptr), buffer_(NULL) {
-        // Do nothing
+        throw Illegal("Framebuffer");
     }
 
     template <typename T> Framebuffer<T>::Framebuffer(CFG *cfg) : cfg_(cfg) {
@@ -53,7 +55,7 @@ namespace rgb_matrix {
                     lut[j][color].blue = (uint16_t) round(pow(value / 65535.0, 1 / g.get_blue()) * T::blue_lim * j / 99.0);
                     break;
                 default:
-                    throw String_Exception("Unknown Color");
+                    throw Unknown_Type("Color");
                     break;
             }
         }
