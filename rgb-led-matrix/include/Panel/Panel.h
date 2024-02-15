@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <CFG/types.h>
-#include <IO/Node/Node.h>
+#include <IO/Protocol/Protocol.h>
 
 namespace rgb_matrix {
     class Panel {
@@ -14,7 +14,7 @@ namespace rgb_matrix {
             virtual void SetPixel(cord_t cord, pixel_t pixel) { SetPixel(cord.x, cord.y, pixel.red, pixel.green, pixel.blue); }
             virtual void show() = 0;
             virtual cord_t get_size() = 0;
-            virtual Node *get_node() = 0;
+            virtual Protocol *get_protocol() = 0;
 
             // Applies to SetPixel calls after set/map
             virtual void set_brightness(uint8_t brightness) = 0;

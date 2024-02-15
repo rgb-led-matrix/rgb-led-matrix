@@ -3,7 +3,8 @@
 
 #include <list>
 #include <thread>
-#include <IO/Node/Node.h>
+#include <mutex>
+#include <IO/Protocol/Protocol.h>
 using std::list;
 using std::thread;
 
@@ -13,15 +14,16 @@ namespace rgb_matrix {
             Scheduler();
             virtual ~Scheduler();
 
-            virtual bool add_node(Node *node);
+            virtual bool add_protocol(Protocol *protocol);
             bool start();
             void shutdown();
 
         protected:
             static void worker_thread(Scheduler *object);
 
-            list<Node *> nodes_;
+            list<Protocol *> protocols_;
             thread *thread_;
+            std::mutex lock_;
             bool shutdown_;
     };
 }

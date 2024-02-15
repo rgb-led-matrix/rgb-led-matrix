@@ -17,7 +17,7 @@ namespace rgb_matrix {
             void set_brightness(uint8_t brightness);
             cord_t get_size();
             void map_wavelength(uint8_t color, Color index, uint16_t value);
-            Node *get_node();
+            Protocol *get_protocol();
 
         protected:
             Framebuffer();

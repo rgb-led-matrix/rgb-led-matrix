@@ -2,12 +2,12 @@
 #define PROTOCOL_H
 
 #include <stdint.h>
+#include <IO/Node/Node.h>
 
-namespace rgb_matrix {
-    class Node;
-    
+namespace rgb_matrix {    
     class Protocol {
         public:
+            Protocol(Node *node);
             virtual ~Protocol() {}
 
             enum Status {
@@ -16,10 +16,17 @@ namespace rgb_matrix {
                 NOT_FINISHED
             };
 
-            // For Node
-            virtual void send(uint8_t *buf, uint32_t size, Node *node) = 0;
+            // For Panel
+            virtual void send(uint8_t *buf, uint32_t size) = 0;
+
+            // For Scheduler
             virtual Status get_protocol_status() = 0;
             virtual void acknowledge(Status) = 0;
+
+        protected:
+            Protocol();
+
+            Node *node_;
     };
 }
 #endif

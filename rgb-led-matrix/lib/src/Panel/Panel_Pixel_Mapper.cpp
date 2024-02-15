@@ -85,8 +85,8 @@ namespace rgb_matrix {
         panel_->show();
     }
 
-    Node *Panel_Pixel_Mapper::get_node() {
-        return panel_->get_node();
+    Protocol *Panel_Pixel_Mapper::get_protocol() {
+        return panel_->get_protocol();
     }
 
     void Panel_Pixel_Mapper::set_brightness(uint8_t brightness) {

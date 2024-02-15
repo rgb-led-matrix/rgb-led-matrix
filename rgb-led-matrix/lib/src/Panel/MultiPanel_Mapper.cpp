@@ -40,7 +40,7 @@ namespace rgb_matrix {
         Panel_t *ptr = new Panel_t;
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
-            if ((*it)->panel->get_node() == panel->get_node())
+            if ((*it)->panel->get_protocol() == panel->get_protocol())
                 return false;
         }
 

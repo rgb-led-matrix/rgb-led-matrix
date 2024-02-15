@@ -11,49 +11,61 @@ namespace rgb_matrix {
     }
 
     bool Scheduler::start() {
+        lock_.lock();
+
         if (thread_ == nullptr) {
             shutdown_ = false;
             thread_ = new std::thread(&Scheduler::worker_thread, this);
+
+            lock_.unlock();
             return true;
         }
 
+        lock_.unlock();
         return false;
     }
 
     void Scheduler::shutdown() {
+        lock_.lock();
         if (thread_ != nullptr) {
             shutdown_ = true;
             thread_->join();
             delete thread_;
             thread_ = nullptr;
         }
+        lock_.unlock();
     }
 
-    bool Scheduler::add_node(Node *node) {
+    bool Scheduler::add_protocol(Protocol *protocol) {
+        lock_.lock();
         if (thread_ == nullptr) {
-            for (std::list<Node *>::iterator it = nodes_.begin(); it != nodes_.end(); ++it) {
-                if ((*it) == node)
+            for (std::list<Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
+                if ((*it) == protocol) {
+                    lock_.unlock();
                     return true;
+                }
             }
 
-            nodes_.push_back(node);
+            protocols_.push_back(protocol);
+            lock_.unlock();
             return true;
         }
 
+        lock_.unlock();
         return false;
     }
 
     void Scheduler::worker_thread(Scheduler *object) {
         while (!object->shutdown_) {
             // Wait for sync point
-            for (std::list<Node *>::iterator it = object->nodes_.begin(); it != object->nodes_.end(); ++it) {
+            for (std::list<Protocol *>::iterator it = object->protocols_.begin(); it != object->protocols_.end(); ++it) {
                 while((*it)->get_protocol_status() == Protocol::Status::NOT_FINISHED) {
                     // TODO: Sleep
                 }
             }
 
             // Advance the state
-            for (std::list<Node *>::iterator it = object->nodes_.begin(); it != object->nodes_.end(); ++it) {
+            for (std::list<Protocol *>::iterator it = object->protocols_.begin(); it != object->protocols_.end(); ++it) {
                 (*it)->acknowledge((*it)->get_protocol_status());
             }
         }
