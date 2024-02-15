@@ -53,6 +53,7 @@ namespace rgb_matrix {
                     lut[j][color].blue = (uint16_t) round(pow(value / 65535.0, 1 / g.get_blue()) * T::blue_lim * j / 99.0);
                     break;
                 default:
+                    throw String_Exception("Unknown Color");
                     break;
             }
         }

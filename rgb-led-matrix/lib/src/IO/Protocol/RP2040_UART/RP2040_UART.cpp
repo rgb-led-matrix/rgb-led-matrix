@@ -1,8 +1,9 @@
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
+#include <Exception/String_Exception.h>
 
 namespace rgb_matrix {
     RP2040_UART::RP2040_UART(Node *node) : Protocol(node) {
-        
+        throw String_Exception("Not finsihed");
     }
 
     void RP2040_UART::send(uint8_t *buf, uint32_t size) {

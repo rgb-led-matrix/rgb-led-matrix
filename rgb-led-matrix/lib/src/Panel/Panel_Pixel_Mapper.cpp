@@ -67,10 +67,12 @@ namespace rgb_matrix {
                 pixel.blue = green;
                 break;
             case Color_Order::RGB:
-            default:
                 pixel.red = red;
                 pixel.green = green;
                 pixel.blue = blue;
+                break;
+            default:
+                throw String_Exception("Unknown Color_Order");
                 break;
         }
 

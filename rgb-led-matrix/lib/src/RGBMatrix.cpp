@@ -20,6 +20,7 @@ namespace rgb_matrix {
         return new Framebuffer<RGB_555>(cfg);
       default:
         throw String_Exception("Unknown Data_Format_ID");
+        break;
     }
   }
 };
