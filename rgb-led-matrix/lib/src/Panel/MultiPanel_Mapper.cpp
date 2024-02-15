@@ -4,6 +4,11 @@
 
 // TODO: Make this single threaded for now
 
+// WARNING: Does not check underlying protocols for multiple protocols in same frame.
+//  This is bad. Sharing nodes and protocols within a frame is undefined.
+//  Protocols may reuse nodes but must be in different frames.
+//  Frames may reuse protocols, but not within the same frame.
+
 namespace rgb_matrix {
     // Do not use this!
     MultiPanel_Mapper::MultiPanel_Mapper() {
@@ -43,7 +48,7 @@ namespace rgb_matrix {
         Panel_t *ptr = new Panel_t;
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
-            if ((*it)->panel->get_protocol() == panel->get_protocol())
+            if ((*it)->panel == panel)
                 return false;
         }
 

@@ -14,7 +14,6 @@ namespace rgb_matrix {
             void SetPixel(cord_t cord, pixel_t pixel);
             void show();
             cord_t get_size();
-            Protocol *get_protocol();
 
             // Applies to SetPixel calls after set/map
             void set_brightness(uint8_t brightness);

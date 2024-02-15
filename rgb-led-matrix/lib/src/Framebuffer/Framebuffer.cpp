@@ -74,10 +74,6 @@ namespace rgb_matrix {
         cfg_->get_protocol()->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
     }
 
-    template <typename T> Protocol *Framebuffer<T>::get_protocol() {
-        return cfg_->get_protocol();
-    }
-
     template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
         T **ptr = (T **) buffer_;
 
