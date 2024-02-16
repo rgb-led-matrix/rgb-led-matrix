@@ -12,9 +12,9 @@ namespace rgb_matrix {
     class Scheduler {
         public:
             Scheduler();
-            virtual ~Scheduler();
+            ~Scheduler();
 
-            virtual bool add_protocol(Protocol *protocol);
+            bool add_protocol(Protocol *protocol);
             bool start();
             void shutdown();
 

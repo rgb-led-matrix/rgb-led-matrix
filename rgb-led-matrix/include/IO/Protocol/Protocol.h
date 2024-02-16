@@ -13,7 +13,8 @@ namespace rgb_matrix {
             enum Status {
                 MACRO_FINISHED,
                 MICRO_FINISHED,
-                NOT_FINISHED
+                NOT_FINISHED,
+                FINISHED
             };
 
             // For Panel
