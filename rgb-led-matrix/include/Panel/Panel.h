@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 #include <CFG/types.h>
-#include <Panel/Mapper/Mapper.h>
-#include <Panel/Event.h>
+#include <Mapper/Mapper.h>
+#include <Event/Event.h>
 
 namespace rgb_matrix {
     class Panel : public Mapper, Event {

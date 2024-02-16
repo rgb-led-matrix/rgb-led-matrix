@@ -1,7 +1,7 @@
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
 #include <Exception/Unknown_Type.h>
-#include <Panel/Mapper/Pixel/Pixel.h>
+#include <Mapper/Pixel/Pixel.h>
 
 namespace rgb_matrix {
     // Do not use this!    
