@@ -5,11 +5,11 @@
 
 namespace rgb_matrix {
     // Do not use this!    
-    Pixel::Pixel() :panel_(nullptr) {
+    Pixel::Pixel() : panel_(nullptr) {
         throw Illegal("Panel Pixel Mapper");
     }
 
-    Pixel::Pixel(Mapper *panel) {
+    Pixel::Pixel(Panel *panel) {
         cord_t size = panel->get_size();
         
         throw String_Exception("Not Finished");
@@ -80,11 +80,11 @@ namespace rgb_matrix {
                 break;
         }
 
-        SetPixel(locations_[x][y], pixel);
+        send(locations_[x][y], pixel);
     }
 
     // TODO: ???
-    void Pixel::SetPixel(cord_t cord, pixel_t pixel) {
+    void Pixel::send(cord_t cord, pixel_t pixel) {
         panel_->SetPixel(cord.x, cord.y, pixel.red, pixel.green, pixel.blue);
     }
 
