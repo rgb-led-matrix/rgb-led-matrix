@@ -10,13 +10,11 @@ namespace rgb_matrix {
     }
 
     Pixel::Pixel(Panel *panel) {
-        cord_t size = panel->get_size();
-
         if (panel == nullptr)
             throw Null_Pointer("Panel");
 
+        cord_t size = panel->get_size();
         panel_ = panel;
-
         locations_ = new cord_t *[size.x];
         orders_ = new Color_Order *[size.x];
         for (int i = 0; i < size.x; i++) {
