@@ -44,7 +44,7 @@ namespace rgb_matrix {
 
         lock_.lock();
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
-            if ((*it)->panel == ptr->panel) {
+            if (((*it)->panel == ptr->panel) || ((*it)->protocol == ptr->protocol)) {
                 delete ptr;
                 lock_.unlock();
                 return false;

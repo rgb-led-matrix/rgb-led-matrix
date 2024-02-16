@@ -1,28 +1,23 @@
 #ifndef PIXEL_H
 #define PIXEL_H
 
-#include <Mapper/Mapper.h>
+#include <Panel/Single_Panel.h>
 #include <CFG/types.h>
 
 namespace rgb_matrix {
     // Optional construct for handling pixel locations and RGB ordering
-    class Pixel : public Mapper {
+    class Pixel {
         public:
-            Pixel(Mapper *panel);
-            virtual ~Pixel();
-
             void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
 
         protected:
-            Pixel();
-
             virtual cord_t map_location(int x, int y) = 0;
             virtual Color_Order map_color(int x, int y) = 0;
 
-            Mapper *panel_;
+            Single_Panel *panel_;
 
         private:
-            void map();
+            virtual void map() = 0;
 
             cord_t **locations_;
             Color_Order **orders_;
