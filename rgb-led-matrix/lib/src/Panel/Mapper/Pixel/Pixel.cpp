@@ -80,11 +80,7 @@ namespace rgb_matrix {
                 break;
         }
 
-        send(locations_[x][y], pixel);
-    }
-
-    void Pixel::send(cord_t cord, pixel_t pixel) {
-        panel_->SetPixel(cord.x, cord.y, pixel.red, pixel.green, pixel.blue);
+        cord_t cord = locations_[x][y];
     }
 
     void Pixel::map() {

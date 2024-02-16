@@ -22,7 +22,6 @@ namespace rgb_matrix {
 
         private:
             void map();
-            void send(cord_t cord, pixel_t pixel);
 
             cord_t **locations_;
             Color_Order **orders_;
