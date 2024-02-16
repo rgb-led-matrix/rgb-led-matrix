@@ -14,39 +14,35 @@ using std::queue;
 using std::list;
 
 namespace rgb_matrix {
-    class MultiPanel {
+    class MultiPanel : public Panel {
         public:
-                MultiPanel(int width, int height, int threads = 1);
-                virtual ~MultiPanel();
+                MultiPanel(int width, int height);
+                ~MultiPanel();
 
-                virtual bool map_panel(int x, int y, Panel *panel);
-                virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
-                virtual void SetPixel(cord_t cord, pixel_t pixel);
-                virtual cord_t get_size();
-                virtual void show();
+                bool map_panel(int x, int y, CFG *cfg);
+                void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
+                cord_t get_size();
+                void show();
+
+                // Use these before calling SetPixel! (Has no effect until after.)
+                //  We are stuck with these here, because we are hiding Framebuffer/RGB. (Templating)
+                void set_brightness(uint8_t brightness);
+                void map_wavelength(uint8_t color, Color index, uint16_t value);
 
         protected:
                 MultiPanel();
-
-                static void thread(void *args);
 
                 struct Panel_t {
                         Panel *panel;
                         int x;
                         int y;
+                        CFG *cfg;
                 };
-
-                virtual void task(Panel_t *panel);
 
                 int width_;
                 int height_;
-                int thread_count_;
                 mutex lock_;
                 list<Panel_t *> *panel_;
-                vector<std::thread> *threads_;
-                queue<Panel_t *> queue_;
-                mutex queue_lock_;
-                volatile bool shutdown_; 
                 pixel_t **pixel_;
     };
 }

@@ -4,12 +4,11 @@
 #include <stdint.h>
 #include <CFG/types.h>
 #include <Panel/Mapper/Mapper.h>
+#include <Panel/Event.h>
 
 namespace rgb_matrix {
-    class Panel : public Mapper {
+    class Panel : public Mapper, Event {
         public:
-            virtual void show() = 0;
-
             // Use these before calling SetPixel! (Has no effect until after.)
             //  We are stuck with these here, because we are hiding Framebuffer/RGB. (Templating)
             virtual void set_brightness(uint8_t brightness) = 0;

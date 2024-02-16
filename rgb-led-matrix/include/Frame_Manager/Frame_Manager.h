@@ -2,19 +2,19 @@
 #define FRAME_MANAGER_H
 
 #include <stdint.h>
-#include <Panel/MultiPanel_Mapper.h>
+#include <Panel/Event.h>
 #include <IO/Scheduler/Scheduler.h>
 
 namespace rgb_matrix {
     class Frame_Manager {
         public:
             Frame_Manager(int framerate = 30, bool isAsync = false);
-            virtual ~Frame_Manager();
+            ~Frame_Manager();
 
-            void add_frame(MultiPanel_Mapper *frame);
+            void push_frame(Event *frame);
 
         protected:
-            list<MultiPanel_Mapper *> frames_;
+            list<Event *> frames_;
             Scheduler *scheduler_;
     };
 }

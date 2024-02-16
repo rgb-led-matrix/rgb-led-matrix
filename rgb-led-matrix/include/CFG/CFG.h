@@ -28,6 +28,10 @@ namespace rgb_matrix {
                 gamma_ = gamma;
             }
 
+            bool operator==(CFG& cfg) {
+                return this->protocol_ == cfg.protocol_;
+            }
+
             inline DOTCorrect& get_dot() { return dot_; }
             inline GAMMA& get_gamma() { return gamma_; }
             inline Protocol *get_protocol() { return protocol_; }

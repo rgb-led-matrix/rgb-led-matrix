@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     cfg->get_dot().set(0, 10, 255, 128, 0, 0.5, 1.0, 0.9);
 
     panel->set_brightness(50);
-    frame[0]->map_panel(0, 0, panel);
+    frame[0]->map_panel(0, 0, cfg);
     //scheduler[0]->add_node(node);
     //node->set_protocol(protocol);
     scheduler[0]->start();
