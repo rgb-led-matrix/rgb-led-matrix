@@ -11,8 +11,6 @@ namespace rgb_matrix {
 
     Pixel::Pixel(Panel *panel) {
         cord_t size = panel->get_size();
-        
-        throw String_Exception("Not Finished");
 
         if (panel == nullptr)
             throw Null_Pointer("Panel");
