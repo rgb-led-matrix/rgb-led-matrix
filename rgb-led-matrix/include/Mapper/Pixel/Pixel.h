@@ -5,6 +5,7 @@
 #include <CFG/types.h>
 
 namespace rgb_matrix {
+    // Optional construct for handling pixel locations and RGB ordering
     class Pixel : public Mapper {
         public:
             Pixel(Panel *panel);

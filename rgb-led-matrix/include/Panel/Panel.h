@@ -7,6 +7,8 @@
 #include <Event/Event.h>
 
 namespace rgb_matrix {
+    // Pure interface for Panel management
+    //  This is kind of sloopy
     class Panel : public Mapper, Event {
         public:
             virtual void set_brightness(uint8_t brightness) = 0;

@@ -4,7 +4,8 @@
 #include <stdint.h>
 #include <IO/Node/Node.h>
 
-namespace rgb_matrix {    
+namespace rgb_matrix {
+    // Required construct for OSI Layer 2 and above
     class Protocol {
         public:
             Protocol(Node *node);

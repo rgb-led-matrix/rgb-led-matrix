@@ -3,6 +3,7 @@
 namespace rgb_matrix {
     Scheduler::Scheduler() {
         shutdown_ = false;
+        isFinished_ = false;
         thread_ = nullptr; 
     }
 
@@ -15,6 +16,7 @@ namespace rgb_matrix {
 
         if (thread_ == nullptr) {
             shutdown_ = false;
+            isFinished_ = false;
             thread_ = new std::thread(&Scheduler::worker_thread, this);
 
             lock_.unlock();
@@ -34,6 +36,10 @@ namespace rgb_matrix {
             thread_ = nullptr;
         }
         lock_.unlock();
+    }
+
+    bool Scheduler::isFinished() {
+        return isFinished_;
     }
 
     bool Scheduler::add_protocol(Protocol *protocol) {
@@ -57,16 +63,25 @@ namespace rgb_matrix {
 
     void Scheduler::worker_thread(Scheduler *object) {
         while (!object->shutdown_) {
+            bool isFinished = true;
+
             // Wait for sync point
             for (std::list<Protocol *>::iterator it = object->protocols_.begin(); it != object->protocols_.end(); ++it) {
                 while((*it)->get_protocol_status() == Protocol::Status::NOT_FINISHED) {
                     // TODO: Sleep
                 }
+
+                isFinished &= (*it)->get_protocol_status() == Protocol::Status::FINISHED;
             }
 
             // Advance the state
             for (std::list<Protocol *>::iterator it = object->protocols_.begin(); it != object->protocols_.end(); ++it) {
                 (*it)->acknowledge((*it)->get_protocol_status());
+            }
+
+            if (isFinished) {
+                object->isFinished_ = true;
+                break;
             }
         }
     }

@@ -3,6 +3,7 @@
 #include <Exception/Illegal.h>
 #include <Exception/Null_Pointer.h>
 #include <RGBMatrix.h>
+#include <CFG/CFG.h>
 
 namespace rgb_matrix {
     // Do not use this!
@@ -15,6 +16,8 @@ namespace rgb_matrix {
 
         // TODO:
 
+        scheduler_ = new Scheduler();
+
         pixel_ = new pixel_t *[width_];
         for (int i = 0; i < width_; i++)
             pixel_[i] = new pixel_t[height_];
@@ -22,6 +25,7 @@ namespace rgb_matrix {
 
     MultiPanel::~MultiPanel() {
         // TODO: Release memory panels_ and pixel_
+        // TODO: Release scheduler
     }
 
     bool MultiPanel::map_panel(int x, int y, CFG *cfg) {
@@ -38,11 +42,14 @@ namespace rgb_matrix {
         lock_.lock();
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
             if ((*it)->cfg == ptr->cfg) {
-                // TODO: release memory
+                delete ptr->panel;
+                delete ptr;
+                lock_.unlock();
                 return false;
             }
         }
 
+        scheduler_->add_protocol(cfg->get_protocol());
         panel_->push_back(ptr);
         lock_.unlock();
         return true;
@@ -71,6 +78,7 @@ namespace rgb_matrix {
 
     void MultiPanel::show() {
         lock_.lock();
+        // TODO: Use scheduler
         // TODO: Convert pixel_ to panels_[x]->panel->set_pixel
         // TODO: Call show for every panel
         lock_.unlock();

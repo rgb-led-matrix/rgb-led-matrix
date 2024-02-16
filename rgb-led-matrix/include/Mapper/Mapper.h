@@ -5,6 +5,7 @@
 #include <CFG/types.h>
 
 namespace rgb_matrix {
+    // Pure interface for drawing
     class Mapper {
         public:
             virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) = 0;
