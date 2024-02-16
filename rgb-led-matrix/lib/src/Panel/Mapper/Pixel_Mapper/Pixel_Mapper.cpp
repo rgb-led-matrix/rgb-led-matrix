@@ -1,15 +1,15 @@
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
 #include <Exception/Unknown_Type.h>
-#include <Panel/Panel_Pixel_Mapper.h>
+#include <Panel/Mapper/Pixel/Pixel.h>
 
 namespace rgb_matrix {
     // Do not use this!    
-    Panel_Pixel_Mapper::Panel_Pixel_Mapper() :panel_(nullptr) {
+    Pixel::Pixel() :panel_(nullptr) {
         throw Illegal("Panel Pixel Mapper");
     }
 
-    Panel_Pixel_Mapper::Panel_Pixel_Mapper(Panel *panel) {
+    Pixel::Pixel(Mapper *panel) {
         cord_t size = panel->get_size();
         
         throw String_Exception("Not Finished");
@@ -29,7 +29,7 @@ namespace rgb_matrix {
         map();
     }   
 
-    Panel_Pixel_Mapper::~Panel_Pixel_Mapper() {
+    Pixel::~Pixel() {
         for (int i = 0; i < panel_->get_size().x; i++) {
             delete locations_[i];
             delete orders_[i];
@@ -38,7 +38,7 @@ namespace rgb_matrix {
         delete orders_;
     }
 
-    void Panel_Pixel_Mapper::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+    void Pixel::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
         pixel_t pixel;
 
         if (x < 0 || x >= panel_->get_size().x || y < 0 || y >= panel_->get_size().y)
@@ -84,15 +84,11 @@ namespace rgb_matrix {
     }
 
     // TODO: ???
-    void Panel_Pixel_Mapper::SetPixel(cord_t cord, pixel_t pixel) {
+    void Pixel::SetPixel(cord_t cord, pixel_t pixel) {
         panel_->SetPixel(cord.x, cord.y, pixel.red, pixel.green, pixel.blue);
     }
 
-    Panel *Panel_Pixel_Mapper::get_panel() {
-        return panel_;
-    }
-
-    void Panel_Pixel_Mapper::map() {
+    void Pixel::map() {
         for (int i = 0; i < panel_->get_size().x; i++) {
             for (int j = 0; j < panel_->get_size().y; j++) {
                 locations_[i][j] = map_location(i, j);

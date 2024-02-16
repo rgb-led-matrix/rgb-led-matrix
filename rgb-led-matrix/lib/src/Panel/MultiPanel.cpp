@@ -1,21 +1,22 @@
 #include <chrono>
-#include <Panel/MultiPanel_Mapper.h>
+#include <Panel/MultiPanel.h>
 #include <Exception/Illegal.h>
 
 // TODO: Make this single threaded for now
 
-// WARNING: Does not check underlying protocols for multiple protocols in same frame.
+// WARNING: Does not check underlying protocols for multiple copys of the same protocol in same frame.
 //  This is bad. Sharing nodes and protocols within a frame is undefined.
 //  Protocols may reuse nodes but must be in different frames.
 //  Frames may reuse protocols, but not within the same frame.
+//  We are stuck with this because of templating which comes from variable RGB notions.
 
 namespace rgb_matrix {
     // Do not use this!
-    MultiPanel_Mapper::MultiPanel_Mapper() {
-        throw Illegal("MultiPanel Mapper");
+    MultiPanel::MultiPanel() {
+        throw Illegal("MultiPanel Panel");
     }
 
-    MultiPanel_Mapper::MultiPanel_Mapper(int width, int height, int threads) : width_(width), height_(height), thread_count_(threads) {
+    MultiPanel::MultiPanel(int width, int height, int threads) : width_(width), height_(height), thread_count_(threads) {
         shutdown_ = false;
 
         throw String_Exception("Not finished");
@@ -34,12 +35,12 @@ namespace rgb_matrix {
             pixel_[i] = new pixel_t[height_];
     }
 
-    MultiPanel_Mapper::~MultiPanel_Mapper() {
+    MultiPanel::~MultiPanel() {
         // TODO:
     }
 
     // TODO: Check for duplicates!
-    bool MultiPanel_Mapper::map_panel(int x, int y, Panel *panel) {
+    bool MultiPanel::map_panel(int x, int y, Panel *panel) {
         Panel_t *ptr = new Panel_t;
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
@@ -58,7 +59,7 @@ namespace rgb_matrix {
         return true;
     }
 
-    void MultiPanel_Mapper::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+    void MultiPanel::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
         cord_t cord;
         pixel_t pixel;
 
@@ -71,13 +72,13 @@ namespace rgb_matrix {
         SetPixel(cord, pixel);
     }
 
-    void MultiPanel_Mapper::SetPixel(cord_t cord, pixel_t pixel) {
+    void MultiPanel::SetPixel(cord_t cord, pixel_t pixel) {
         lock_.lock();
         pixel_[cord.x][cord.y] = pixel;
         lock_.unlock();
     }
 
-    cord_t MultiPanel_Mapper::get_size() {
+    cord_t MultiPanel::get_size() {
         cord_t result;
 
         result.x = width_;
@@ -86,7 +87,7 @@ namespace rgb_matrix {
         return result;
     }
 
-    void MultiPanel_Mapper::show() {
+    void MultiPanel::show() {
         bool done = false;
 
         lock_.lock();
@@ -119,8 +120,8 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    void MultiPanel_Mapper::thread(void *args) {
-        MultiPanel_Mapper *ptr = (MultiPanel_Mapper *) args;
+    void MultiPanel::thread(void *args) {
+        MultiPanel *ptr = (MultiPanel *) args;
 
         while (!ptr->shutdown_) {
             Panel_t *panel = nullptr;
@@ -139,7 +140,7 @@ namespace rgb_matrix {
         }
     }
 
-    void MultiPanel_Mapper::task(Panel_t *panel) {
+    void MultiPanel::task(Panel_t *panel) {
         // TODO:
         //  Support two operations (SetPixel and show)
     }

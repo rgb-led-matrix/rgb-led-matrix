@@ -1,12 +1,12 @@
-#ifndef MULTIPANEL_MAPPER_H
-#define MULTIPANEL_MAPPER_H
+#ifndef MULTIPANEL_H
+#define MULTIPANEL_H
 
 #include <vector>
 #include <thread>
 #include <mutex>
 #include <queue>
 #include <list>
-#include <Panel/Panel_Pixel_Mapper.h>
+#include <Panel/Panel.h>
 using std::vector;
 using std::thread;
 using std::mutex;
@@ -14,10 +14,10 @@ using std::queue;
 using std::list;
 
 namespace rgb_matrix {
-    class MultiPanel_Mapper {
+    class MultiPanel {
         public:
-                MultiPanel_Mapper(int width, int height, int threads = 1);
-                virtual ~MultiPanel_Mapper();
+                MultiPanel(int width, int height, int threads = 1);
+                virtual ~MultiPanel();
 
                 virtual bool map_panel(int x, int y, Panel *panel);
                 virtual void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
@@ -26,7 +26,7 @@ namespace rgb_matrix {
                 virtual void show();
 
         protected:
-                MultiPanel_Mapper();
+                MultiPanel();
 
                 static void thread(void *args);
 
