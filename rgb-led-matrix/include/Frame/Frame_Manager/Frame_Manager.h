@@ -3,7 +3,7 @@
 
 #include <queue>
 #include <stdint.h>
-#include <Panel/Event.h>
+#include <Panel/Frame.h>
 
 namespace rgb_matrix {
     // Optional construct for managing framerate
@@ -12,10 +12,10 @@ namespace rgb_matrix {
             Frame_Manager(int framerate = 30, bool isAsync = false);
             ~Frame_Manager();
 
-            void push_frame(Event *frame);
+            void push_frame(Frame *frame);
 
         protected:
-            std::queue<Event *> frames_;
+            std::queue<Frame *> frames_;
     };
 }
 #endif

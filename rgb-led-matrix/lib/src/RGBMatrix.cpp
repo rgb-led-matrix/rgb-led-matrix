@@ -8,7 +8,7 @@
 #include <Framebuffer/RGB/RGB_222.h>
 
 namespace rgb_matrix {
-    Panel *RGBMatrix::CreatePanel(CFG *cfg) {
+    Single_Panel *RGBMatrix::CreatePanel(CFG *cfg) {
         switch (cfg->get_data_format()) {
             case Data_Format_ID::RGB48_ID:
                 return new Framebuffer<RGB48>(cfg);

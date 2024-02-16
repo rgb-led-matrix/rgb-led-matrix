@@ -4,12 +4,11 @@
 #include <stdint.h>
 #include <CFG/types.h>
 #include <Mapper/Mapper.h>
-#include <Event/Event.h>
+#include <IO/Protocol/Protocol.h>
 
 namespace rgb_matrix {
     // Pure interface for Panel management
-    //  This is kind of sloopy
-    class Panel : public Mapper, Event {
+    class Panel : public Mapper {
         public:
             virtual void set_brightness(uint8_t brightness) = 0;
             virtual void map_wavelength(uint8_t color, Color index, uint16_t value) = 0;

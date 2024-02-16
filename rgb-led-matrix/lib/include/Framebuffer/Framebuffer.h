@@ -4,17 +4,17 @@
 #include <mutex>
 #include <stdint.h>
 #include <CFG/CFG.h>
-#include <Panel/Panel.h>
+#include <Panel/Single_Panel.h>
 using std::mutex;
 
 namespace rgb_matrix {
-    template <typename T> class Framebuffer : public Panel {
+    template <typename T> class Framebuffer : public Single_Panel {
         public:
             Framebuffer(CFG *cfg);
             ~Framebuffer();
 
             void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
-            void show();
+            void show(Protocol *protocol);
             cord_t get_size();
             
             void set_brightness(uint8_t brightness);

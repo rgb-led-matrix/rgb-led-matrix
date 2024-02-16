@@ -28,28 +28,30 @@ namespace rgb_matrix {
         // TODO: Release scheduler
     }
 
-    bool MultiPanel::map_panel(int x, int y, CFG *cfg) {
+    bool MultiPanel::map_panel(int x, int y, Single_Panel *panel, Protocol *protocol) {
         Panel_t *ptr = new Panel_t;
 
-        if (cfg == nullptr)
-            throw Null_Pointer("CFG");
+        if (panel == nullptr)
+            throw Null_Pointer("Panel");
 
-        ptr->cfg= cfg;
+        if (protocol == nullptr)
+            throw Null_Pointer("Protocol");
+
         ptr->x = x;
         ptr->y = y;
-        ptr->panel = RGBMatrix::CreatePanel(cfg);
+        ptr->panel = panel;
+        ptr->protocol = protocol;
 
         lock_.lock();
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
-            if ((*it)->cfg == ptr->cfg) {
-                delete ptr->panel;
+            if ((*it)->panel == ptr->panel) {
                 delete ptr;
                 lock_.unlock();
                 return false;
             }
         }
 
-        scheduler_->add_protocol(cfg->get_protocol());
+        scheduler_->add_protocol(protocol);
         panel_->push_back(ptr);
         lock_.unlock();
         return true;

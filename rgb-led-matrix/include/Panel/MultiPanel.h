@@ -3,8 +3,9 @@
 
 #include <mutex>
 #include <list>
-#include <Panel/Panel.h>
+#include <Panel/Single_Panel.h>
 #include <IO/Scheduler/Scheduler.h>
+#include <IO/Protocol/Protocol.h>
 using std::mutex;
 using std::list;
 
@@ -16,7 +17,7 @@ namespace rgb_matrix {
             MultiPanel(int width, int height);
             ~MultiPanel();
 
-            bool map_panel(int x, int y, CFG *cfg);
+            bool map_panel(int x, int y, Single_Panel *panel, Protocol *protocol);
 
             void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
             cord_t get_size();
@@ -28,10 +29,10 @@ namespace rgb_matrix {
             MultiPanel();
 
             struct Panel_t {
-                Panel *panel;
+                Single_Panel *panel;
                 int x;
                 int y;
-                CFG *cfg;
+                Protocol *protocol;
             };
 
             int width_;
