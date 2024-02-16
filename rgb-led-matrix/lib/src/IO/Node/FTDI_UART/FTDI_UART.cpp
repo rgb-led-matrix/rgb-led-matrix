@@ -1,11 +1,9 @@
-#include <algorithm>
 #include <chrono>
 #include <stdio.h>
 #include <ftd2xx.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
-using std::min;
 
 namespace rgb_matrix {
     // Do not use this!
@@ -94,13 +92,9 @@ namespace rgb_matrix {
     void FTDI_UART::set_baud(uint32_t baud) {
         FT_HANDLE handle;
 
-        lock_.lock();
-
         if (FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle) == FT_OK) {
             FT_SetBaudRate(handle, baud);
             FT_Close(handle);
         }
-
-        lock_.unlock();
     }
 }

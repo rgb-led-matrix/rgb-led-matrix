@@ -1,6 +1,7 @@
 #include <IO/Root/FT4232/FT4232.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
 #include <Exception/Illegal.h>
+#include <Exception/Null_Pointer.h>
 
 namespace rgb_matrix {
     // Do not use this!
@@ -9,19 +10,15 @@ namespace rgb_matrix {
     }
 
     FT4232::FT4232(const char *serial_number) {
-        for (int i = 0; i < (sizeof(nodes_) / sizeof(Node *)); i++)
-            nodes_[i] = new FTDI_UART(serial_number, i);
-    }
+        if (serial_number == nullptr)
+            throw Null_Pointer("serial number");
 
-    FT4232::~FT4232() {
-        for (int i = 0; i < (sizeof(nodes_) / sizeof(Node *)); i++)
-            delete nodes_[i];
+        serial_number_ = std::string(serial_number);
     }
 
     Node *FT4232::GetNode(uint32_t index) {
-        if (index > sizeof(nodes_) / sizeof(Node *))
-            return nullptr;
-
-        return nodes_[index];
+        if (index > 4)
+            throw Illegal("index");
+        return new FTDI_UART(serial_number_.c_str(), index);
     }
 }
