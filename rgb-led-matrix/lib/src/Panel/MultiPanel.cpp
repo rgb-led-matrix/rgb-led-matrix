@@ -79,7 +79,7 @@ namespace rgb_matrix {
     void MultiPanel::show() {
         lock_.lock();
         // TODO: Use scheduler
-        // TODO: Convert pixel_ to panels_[x]->panel->set_pixel
+        // TODO: Convert pixel_ to panels_[x]->panel->set_pixel (implement runnables?)
         // TODO: Call show for every panel
         lock_.unlock();
     }
