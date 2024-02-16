@@ -25,7 +25,6 @@ namespace rgb_matrix {
                 void show();
 
                 // Use these before calling SetPixel! (Has no effect until after.)
-                //  We are stuck with these here, because we are hiding Framebuffer/RGB. (Templating)
                 void set_brightness(uint8_t brightness);
                 void map_wavelength(uint8_t color, Color index, uint16_t value);
 

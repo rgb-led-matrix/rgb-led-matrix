@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <map>
 #include <math.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
@@ -24,7 +25,7 @@ namespace rgb_matrix {
         build_table();
 
         buffer_ = new T *[cfg->get_cols()];
-        for (int i = 0; i < cfg->get_cols(); i++)
+        for (uint32_t i = 0; i < cfg->get_cols(); i++)
             buffer_[i] = new T[cfg->get_rows()];
 
         brightness_ = 100;
@@ -37,10 +38,29 @@ namespace rgb_matrix {
     }
 
     template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
+        lock_.lock();
+        uint8_t old = brightness_;
         brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
+
+        std::map<uint16_t, uint8_t> lookup[3];
+        for (uint32_t i = 0; i < 256; i++) {
+            lookup[0][lut[old][i].red] = i;
+            lookup[1][lut[old][i].green] = i;
+            lookup[2][lut[old][i].blue] = i;
+        }
+
+        for (uint32_t i = 0; i < cfg_->get_cols(); i++) {
+            for (uint32_t j = 0; j < cfg_->get_rows(); i++) {
+                buffer_[i][j].red = lut[brightness_][lookup[0][buffer_[i][j].red]].red;
+                buffer_[i][j].green = lut[brightness_][lookup[1][buffer_[i][j].green]].green;
+                buffer_[i][j].blue = lut[brightness_][lookup[2][buffer_[i][j].blue]].blue;
+            }
+        }
+        lock_.unlock();
     }
 
     template <typename T> void Framebuffer<T>::map_wavelength(uint8_t color, Color index, uint16_t value) {
+        lock_.lock();
         GAMMA g = cfg_->get_gamma();
 
         for (int j = 0; j < 100; j++) {
@@ -59,14 +79,13 @@ namespace rgb_matrix {
                     break;
             }
         }
+        lock_.unlock();
     }
 
     template <typename T> cord_t Framebuffer<T>::get_size() {
         cord_t result;
-
         result.x = cfg_->get_cols();
         result.y = cfg_->get_rows();
-
         return result;
     }
 
@@ -93,15 +112,18 @@ namespace rgb_matrix {
     // Handles dot correction
     template <typename T> inline void Framebuffer<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
         float fr, fg, fb;
-        uint8_t bright =  this->brightness_;
 
         if (pixel == nullptr)
             throw Null_Pointer("Pixel");
+
+        lock_.lock();
+        uint8_t bright =  this->brightness_;
 
         cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
         pixel->red = (uint16_t) round(this->lut[bright][r].red / T::red_max * fr);
         pixel->green = (uint16_t) round(this->lut[bright][g].green / T::green_max * fg);
         pixel->blue = (uint16_t) round(this->lut[bright][b].blue / T::blue_max * fb);
+        lock_.unlock();
     }
 
     template class Framebuffer<RGB48>;
