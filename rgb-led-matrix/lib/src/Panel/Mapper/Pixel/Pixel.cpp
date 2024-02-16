@@ -83,7 +83,6 @@ namespace rgb_matrix {
         send(locations_[x][y], pixel);
     }
 
-    // TODO: ???
     void Pixel::send(cord_t cord, pixel_t pixel) {
         panel_->SetPixel(cord.x, cord.y, pixel.red, pixel.green, pixel.blue);
     }
