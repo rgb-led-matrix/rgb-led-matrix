@@ -21,10 +21,9 @@ namespace rgb_matrix {
     }
 
     MultiPanel::~MultiPanel() {
-        // TODO:
+        // TODO: Release memory panels_ and pixel_
     }
 
-    // TODO: Check for duplicates!
     bool MultiPanel::map_panel(int x, int y, CFG *cfg) {
         Panel_t *ptr = new Panel_t;
 
@@ -36,18 +35,16 @@ namespace rgb_matrix {
         ptr->y = y;
         ptr->panel = RGBMatrix::CreatePanel(cfg);
 
-        if (ptr->panel == nullptr)
-            throw Null_Pointer("RGBMatrix");
-
+        lock_.lock();
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
-            if ((*it)->cfg == ptr->cfg)
+            if ((*it)->cfg == ptr->cfg) {
+                // TODO: release memory
                 return false;
+            }
         }
 
-        lock_.lock();
         panel_->push_back(ptr);
         lock_.unlock();
-
         return true;
     }
 
@@ -67,27 +64,30 @@ namespace rgb_matrix {
 
     cord_t MultiPanel::get_size() {
         cord_t result;
-
         result.x = width_;
         result.y = height_;
-
         return result;
     }
 
     void MultiPanel::show() {
         lock_.lock();
-
+        // TODO: Convert pixel_ to panels_[x]->panel->set_pixel
+        // TODO: Call show for every panel
         lock_.unlock();
     }
 
 
     void MultiPanel::set_brightness(uint8_t brightness) {
+        lock_.lock();
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->set_brightness(brightness);
+        lock_.unlock();
     }
 
     void MultiPanel::map_wavelength(uint8_t color, Color index, uint16_t value) {
+        lock_.lock();
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->map_wavelength(color, index, value);
+        lock_.unlock();
     }
 }
