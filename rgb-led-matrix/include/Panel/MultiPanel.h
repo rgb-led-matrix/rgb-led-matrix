@@ -20,11 +20,10 @@ namespace rgb_matrix {
                 ~MultiPanel();
 
                 bool map_panel(int x, int y, CFG *cfg);
+
                 void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
                 cord_t get_size();
                 void show();
-
-                // Use these before calling SetPixel! (Has no effect until after.)
                 void set_brightness(uint8_t brightness);
                 void map_wavelength(uint8_t color, Color index, uint16_t value);
 

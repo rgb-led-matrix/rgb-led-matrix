@@ -39,16 +39,18 @@ namespace rgb_matrix {
 
     template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
         lock_.lock();
-        uint8_t old = brightness_;
-        brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
-
+        // Capture the old values
         std::map<uint16_t, uint8_t> lookup[3];
         for (uint32_t i = 0; i < 256; i++) {
-            lookup[0][lut[old][i].red] = i;
-            lookup[1][lut[old][i].green] = i;
-            lookup[2][lut[old][i].blue] = i;
+            lookup[0][lut[brightness_][i].red] = i;
+            lookup[1][lut[brightness_][i].green] = i;
+            lookup[2][lut[brightness_][i].blue] = i;
         }
 
+        // Make the update
+        brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
+
+        // Apply the new values to the buffer
         for (uint32_t i = 0; i < cfg_->get_cols(); i++) {
             for (uint32_t j = 0; j < cfg_->get_rows(); i++) {
                 buffer_[i][j].red = lut[brightness_][lookup[0][buffer_[i][j].red]].red;
@@ -63,6 +65,26 @@ namespace rgb_matrix {
         lock_.lock();
         GAMMA g = cfg_->get_gamma();
 
+        // Capture the old values from the table
+        std::map<uint16_t, uint8_t> lookup;
+        for (uint32_t i = 0; i < 256; i++) {
+            switch (index) {
+                case Color::Red:
+                    lookup[lut[brightness_][i].red] = i;
+                    break;
+                case Color::Green:
+                    lookup[lut[brightness_][i].green] = i;
+                    break;
+                case Color::Blue:
+                    lookup[lut[brightness_][i].blue] = i;
+                    break;
+                default:
+                    throw Unknown_Type("Color");
+                    break;
+            }
+        }
+
+        // Make the update to the table
         for (int j = 0; j < 100; j++) {
             switch (index) {
                 case Color::Red:
@@ -77,6 +99,26 @@ namespace rgb_matrix {
                 default:
                     throw Unknown_Type("Color");
                     break;
+            }
+        }
+
+        // Apply new values to the buffer
+        for (uint32_t i = 0; i < cfg_->get_cols(); i++) {
+            for (uint32_t j = 0; j < cfg_->get_rows(); i++) {
+                switch (index) {
+                    case Color::Red:
+                        buffer_[i][j].red = lut[brightness_][lookup[buffer_[i][j].red]].red;
+                        break;
+                    case Color::Green:
+                        buffer_[i][j].green = lut[brightness_][lookup[buffer_[i][j].green]].green;
+                        break;
+                    case Color::Blue:
+                        buffer_[i][j].blue = lut[brightness_][lookup[buffer_[i][j].blue]].blue;
+                        break;
+                    default:
+                        throw Unknown_Type("Color");
+                        break;
+                }
             }
         }
         lock_.unlock();

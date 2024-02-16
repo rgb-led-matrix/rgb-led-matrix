@@ -76,8 +76,7 @@ namespace rgb_matrix {
                 break;
         }
 
-        cord_t cord = locations_[x][y];
-        panel_->SetPixel(cord, pixel);
+        panel_->SetPixel(locations_[x][y], pixel);
     }
 
     void Pixel::map() {
