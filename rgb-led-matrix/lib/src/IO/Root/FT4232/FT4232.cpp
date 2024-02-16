@@ -12,7 +12,6 @@ namespace rgb_matrix {
     FT4232::FT4232(const char *serial_number) {
         if (serial_number == nullptr)
             throw Null_Pointer("serial number");
-
         serial_number_ = std::string(serial_number);
     }
 
