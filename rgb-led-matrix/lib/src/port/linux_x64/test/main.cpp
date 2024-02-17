@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
     FT4232 *root = new FT4232("000");
     Node *node = root->GetNode(0);
     RP2040_UART *protocol = new RP2040_UART(node);
-    CFG *cfg = new CFG(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, rgb_matrix::Panel_Type::HUB75, 8, gamma);
+    CFG *cfg = new CFG(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, gamma);
     Single_Panel *panel = RGBMatrix::CreatePanel(cfg);
     MultiPanel *frame[2] = { new MultiPanel(32, 16), new MultiPanel(32, 16) };
 

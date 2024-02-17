@@ -4,11 +4,6 @@
 #include <stdint.h>
 
 namespace rgb_matrix {
-    enum Panel_Type {
-        STANDARD = 0,
-        HUB75 = 1,
-    };
-
     struct cord_t {
         int x;
         int y;

@@ -8,7 +8,7 @@
 namespace rgb_matrix {
     class CFG {
         public:
-            CFG(int rows, int cols, Data_Format_ID data_format, Panel_Type type, uint8_t scan, GAMMA gamma);
+            CFG(int rows, int cols, Data_Format_ID data_format, GAMMA gamma);
 
             DOTCorrect& get_dot();
             GAMMA& get_gamma();
