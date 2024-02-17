@@ -3,7 +3,7 @@
 
 #include <queue>
 #include <stdint.h>
-#include <Panel/Frame.h>
+#include <Frame/Frame.h>
 
 namespace rgb_matrix {
     // Optional construct for managing framerate
