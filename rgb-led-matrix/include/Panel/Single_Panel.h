@@ -8,7 +8,7 @@ namespace rgb_matrix {
     // Pure interface for Single Panel
     class Single_Panel : public Mapper {
         public:
-            virtual void show(Protocol *protocol) = 0;
+            virtual void show(Protocol *protocol, bool threadless = false) = 0;
     };
 }
 #endif

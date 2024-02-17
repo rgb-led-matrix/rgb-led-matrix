@@ -79,7 +79,7 @@ namespace rgb_matrix {
         lock_.lock();
         // TODO: Convert pixel_ to panels_[x]->panel->set_pixel (implement runnables?)
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
-            (*it)->panel->show((*it)->protocol);
+            (*it)->panel->show((*it)->protocol, true);
         scheduler_->start();
         while(!scheduler_->isFinished());   // TODO: Sleep
         lock_.unlock();

@@ -14,7 +14,7 @@ namespace rgb_matrix {
             ~Single_Panel_Internal();
 
             void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
-            void show(Protocol *protocol);
+            void show(Protocol *protocol, bool threadless = false);
             cord_t get_size();
             
             void set_brightness(uint8_t brightness);

@@ -132,16 +132,20 @@ namespace rgb_matrix {
         return result;
     }
 
-    template<typename T> void Single_Panel_Internal<T>::show(Protocol *protocol) {
+    template<typename T> void Single_Panel_Internal<T>::show(Protocol *protocol, bool threadless) {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
-            
-        Scheduler *scheduler_ = new Scheduler();
-        scheduler_->add_protocol(protocol);
-        protocol->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
-        scheduler_->start();
-        while(!scheduler_->isFinished());   // TODO: Sleep
-        delete scheduler_;
+        
+        if (threadless)
+            protocol->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
+        else {
+            Scheduler *scheduler_ = new Scheduler();
+            scheduler_->add_protocol(protocol);
+            protocol->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
+            scheduler_->start();
+            while(!scheduler_->isFinished());   // TODO: Sleep
+            delete scheduler_;
+        }
     }
 
     template <typename T> void Single_Panel_Internal<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
