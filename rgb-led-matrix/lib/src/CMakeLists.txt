@@ -1,6 +1,7 @@
 add_subdirectory(port)
-add_subdirectory(Framebuffer)
 add_subdirectory(CFG)
 add_subdirectory(IO)
 add_subdirectory(Panel)
 add_subdirectory(Exception)
+add_subdirectory(Mapper)
+add_subdirectory(Frame)

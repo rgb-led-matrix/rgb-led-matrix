@@ -1,7 +1,17 @@
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
+#include <Exception/Illegal.h>
 
 namespace rgb_matrix {
-    void RP2040_UART::send(uint8_t *buf, uint32_t size, Node *node) {
+    // Do not use this!
+    RP2040_UART::RP2040_UART() {
+        throw Illegal("RP2040_UART");
+    }
+
+    RP2040_UART::RP2040_UART(Node *node) : Protocol(node) {
+        throw String_Exception("Not finished");
+    }
+
+    void RP2040_UART::send(uint8_t *buf, uint32_t size) {
         /*uint32_t size = sizeof(T) * object->cfg_->get_cols() * object->cfg_->get_rows();
         char *start = (char *) "s";
         char *idle = (char *) "i";
@@ -38,5 +48,9 @@ namespace rgb_matrix {
     Protocol::Status RP2040_UART::get_protocol_status() {
         // TODO
         return Protocol::Status::NOT_FINISHED;
+    }
+
+    void RP2040_UART::acknowledge(Protocol::Status status) {
+        // TODO
     }
 }

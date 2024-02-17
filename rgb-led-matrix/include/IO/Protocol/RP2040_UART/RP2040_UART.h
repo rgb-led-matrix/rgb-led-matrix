@@ -8,8 +8,14 @@
 namespace rgb_matrix {
     class RP2040_UART : public Protocol {
         public:
-            void send(uint8_t *buf, uint32_t size, Node *node);
+            RP2040_UART(Node *node);
+
+            void send(uint8_t *buf, uint32_t size);
             Protocol::Status get_protocol_status();
+            void acknowledge(Protocol::Status);
+        
+        protected:
+            RP2040_UART();
     };
 }
 #endif

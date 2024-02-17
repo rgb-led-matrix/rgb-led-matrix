@@ -1,7 +1,6 @@
 #ifndef FTDI_UART_H
 #define FTDI_UART_H
 
-#include <mutex>
 #include <string>
 #include <IO/Node/Node.h>
 
@@ -10,13 +9,16 @@ namespace rgb_matrix {
         public:
             FTDI_UART(const char *serial_number, uint8_t chan_num);
 
-            void set_baud(uint32_t baud);
-            void send(uint8_t *buf, uint32_t size);
+            // For Protocol
             void write(char *buf, uint32_t len);
             int read(char **buf, uint32_t len, uint32_t timeout_us);
 
+            // For Application (main)
+            void set_baud(uint32_t baud);
+
         protected:
-            std::mutex lock_;
+            FTDI_UART();
+            
             std::string serial_number_;
     };
 }

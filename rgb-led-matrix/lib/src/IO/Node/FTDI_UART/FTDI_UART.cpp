@@ -1,12 +1,16 @@
-#include <algorithm>
 #include <chrono>
 #include <stdio.h>
 #include <ftd2xx.h>
 #include <Exception/Null_Pointer.h>
+#include <Exception/Illegal.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
-using std::min;
 
 namespace rgb_matrix {
+    // Do not use this!
+    FTDI_UART::FTDI_UART() {
+        throw Illegal("FTDI_UART");
+    }
+
     FTDI_UART::FTDI_UART(const char *serial_number, uint8_t chan_num) {
         FT_HANDLE handle;
         char str[100];
@@ -88,23 +92,9 @@ namespace rgb_matrix {
     void FTDI_UART::set_baud(uint32_t baud) {
         FT_HANDLE handle;
 
-        lock_.lock();
-
         if (FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle) == FT_OK) {
             FT_SetBaudRate(handle, baud);
             FT_Close(handle);
         }
-
-        lock_.unlock();
-    }
-
-
-    void FTDI_UART::send(uint8_t *buf, uint32_t size) {
-        lock_.lock();
-        if (protocol_ == nullptr)
-            throw Null_Pointer("Protocol");
-
-        protocol_->send(buf, size, this);
-        lock_.unlock();
     }
 }

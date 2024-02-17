@@ -13,11 +13,11 @@ target_link_directories(rock_pi_s PUBLIC
     ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv8_hard-float/build)
 
 target_link_libraries(rock_pi_s
-    Framebuffer
     Exception
     CFG
     IO
     Panel
+    Frame
     ftd2xx
     pthread)
 

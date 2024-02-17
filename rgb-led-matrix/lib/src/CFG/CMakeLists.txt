@@ -1,4 +1,6 @@
 add_library(CFG INTERFACE)
 
 target_sources(CFG INTERFACE
-    DOTCorrect.cpp)
+    CFG.cpp
+    Types/DOTCorrect.cpp
+    Types/GAMMA.cpp)

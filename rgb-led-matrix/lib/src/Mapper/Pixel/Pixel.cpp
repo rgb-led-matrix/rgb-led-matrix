@@ -1,20 +1,20 @@
 #include <Exception/Null_Pointer.h>
-#include <Panel/Panel_Pixel_Mapper.h>
+#include <Exception/Illegal.h>
+#include <Exception/Unknown_Type.h>
+#include <Mapper/Pixel/Pixel.h>
 
 namespace rgb_matrix {
     // Do not use this!    
-    Panel_Pixel_Mapper::Panel_Pixel_Mapper() :panel_(nullptr) {
-        // Do nothing
+    Pixel::Pixel() : panel_(nullptr) {
+        throw Illegal("Panel Pixel Mapper");
     }
 
-    Panel_Pixel_Mapper::Panel_Pixel_Mapper(Panel *panel) {
-        cord_t size = panel->get_size();
-
+    Pixel::Pixel(Panel *panel) {
         if (panel == nullptr)
             throw Null_Pointer("Panel");
 
+        cord_t size = panel->get_size();
         panel_ = panel;
-
         locations_ = new cord_t *[size.x];
         orders_ = new Color_Order *[size.x];
         for (int i = 0; i < size.x; i++) {
@@ -25,7 +25,7 @@ namespace rgb_matrix {
         map();
     }   
 
-    Panel_Pixel_Mapper::~Panel_Pixel_Mapper() {
+    Pixel::~Pixel() {
         for (int i = 0; i < panel_->get_size().x; i++) {
             delete locations_[i];
             delete orders_[i];
@@ -34,7 +34,7 @@ namespace rgb_matrix {
         delete orders_;
     }
 
-    void Panel_Pixel_Mapper::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+    void Pixel::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
         pixel_t pixel;
 
         if (x < 0 || x >= panel_->get_size().x || y < 0 || y >= panel_->get_size().y)
@@ -67,41 +67,27 @@ namespace rgb_matrix {
                 pixel.blue = green;
                 break;
             case Color_Order::RGB:
-            default:
                 pixel.red = red;
                 pixel.green = green;
                 pixel.blue = blue;
                 break;
+            default:
+                throw Unknown_Type("Color_Order");
+                break;
         }
 
-        SetPixel(locations_[x][y], pixel);
+        panel_->SetPixel(locations_[x][y], pixel);
     }
 
-    void Panel_Pixel_Mapper::SetPixel(cord_t cord, pixel_t pixel) {
-        panel_->SetPixel(cord.x, cord.y, pixel.red, pixel.green, pixel.blue);
-    }
-
-    void Panel_Pixel_Mapper::show() {
-        panel_->show();
-    }
-
-    Node *Panel_Pixel_Mapper::get_node() {
-        return panel_->get_node();
-    }
-
-    void Panel_Pixel_Mapper::set_brightness(uint8_t brightness) {
+    void Pixel::set_brightness(uint8_t brightness) {
         panel_->set_brightness(brightness);
     }
 
-    void Panel_Pixel_Mapper::map_wavelength(uint8_t color, Color index, uint16_t value) {
+    void Pixel::map_wavelength(uint8_t color, Color index, uint16_t value) {
         panel_->map_wavelength(color, index, value);
     }
 
-    cord_t Panel_Pixel_Mapper::get_size() {
-        return panel_->get_size();
-    }
-
-    void Panel_Pixel_Mapper::map() {
+    void Pixel::map() {
         for (int i = 0; i < panel_->get_size().x; i++) {
             for (int j = 0; j < panel_->get_size().y; j++) {
                 locations_[i][j] = map_location(i, j);
@@ -109,4 +95,4 @@ namespace rgb_matrix {
             }
         }
     }
-}  // namespace rgb_matrix
+}
