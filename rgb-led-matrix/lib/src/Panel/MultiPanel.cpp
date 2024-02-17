@@ -14,10 +14,7 @@ namespace rgb_matrix {
     MultiPanel::MultiPanel(int width, int height) : width_(width), height_(height) {
         throw String_Exception("Not finished");
 
-        // TODO:
-
         scheduler_ = new Scheduler();
-
         pixel_ = new pixel_t *[width_];
         for (int i = 0; i < width_; i++)
             pixel_[i] = new pixel_t[height_];
@@ -25,7 +22,7 @@ namespace rgb_matrix {
 
     MultiPanel::~MultiPanel() {
         // TODO: Release memory panels_ and pixel_
-        // TODO: Release scheduler
+        delete scheduler_;
     }
 
     bool MultiPanel::map_panel(int x, int y, Single_Panel *panel, Protocol *protocol) {
@@ -80,15 +77,18 @@ namespace rgb_matrix {
 
     void MultiPanel::show() {
         lock_.lock();
-        // TODO: Use scheduler
         // TODO: Convert pixel_ to panels_[x]->panel->set_pixel (implement runnables?)
-        // TODO: Call show for every panel
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
+            (*it)->panel->show((*it)->protocol);
+        scheduler_->start();
+        while(!scheduler_->isFinished());   // TODO: Sleep
         lock_.unlock();
     }
 
 
     void MultiPanel::set_brightness(uint8_t brightness) {
         lock_.lock();
+        // Implement runnables?
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->set_brightness(brightness);
         lock_.unlock();
@@ -96,6 +96,7 @@ namespace rgb_matrix {
 
     void MultiPanel::map_wavelength(uint8_t color, Color index, uint16_t value) {
         lock_.lock();
+        // Implement runnables?
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->map_wavelength(color, index, value);
         lock_.unlock();

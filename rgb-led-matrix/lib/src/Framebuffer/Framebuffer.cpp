@@ -9,6 +9,7 @@
 #include <Framebuffer/RGB/RGB48.h>
 #include <Framebuffer/RGB/RGB_555.h>
 #include <Framebuffer/RGB/RGB_222.h>
+#include <IO/Scheduler/Scheduler.h>
 using std::min;
 using std::max;
 
@@ -134,7 +135,13 @@ namespace rgb_matrix {
     template<typename T> void Framebuffer<T>::show(Protocol *protocol) {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
+            
+        Scheduler *scheduler_ = new Scheduler();
+        scheduler_->add_protocol(protocol);
         protocol->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
+        scheduler_->start();
+        while(!scheduler_->isFinished());   // TODO: Sleep
+        delete scheduler_;
     }
 
     template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
