@@ -1,4 +1,5 @@
 #include <chrono>
+#include <thread>
 #include <Panel/MultiPanel_Internal.h>
 #include <Exception/Illegal.h>
 #include <Exception/Null_Pointer.h>
@@ -21,7 +22,12 @@ namespace rgb_matrix {
     }
 
     MultiPanel_Internal::~MultiPanel_Internal() {
-        // TODO: Release memory panels_ and pixel_
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
+            delete *it;
+        panel_->clear();
+        for (int i = 0; i < width_; i++)
+            delete pixel_[i];
+        delete pixel_;
         delete scheduler_;
     }
 
@@ -81,7 +87,7 @@ namespace rgb_matrix {
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->show((*it)->protocol, true);
         scheduler_->start();
-        while(!scheduler_->isFinished());   // TODO: Sleep
+        while(!scheduler_->isFinished()) std::this_thread::sleep_for (std::chrono::seconds(1));
         lock_.unlock();
     }
 

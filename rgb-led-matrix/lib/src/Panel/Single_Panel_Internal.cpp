@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <map>
+#include <thread>
+#include <chrono>
 #include <math.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
@@ -143,7 +145,7 @@ namespace rgb_matrix {
             scheduler_->add_protocol(protocol);
             protocol->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
             scheduler_->start();
-            while(!scheduler_->isFinished());   // TODO: Sleep
+            while(!scheduler_->isFinished()) std::this_thread::sleep_for (std::chrono::seconds(1));
             delete scheduler_;
         }
     }

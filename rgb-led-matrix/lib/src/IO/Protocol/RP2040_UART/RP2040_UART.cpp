@@ -8,7 +8,7 @@ namespace rgb_matrix {
     }
 
     RP2040_UART::RP2040_UART(Node *node) : Protocol(node) {
-        throw String_Exception("Not finsihed");
+        throw String_Exception("Not finished");
     }
 
     void RP2040_UART::send(uint8_t *buf, uint32_t size) {

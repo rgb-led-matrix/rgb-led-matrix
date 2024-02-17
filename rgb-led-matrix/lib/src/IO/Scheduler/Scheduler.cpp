@@ -1,4 +1,5 @@
-#include "IO/Scheduler/Scheduler.h"
+#include <chrono>
+#include <IO/Scheduler/Scheduler.h>
 
 namespace rgb_matrix {
     Scheduler::Scheduler() {
@@ -9,6 +10,7 @@ namespace rgb_matrix {
 
     Scheduler::~Scheduler() {
         shutdown();
+        protocols_.clear();
     }
 
     bool Scheduler::start() {
@@ -68,7 +70,7 @@ namespace rgb_matrix {
             // Wait for sync point
             for (std::list<Protocol *>::iterator it = object->protocols_.begin(); it != object->protocols_.end(); ++it) {
                 while((*it)->get_protocol_status() == Protocol::Status::NOT_FINISHED) {
-                    // TODO: Sleep
+                    std::this_thread::sleep_for (std::chrono::seconds(1));
                 }
 
                 isFinished &= (*it)->get_protocol_status() == Protocol::Status::FINISHED;
