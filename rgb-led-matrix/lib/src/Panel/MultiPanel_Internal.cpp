@@ -1,5 +1,5 @@
 #include <chrono>
-#include <Panel/MultiPanel.h>
+#include <Panel/MultiPanel_Internal.h>
 #include <Exception/Illegal.h>
 #include <Exception/Null_Pointer.h>
 #include <RGBMatrix.h>
@@ -7,11 +7,11 @@
 
 namespace rgb_matrix {
     // Do not use this!
-    MultiPanel::MultiPanel() {
-        throw Illegal("MultiPanel Panel");
+    MultiPanel_Internal::MultiPanel_Internal() {
+        throw Illegal("MultiPanel_Internal Panel");
     }
 
-    MultiPanel::MultiPanel(int width, int height) : width_(width), height_(height) {
+    MultiPanel_Internal::MultiPanel_Internal(int width, int height) : width_(width), height_(height) {
         throw String_Exception("Not finished");
 
         scheduler_ = new Scheduler();
@@ -20,12 +20,12 @@ namespace rgb_matrix {
             pixel_[i] = new pixel_t[height_];
     }
 
-    MultiPanel::~MultiPanel() {
+    MultiPanel_Internal::~MultiPanel_Internal() {
         // TODO: Release memory panels_ and pixel_
         delete scheduler_;
     }
 
-    bool MultiPanel::map_panel(int x, int y, Single_Panel *panel, Protocol *protocol) {
+    bool MultiPanel_Internal::map_panel(int x, int y, Single_Panel *panel, Protocol *protocol) {
         Panel_t *ptr = new Panel_t;
 
         if (panel == nullptr)
@@ -54,7 +54,7 @@ namespace rgb_matrix {
         return true;
     }
 
-    void MultiPanel::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+    void MultiPanel_Internal::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
         cord_t cord;
         pixel_t pixel;
 
@@ -68,14 +68,14 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    cord_t MultiPanel::get_size() {
+    cord_t MultiPanel_Internal::get_size() {
         cord_t result;
         result.x = width_;
         result.y = height_;
         return result;
     }
 
-    void MultiPanel::show() {
+    void MultiPanel_Internal::show() {
         lock_.lock();
         // TODO: Convert pixel_ to panels_[x]->panel->set_pixel (implement runnables?)
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
@@ -86,7 +86,7 @@ namespace rgb_matrix {
     }
 
 
-    void MultiPanel::set_brightness(uint8_t brightness) {
+    void MultiPanel_Internal::set_brightness(uint8_t brightness) {
         lock_.lock();
         // Implement runnables?
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
@@ -94,7 +94,7 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    void MultiPanel::map_wavelength(uint8_t color, Color index, uint16_t value) {
+    void MultiPanel_Internal::map_wavelength(uint8_t color, Color index, uint16_t value) {
         lock_.lock();
         // Implement runnables?
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)

@@ -4,22 +4,22 @@
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
 #include <Exception/Unknown_Type.h>
-#include <Framebuffer/Framebuffer.h>
-#include <Framebuffer/RGB/RGB24.h>
-#include <Framebuffer/RGB/RGB48.h>
-#include <Framebuffer/RGB/RGB_555.h>
-#include <Framebuffer/RGB/RGB_222.h>
+#include <Panel/Single_Panel_Internal.h>
+#include <Panel/RGB/RGB24.h>
+#include <Panel/RGB/RGB48.h>
+#include <Panel/RGB/RGB_555.h>
+#include <Panel/RGB/RGB_222.h>
 #include <IO/Scheduler/Scheduler.h>
 using std::min;
 using std::max;
 
 namespace rgb_matrix {
     // Do not use this!    
-    template <typename T> Framebuffer<T>::Framebuffer() : cfg_(nullptr), buffer_(NULL) {
-        throw Illegal("Framebuffer");
+    template <typename T> Single_Panel_Internal<T>::Single_Panel_Internal() : cfg_(nullptr), buffer_(NULL) {
+        throw Illegal("Single Panel Internal");
     }
 
-    template <typename T> Framebuffer<T>::Framebuffer(CFG *cfg) : cfg_(cfg) {
+    template <typename T> Single_Panel_Internal<T>::Single_Panel_Internal(CFG *cfg) : cfg_(cfg) {
         if (cfg == nullptr)
             throw Null_Pointer("CFG");
 
@@ -32,13 +32,13 @@ namespace rgb_matrix {
         brightness_ = 100;
     }
 
-    template <typename T> Framebuffer<T>::~Framebuffer() {
+    template <typename T> Single_Panel_Internal<T>::~Single_Panel_Internal() {
         for (int i = 0; i < cfg_->get_cols(); i++)
             delete buffer_[i];
         delete buffer_;
     }
 
-    template <typename T> void Framebuffer<T>::set_brightness(uint8_t brightness) {
+    template <typename T> void Single_Panel_Internal<T>::set_brightness(uint8_t brightness) {
         lock_.lock();
         // Capture the old values
         std::map<uint16_t, uint8_t> lookup[3];
@@ -62,7 +62,7 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    template <typename T> void Framebuffer<T>::map_wavelength(uint8_t color, Color index, uint16_t value) {
+    template <typename T> void Single_Panel_Internal<T>::map_wavelength(uint8_t color, Color index, uint16_t value) {
         lock_.lock();
         GAMMA g = cfg_->get_gamma();
 
@@ -125,14 +125,14 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    template <typename T> cord_t Framebuffer<T>::get_size() {
+    template <typename T> cord_t Single_Panel_Internal<T>::get_size() {
         cord_t result;
         result.x = cfg_->get_cols();
         result.y = cfg_->get_rows();
         return result;
     }
 
-    template<typename T> void Framebuffer<T>::show(Protocol *protocol) {
+    template<typename T> void Single_Panel_Internal<T>::show(Protocol *protocol) {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
             
@@ -144,7 +144,7 @@ namespace rgb_matrix {
         delete scheduler_;
     }
 
-    template <typename T> void Framebuffer<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+    template <typename T> void Single_Panel_Internal<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
         T **ptr = (T **) buffer_;
 
         if (x > 0 && x < cfg_->get_cols() && y > 0 && y < cfg_->get_rows())
@@ -152,7 +152,7 @@ namespace rgb_matrix {
     }
 
     // Handles brightness and gamma
-    template <typename T> void Framebuffer<T>::build_table() {
+    template <typename T> void Single_Panel_Internal<T>::build_table() {
         for (uint32_t i = 0; i < 256; i++) {
             map_wavelength(i, Color::Red, i * 65536 / 256);
             map_wavelength(i, Color::Green, i * 65536 / 256);
@@ -161,7 +161,7 @@ namespace rgb_matrix {
     }
 
     // Handles dot correction
-    template <typename T> inline void Framebuffer<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
+    template <typename T> inline void Single_Panel_Internal<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
         float fr, fg, fb;
 
         if (pixel == nullptr)
@@ -177,8 +177,8 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    template class Framebuffer<RGB48>;
-    template class Framebuffer<RGB24>;
-    template class Framebuffer<RGB_555>;
-    template class Framebuffer<RGB_222>;
+    template class Single_Panel_Internal<RGB48>;
+    template class Single_Panel_Internal<RGB24>;
+    template class Single_Panel_Internal<RGB_555>;
+    template class Single_Panel_Internal<RGB_222>;
 }

@@ -11,8 +11,8 @@ int main(int argc, char **argv) {
     Node *node = root->GetNode(0);
     RP2040_UART *protocol = new RP2040_UART(node);
     CFG *cfg = new CFG(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, gamma);
-    Single_Panel *panel = RGBMatrix::CreatePanel(cfg);
-    MultiPanel *frame[2] = { new MultiPanel(32, 16), new MultiPanel(32, 16) };
+    Single_Panel *panel = RGBMatrix::Create_Single_Panel(cfg);
+    MultiPanel *frame[2] = { RGBMatrix::Create_MultiPanel(32, 16), RGBMatrix::Create_MultiPanel(32, 16) };
 
     cfg->get_dot().set(0, 10, 255, 128, 0, 0.5, 1.0, 0.9);
 
