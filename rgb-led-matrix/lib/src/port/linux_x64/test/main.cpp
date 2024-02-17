@@ -3,6 +3,7 @@
 #include <IO/Root/FT4232/FT4232.h>
 #include <Panel/MultiPanel.h>
 #include <CFG/CFG.h>
+#include <Frame/Frame.h>
 using namespace rgb_matrix;
 
 int main(int argc, char **argv) {
@@ -13,6 +14,7 @@ int main(int argc, char **argv) {
     CFG *cfg = new CFG(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, gamma);
     Single_Panel *panel = RGBMatrix::Create_Single_Panel(cfg);
     MultiPanel *frame[2] = { RGBMatrix::Create_MultiPanel(32, 16), RGBMatrix::Create_MultiPanel(32, 16) };
+    Frame *f = new Frame(panel, protocol);
 
     cfg->get_dot().set(0, 10, 255, 128, 0, 0.5, 1.0, 0.9);
 
@@ -25,6 +27,8 @@ int main(int argc, char **argv) {
         frame[0]->show();
         x++;
         y++;
+        if (f->isFree())
+            y++;
     }
 
     return 0;

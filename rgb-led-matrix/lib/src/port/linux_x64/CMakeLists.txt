@@ -14,6 +14,7 @@ target_link_libraries(linux_x64
     CFG
     IO
     Panel
+    Frame
     ftd2xx
     pthread)
 

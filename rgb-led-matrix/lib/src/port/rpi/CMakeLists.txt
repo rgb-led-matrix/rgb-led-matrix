@@ -17,6 +17,7 @@ target_link_libraries(rpi
     CFG
     IO
     Panel
+    Frame
     ftd2xx
     pthread)
 

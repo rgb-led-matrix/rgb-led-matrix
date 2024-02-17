@@ -79,6 +79,14 @@ namespace rgb_matrix {
         panel_->SetPixel(locations_[x][y], pixel);
     }
 
+    void Pixel::set_brightness(uint8_t brightness) {
+        panel_->set_brightness(brightness);
+    }
+
+    void Pixel::map_wavelength(uint8_t color, Color index, uint16_t value) {
+        panel_->map_wavelength(color, index, value);
+    }
+
     void Pixel::map() {
         for (int i = 0; i < panel_->get_size().x; i++) {
             for (int j = 0; j < panel_->get_size().y; j++) {

@@ -17,6 +17,7 @@ target_link_libraries(rock_pi_s
     CFG
     IO
     Panel
+    Frame
     ftd2xx
     pthread)
 

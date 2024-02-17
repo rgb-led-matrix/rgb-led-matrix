@@ -26,7 +26,7 @@ namespace rgb_matrix {
         build_table();
 
         buffer_ = new T *[cfg->get_cols()];
-        for (uint32_t i = 0; i < cfg->get_cols(); i++)
+        for (int i = 0; i < cfg->get_cols(); i++)
             buffer_[i] = new T[cfg->get_rows()];
 
         brightness_ = 100;
@@ -52,8 +52,8 @@ namespace rgb_matrix {
         brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
 
         // Apply the new values to the buffer
-        for (uint32_t i = 0; i < cfg_->get_cols(); i++) {
-            for (uint32_t j = 0; j < cfg_->get_rows(); i++) {
+        for (int i = 0; i < cfg_->get_cols(); i++) {
+            for (int j = 0; j < cfg_->get_rows(); i++) {
                 buffer_[i][j].red = lut[brightness_][lookup[0][buffer_[i][j].red]].red;
                 buffer_[i][j].green = lut[brightness_][lookup[1][buffer_[i][j].green]].green;
                 buffer_[i][j].blue = lut[brightness_][lookup[2][buffer_[i][j].blue]].blue;
@@ -104,8 +104,8 @@ namespace rgb_matrix {
         }
 
         // Apply new values to the buffer
-        for (uint32_t i = 0; i < cfg_->get_cols(); i++) {
-            for (uint32_t j = 0; j < cfg_->get_rows(); i++) {
+        for (int i = 0; i < cfg_->get_cols(); i++) {
+            for (int j = 0; j < cfg_->get_rows(); i++) {
                 switch (index) {
                     case Color::Red:
                         buffer_[i][j].red = lut[brightness_][lookup[buffer_[i][j].red]].red;
