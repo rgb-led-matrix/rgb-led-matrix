@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 #include <Panel/Single_Panel.h>
-#include <CFG/types.h>
+#include <CFG/CFG.h>
 
 namespace rgb_matrix {
     // Factory for creating individual panels from configuration

@@ -2,7 +2,7 @@
 #define PANEL_H
 
 #include <stdint.h>
-#include <CFG/types.h>
+#include <CFG/Types/types.h>
 #include <Mapper/Mapper.h>
 #include <IO/Protocol/Protocol.h>
 

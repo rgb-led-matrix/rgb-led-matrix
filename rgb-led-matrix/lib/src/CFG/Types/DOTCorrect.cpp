@@ -1,6 +1,11 @@
-#include "CFG/CFG.h"
+#include <CFG/CFG.h>
+#include <Exception/Illegal.h>
 
 namespace rgb_matrix {
+    // Do not use this!
+    DOTCorrect::DOTCorrect() {
+        throw Illegal("DOT Correct");
+    }
 
     DOTCorrect::DOTCorrect(int r, int c) : rows(r), cols(c) {
         table_ = new float[256 * 3 * rows * cols];
