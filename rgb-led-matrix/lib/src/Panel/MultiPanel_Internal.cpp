@@ -9,8 +9,6 @@ namespace rgb_matrix {
     }
 
     MultiPanel_Internal::MultiPanel_Internal(uint16_t width, uint16_t height) : width_(width), height_(height) {
-        throw String_Exception("Not finished");
-
         scheduler_ = new Scheduler();
         pixel_ = new pixel_t *[width_];
         for (uint16_t i = 0; i < width_; i++)
@@ -79,9 +77,21 @@ namespace rgb_matrix {
 
     void MultiPanel_Internal::show() {
         lock_.lock();
-        // TODO: Convert pixel_ to panels_[x]->panel->set_pixel (implement runnables?)
+
+        // Quick and dirty loop(s)!
+        for (uint16_t x = 0; x < width_; x++) {
+            for (uint16_t y = 0; y < height_; y++) {
+                for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
+                    if (((x >= (*it)->x) &&  (x < ((*it)->x + (*it)->panel->get_size().x))) && ((y >= (*it)->y) &&  (y < ((*it)->y + (*it)->panel->get_size().y)))) {
+                        (*it)->panel->SetPixel(x % (*it)->panel->get_size().x, y % (*it)->panel->get_size().y, pixel_[x][y].red, pixel_[x][y].green, pixel_[x][y].blue);
+                    }
+                }
+            }
+        }
+
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->show((*it)->protocol, false);
+
         scheduler_->start();
         lock_.unlock();
     }
@@ -89,17 +99,21 @@ namespace rgb_matrix {
 
     void MultiPanel_Internal::set_brightness(uint8_t brightness) {
         lock_.lock();
-        // Implement runnables?
+
+        // Quick and dirty loop
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->set_brightness(brightness);
+
         lock_.unlock();
     }
 
     void MultiPanel_Internal::map_wavelength(uint8_t color, Color index, uint16_t value) {
         lock_.lock();
-        // Implement runnables?
+
+        // Quick and dirty loop
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->map_wavelength(color, index, value);
+
         lock_.unlock();
     }
 }
