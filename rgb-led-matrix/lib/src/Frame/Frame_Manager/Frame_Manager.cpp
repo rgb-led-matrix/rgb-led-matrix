@@ -6,8 +6,6 @@ using namespace std::chrono;
 
 namespace rgb_matrix {
     Frame_Manager::Frame_Manager(int framerate, bool isAsync) {
-        String_Exception("Not finished");
-
         if (framerate <= 0 || framerate >= 1000)
             throw Illegal("Framerate");
 
