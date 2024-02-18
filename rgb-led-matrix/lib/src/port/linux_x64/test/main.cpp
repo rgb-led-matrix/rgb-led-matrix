@@ -29,13 +29,13 @@ int main(int argc, char **argv) {
     Frame_Manager *manager = new Frame_Manager();
 
     // Draw (Double Buffered)
-    uint8_t x, y, i = 0;
+    uint8_t x = 0, y = 0, i = 0;
     while (1) {
         if (f[i]->isFree()) {
             f[i]->SetPixel(x, y, 255, 255, 255);
             manager->push_frame(f[i]);
-            x++;
-            y++;
+            x = (x + 1) % 32;
+            y = (y + 1) % 16;
             i = (i + 1) % 2;
         }
     }
