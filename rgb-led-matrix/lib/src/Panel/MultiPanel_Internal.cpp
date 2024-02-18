@@ -106,9 +106,6 @@ namespace rgb_matrix {
     void MultiPanel_Internal::set_brightness(uint8_t brightness) {
         lock_.lock();
 
-        if (--brightness >= 100)
-            throw Illegal("Brightness");
-
         // Quick and dirty loop
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->set_brightness(brightness);

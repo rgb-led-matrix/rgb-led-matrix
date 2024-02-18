@@ -12,6 +12,12 @@ target_include_directories(rpi PUBLIC
 target_link_directories(rpi PUBLIC
     ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv6_hard-float/build)
 
+target_compile_options(rpi PRIVATE
+    -Wall
+    -Werror
+   -O3
+)
+
 target_link_libraries(rpi
     Exception
     CFG
