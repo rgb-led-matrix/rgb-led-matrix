@@ -14,6 +14,7 @@ namespace rgb_matrix {
             void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
             void set_brightness(uint8_t brightness);
             void map_wavelength(uint8_t color, Color index, uint16_t value);
+            void show(Protocol *protocol, bool schedule = true);
 
         protected:
             Pixel();

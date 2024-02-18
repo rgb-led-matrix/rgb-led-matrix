@@ -5,28 +5,9 @@ using std::thread;
 
 namespace rgb_matrix {
     void Scheduler::start() {
-        lock_.lock();
-        worker();
-        lock_.unlock();
-    }
-
-    bool Scheduler::add_protocol(Protocol *protocol) {
-        lock_.lock();
-        for (std::list<Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
-            if ((*it) == protocol) {
-                lock_.unlock();
-                return false;
-            }
-        }
-
-        protocols_.push_back(protocol);
-        lock_.unlock();
-        return true;
-    }
-
-    void Scheduler::worker() {
         bool isFinished = true;
-
+        
+        lock_.lock();
         while (isFinished) {
             // Wait for sync point
             for (std::list<Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
@@ -42,5 +23,20 @@ namespace rgb_matrix {
                 (*it)->acknowledge((*it)->get_protocol_status());
             }
         }
+        lock_.unlock();
+    }
+
+    bool Scheduler::add_protocol(Protocol *protocol) {
+        lock_.lock();
+        for (std::list<Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
+            if ((*it) == protocol) {
+                lock_.unlock();
+                return false;
+            }
+        }
+
+        protocols_.push_back(protocol);
+        lock_.unlock();
+        return true;
     }
 }

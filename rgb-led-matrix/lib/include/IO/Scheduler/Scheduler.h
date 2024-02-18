@@ -8,15 +8,12 @@ using std::list;
 using std::mutex;
 
 namespace rgb_matrix {
-    // Optional construct for syncing multiple Panels
     class Scheduler {
         public:
             void start();
             bool add_protocol(Protocol *protocol);
 
         protected:
-            void worker();
-
             list<Protocol *> protocols_;
             mutex lock_;
     };

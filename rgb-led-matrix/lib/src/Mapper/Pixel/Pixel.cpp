@@ -87,6 +87,10 @@ namespace rgb_matrix {
         panel_->map_wavelength(color, index, value);
     }
 
+    void Pixel::show(Protocol *protocol, bool schedule) {
+        panel_->show(protoocl, schedule);
+    }
+
     void Pixel::map() {
         for (int i = 0; i < panel_->get_size().x; i++) {
             for (int j = 0; j < panel_->get_size().y; j++) {

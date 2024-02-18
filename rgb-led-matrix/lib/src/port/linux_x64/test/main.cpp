@@ -18,24 +18,25 @@ int main(int argc, char **argv) {
     CFG *cfg = new CFG(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, gamma);
     cfg->get_dot().set(0, 10, 255, 128, 0, 0.5, 1.0, 0.9);
 
-    // Create panels
-    Single_Panel *panel = RGBMatrix::Create_Single_Panel(cfg);
+    // Create panels (Double Buffered)
+    Single_Panel *panel[2] = { RGBMatrix::Create_Single_Panel(cfg), RGBMatrix::Create_Single_Panel(cfg) };
     MultiPanel *frame[2] = { RGBMatrix::Create_MultiPanel(32, 16), RGBMatrix::Create_MultiPanel(32, 16) };
-    frame[0]->map_panel(0, 0, panel, protocol);
+    frame[0]->map_panel(0, 0, panel[0], protocol);
+    frame[1]->map_panel(0, 0, panel[1], protocol);
 
-    // Create frame
-    Frame *f = new Frame(frame[0]);
+    // Create frame (Double Buffered)
+    Frame *f[2] = { new Frame(frame[0]), new Frame(frame[1]) };
     Frame_Manager *manager = new Frame_Manager();
-    manager->push_frame(f);
 
-    // Draw
-    uint8_t x, y;
+    // Draw (Double Buffered)
+    uint8_t x, y, i = 0;
     while (1) {
-        if (f->isFree()) {
-            f->SetPixel(x, y, 255, 255, 255);
-            manager->push_frame(f);
+        if (f[i]->isFree()) {
+            f[i]->SetPixel(x, y, 255, 255, 255);
+            manager->push_frame(f[i]);
             x++;
             y++;
+            i = (i + 1) % 2;
         }
     }
 
