@@ -148,7 +148,7 @@ namespace rgb_matrix {
     template <typename T> void Single_Panel_Internal<T>::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
         T **ptr = (T **) buffer_;
 
-        if (x > 0 && x < cfg_->get_cols() && y > 0 && y < cfg_->get_rows())
+        if (x < cfg_->get_cols() && y < cfg_->get_rows())
             MapColors(x, y, red, green, blue, &ptr[x][y]);
     }
 
