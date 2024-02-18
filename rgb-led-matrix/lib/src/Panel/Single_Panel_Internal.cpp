@@ -144,7 +144,7 @@ namespace rgb_matrix {
             Scheduler *scheduler_ = new Scheduler();
             scheduler_->add_protocol(protocol);
             protocol->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
-            scheduler_->start();
+            scheduler_->start(true);
             while(!scheduler_->isFinished()) std::this_thread::sleep_for (std::chrono::seconds(1));
             delete scheduler_;
         }

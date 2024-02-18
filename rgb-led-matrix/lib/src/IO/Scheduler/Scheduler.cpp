@@ -13,14 +13,23 @@ namespace rgb_matrix {
         protocols_.clear();
     }
 
-    bool Scheduler::start() {
+    bool Scheduler::start(bool threadless) {
         lock_.lock();
 
-        if (thread_ == nullptr) {
+        if (!threadless) {
+            if (thread_ == nullptr) {
+                shutdown_ = false;
+                isFinished_ = false;
+                thread_ = new std::thread(&Scheduler::worker_thread, this);
+
+                lock_.unlock();
+                return true;
+            }
+        }
+        else {
             shutdown_ = false;
             isFinished_ = false;
-            thread_ = new std::thread(&Scheduler::worker_thread, this);
-
+            worker_thread(this);
             lock_.unlock();
             return true;
         }

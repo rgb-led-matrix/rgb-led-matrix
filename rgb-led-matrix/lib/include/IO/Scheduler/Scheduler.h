@@ -15,7 +15,7 @@ namespace rgb_matrix {
             Scheduler();
             ~Scheduler();
 
-            bool start();
+            bool start(bool threadless = false);
             void shutdown();
             bool isFinished();
 
