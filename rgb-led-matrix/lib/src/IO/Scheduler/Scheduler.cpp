@@ -1,6 +1,7 @@
 #include <chrono>
 #include <thread>
 #include <IO/Scheduler/Scheduler.h>
+#include <Exception/Null_Pointer.h>
 
 namespace rgb_matrix {
     void Scheduler::start() {
@@ -26,6 +27,9 @@ namespace rgb_matrix {
     }
 
     bool Scheduler::add_protocol(Protocol *protocol) {
+        if (protocol == nullptr)
+            throw Null_Pointer("Protocol");
+
         lock_.lock();
         for (std::list<Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
             if ((*it) == protocol) {
