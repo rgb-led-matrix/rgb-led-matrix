@@ -1,10 +1,6 @@
-#include <chrono>
-#include <thread>
 #include <Panel/MultiPanel_Internal.h>
 #include <Exception/Illegal.h>
 #include <Exception/Null_Pointer.h>
-#include <RGBMatrix.h>
-#include <CFG/CFG.h>
 
 namespace rgb_matrix {
     // Do not use this!
@@ -12,12 +8,12 @@ namespace rgb_matrix {
         throw Illegal("MultiPanel_Internal Panel");
     }
 
-    MultiPanel_Internal::MultiPanel_Internal(int width, int height) : width_(width), height_(height) {
+    MultiPanel_Internal::MultiPanel_Internal(uint16_t width, uint16_t height) : width_(width), height_(height) {
         throw String_Exception("Not finished");
 
         scheduler_ = new Scheduler();
         pixel_ = new pixel_t *[width_];
-        for (int i = 0; i < width_; i++)
+        for (uint16_t i = 0; i < width_; i++)
             pixel_[i] = new pixel_t[height_];
     }
 
@@ -25,13 +21,13 @@ namespace rgb_matrix {
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             delete *it;
         panel_->clear();
-        for (int i = 0; i < width_; i++)
+        for (uint16_t i = 0; i < width_; i++)
             delete pixel_[i];
         delete pixel_;
         delete scheduler_;
     }
 
-    bool MultiPanel_Internal::map_panel(int x, int y, Single_Panel *panel, Protocol *protocol) {
+    bool MultiPanel_Internal::map_panel(uint16_t x, uint16_t y, Single_Panel *panel, Protocol *protocol) {
         Panel_t *ptr = new Panel_t;
 
         if (panel == nullptr)
@@ -60,7 +56,7 @@ namespace rgb_matrix {
         return true;
     }
 
-    void MultiPanel_Internal::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+    void MultiPanel_Internal::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
         cord_t cord;
         pixel_t pixel;
 
@@ -85,9 +81,8 @@ namespace rgb_matrix {
         lock_.lock();
         // TODO: Convert pixel_ to panels_[x]->panel->set_pixel (implement runnables?)
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
-            (*it)->panel->show((*it)->protocol, true);
+            (*it)->panel->show((*it)->protocol, false);
         scheduler_->start();
-        while(!scheduler_->isFinished()) std::this_thread::sleep_for (std::chrono::seconds(1));
         lock_.unlock();
     }
 

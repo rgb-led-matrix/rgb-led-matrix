@@ -1,7 +1,6 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
-#include <stdint.h>
 #include <IO/Node/Node.h>
 
 namespace rgb_matrix {

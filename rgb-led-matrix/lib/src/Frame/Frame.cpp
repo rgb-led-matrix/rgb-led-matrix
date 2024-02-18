@@ -38,7 +38,7 @@ namespace rgb_matrix {
         return isFree_;
     }
 
-    void Frame::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+    void Frame::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
         if (isMulti_)
             multi_->SetPixel(x, y, red, green, blue);
         else
