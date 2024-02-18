@@ -34,6 +34,9 @@ namespace rgb_matrix {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
 
+        if (x >= width_ || y >= height_)
+            throw Illegal("Location");
+
         ptr->x = x;
         ptr->y = y;
         ptr->panel = panel;
@@ -57,6 +60,9 @@ namespace rgb_matrix {
     void MultiPanel_Internal::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
         cord_t cord;
         pixel_t pixel;
+
+        if (x >= width_ || y >= height_)
+            throw Illegal("Location");
 
         lock_.lock();
         cord.x = x;
@@ -99,6 +105,9 @@ namespace rgb_matrix {
 
     void MultiPanel_Internal::set_brightness(uint8_t brightness) {
         lock_.lock();
+
+        if (--brightness >= 100)
+            throw Illegal("Brightness");
 
         // Quick and dirty loop
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)

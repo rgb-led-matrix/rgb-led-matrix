@@ -37,6 +37,9 @@ namespace rgb_matrix {
     }
 
     template <typename T> void Single_Panel_Internal<T>::set_brightness(uint8_t brightness) {
+        if (--brightness >= 100)
+            throw Illegal("Brightness");
+
         lock_.lock();
         // Capture the old values
         std::map<uint16_t, uint8_t> lookup[3];
@@ -146,10 +149,10 @@ namespace rgb_matrix {
     }
 
     template <typename T> void Single_Panel_Internal<T>::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
-        T **ptr = (T **) buffer_;
-
-        if (x < cfg_->get_cols() && y < cfg_->get_rows())
-            MapColors(x, y, red, green, blue, &ptr[x][y]);
+        if (x >= cfg_->get_cols() || y >= cfg_->get_rows())
+            throw Illegal("Location");
+            
+        MapColors(x, y, red, green, blue, &buffer_[x][y]);
     }
 
     // Handles brightness and gamma

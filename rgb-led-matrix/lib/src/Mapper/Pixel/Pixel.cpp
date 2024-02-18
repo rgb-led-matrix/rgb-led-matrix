@@ -37,8 +37,8 @@ namespace rgb_matrix {
     void Pixel::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
         pixel_t pixel;
 
-        if (x < 0 || x >= panel_->get_size().x || y < 0 || y >= panel_->get_size().y)
-            return;
+        if (x >= get_size().x || y >= get_size().y)
+            throw Illegal("Location");
 
         switch (orders_[x][y]) {
             case Color_Order::BGR:

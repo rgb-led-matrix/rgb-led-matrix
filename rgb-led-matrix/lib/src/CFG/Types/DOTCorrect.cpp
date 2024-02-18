@@ -27,7 +27,10 @@ namespace rgb_matrix {
 
     bool DOTCorrect::set(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, float red, float green, float blue) {
         if (check(red) || check(green) || check(blue))
-            return false;
+            throw Illegal("Value");
+
+        if (x >= cols || y >= rows)
+            throw Illegal("Location");
 
         table_[(3 * rows * cols * r) + (3 * ((y * cols) + x))] = red;
         table_[(3 * rows * cols * g) + (3 * ((y * cols) + x)) + 1] = green;
@@ -37,6 +40,9 @@ namespace rgb_matrix {
     }
 
     void DOTCorrect::get(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, float *red, float *green, float *blue) {
+        if (x >= cols || y >= rows)
+            throw Illegal("Location");
+
         *red = table_[(3 * rows * cols * r) + (3 * ((y * cols) + x))];
         *green = table_[(3 * rows * cols * g) + (3 * ((y * cols) + x)) + 1];
         *blue = table_[(3 * rows * cols * b) + (3 * ((y * cols) + x)) + 2];

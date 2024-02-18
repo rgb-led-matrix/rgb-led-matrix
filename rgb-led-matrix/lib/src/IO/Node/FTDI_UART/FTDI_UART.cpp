@@ -15,6 +15,9 @@ namespace rgb_matrix {
         FT_HANDLE handle;
         char str[100];
 
+        if (serial_number == nullptr)
+            throw Null_Pointer("Serial Number");
+
         snprintf(str, sizeof(str), "%s%u", serial_number, chan_num);
         serial_number_ = str;
 
@@ -30,6 +33,9 @@ namespace rgb_matrix {
         FT_STATUS status;
         FT_HANDLE handle;
         DWORD written;
+
+        if (buf == nullptr)
+            throw Null_Pointer("Buffer");
 
         status = FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle);
 
@@ -57,6 +63,9 @@ namespace rgb_matrix {
         FT_HANDLE handle;
         DWORD written;
         uint32_t timeout_ms = std::max((uint32_t) 1, timeout_us / 1000);
+
+        if (buf == nullptr)
+            throw Null_Pointer("Buffer");
 
         auto start = std::chrono::high_resolution_clock::now();
         status = FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle);
