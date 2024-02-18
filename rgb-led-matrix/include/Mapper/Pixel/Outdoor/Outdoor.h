@@ -8,8 +8,6 @@ namespace rgb_matrix {
         public:
             Outdoor(Single_Panel *panel);
 
-            cord_t get_size();
-
         protected:
             Outdoor();
 

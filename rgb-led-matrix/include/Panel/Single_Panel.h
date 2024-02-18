@@ -10,6 +10,13 @@ namespace rgb_matrix {
         public:
             // Using Single_Panel directly should always schedule (we may delete this option)
             virtual void show(Protocol *protocol, bool schedule = true) = 0;
+
+        protected:
+            // Used by Pixel to resize into physical size.
+            //  Config will have logic size. (They will contain the same number of pixels.)
+            virtual void resize(cord_t size) = 0;
+
+            friend class Pixel;
     };
 }
 #endif

@@ -23,8 +23,6 @@ namespace rgb_matrix {
             void build_table();
             void MapColors(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, T *color);
 
-            // Used by Pixel to resize into physical size.
-            //  Config will have logic size. (They will contain the same number of pixels.)
             void resize(cord_t size);
 
             CFG *cfg_;
@@ -34,8 +32,6 @@ namespace rgb_matrix {
             volatile uint8_t brightness_;
             uint16_t width_;
             uint16_t height_;
-
-            friend class Pixel;
     };
 }
 #endif

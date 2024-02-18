@@ -14,6 +14,7 @@ namespace rgb_matrix {
             void set_brightness(uint8_t brightness);
             void map_wavelength(uint8_t color, Color index, uint16_t value);
             void show(Protocol *protocol, bool schedule = true);
+            cord_t get_size();
 
         protected:
             Pixel();
@@ -22,6 +23,8 @@ namespace rgb_matrix {
             virtual cord_t get_actual_size() = 0;
             virtual cord_t map_location(uint16_t x, uint16_t y) = 0;
             virtual Color_Order map_color(uint16_t x, uint16_t y) = 0;
+
+            virtual void resize(cord_t size);
 
             Single_Panel *panel_;
             cord_t **locations_;
