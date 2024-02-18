@@ -13,6 +13,7 @@ namespace rgb_matrix {
         if (panel == nullptr)
             throw Null_Pointer("Panel");
 
+        // Get Panel Size from config
         size_ = panel_->get_size();
         locations_ = new cord_t *[size_.x];
         orders_ = new Color_Order *[size_.x];
@@ -20,8 +21,6 @@ namespace rgb_matrix {
             locations_[i] = new cord_t[size_.y];
             orders_[i] = new Color_Order[size_.y];
         }
-        
-        map();
     }   
 
     Pixel::~Pixel() {
@@ -94,8 +93,9 @@ namespace rgb_matrix {
         return size_;
     }
 
+    // TODO: Think about this! (Does nesting work?)
     void Pixel::resize(cord_t size) {
-        throw Illegal("Called");
+        panel_->resize(size);
     }
 
     void Pixel::map() {

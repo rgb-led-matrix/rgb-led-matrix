@@ -10,7 +10,7 @@ namespace rgb_matrix {
     }
 
     Outdoor::Outdoor(Single_Panel *panel) : Pixel(panel) {
-        // Do nothing?
+        map();
     }
 
     cord_t Outdoor::get_actual_size() {
