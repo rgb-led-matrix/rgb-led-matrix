@@ -9,6 +9,12 @@ target_include_directories(linux_x64 PUBLIC
 target_link_directories(linux_x64 PUBLIC
     ../../../../../external/FTDI/FTDI_D2XX/Linux/x64/build)
 
+target_compile_options(linux_x64 PRIVATE
+    -Wall
+    -Werror
+    -O3
+)
+
 target_link_libraries(linux_x64
     Exception
     CFG
