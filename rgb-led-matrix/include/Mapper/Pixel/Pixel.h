@@ -24,12 +24,12 @@ namespace rgb_matrix {
             virtual Color_Order map_color(uint16_t x, uint16_t y) = 0;
 
             Single_Panel *panel_;
+            cord_t **locations_;
+            Color_Order **orders_;
+            cord_t size_;
 
         private:
             void map();
-
-            cord_t **locations_;
-            Color_Order **orders_;
     };
 }
 #endif
