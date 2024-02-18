@@ -8,7 +8,6 @@ namespace rgb_matrix {
     }
 
     CFG::CFG(uint16_t rows, uint16_t cols, Data_Format_ID data_format, GAMMA gamma) : dot_(rows, cols) {
-        dot_ = DOTCorrect(rows_, cols_);
         data_format_ = data_format;
         gamma_ = gamma;
     }

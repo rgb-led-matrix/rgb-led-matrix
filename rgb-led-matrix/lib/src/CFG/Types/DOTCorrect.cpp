@@ -32,9 +32,11 @@ namespace rgb_matrix {
         if (x >= cols || y >= rows)
             throw Illegal("Location");
 
+        lock_.lock();
         table_[(3 * rows * cols * r) + (3 * ((y * cols) + x))] = red;
         table_[(3 * rows * cols * g) + (3 * ((y * cols) + x)) + 1] = green;
         table_[(3 * rows * cols * b) + (3 * ((y * cols) + x)) + 2] = blue;
+        lock_.unlock();
 
         return true;
     }
@@ -43,9 +45,11 @@ namespace rgb_matrix {
         if (x >= cols || y >= rows)
             throw Illegal("Location");
 
+        lock_.lock();
         *red = table_[(3 * rows * cols * r) + (3 * ((y * cols) + x))];
         *green = table_[(3 * rows * cols * g) + (3 * ((y * cols) + x)) + 1];
         *blue = table_[(3 * rows * cols * b) + (3 * ((y * cols) + x)) + 2];
+        lock_.unlock();
     }
 
     bool DOTCorrect::check(float f) {

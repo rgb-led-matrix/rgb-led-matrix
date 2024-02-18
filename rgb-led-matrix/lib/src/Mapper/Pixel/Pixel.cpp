@@ -5,24 +5,22 @@
 
 namespace rgb_matrix {
     // Do not use this!    
-    Pixel::Pixel() : panel_(nullptr) {
+    Pixel::Pixel() {
         throw Illegal("Panel Pixel Mapper");
     }
 
-    Pixel::Pixel(Panel *panel) {
+    Pixel::Pixel(Single_Panel *panel) : panel_(panel) {
         if (panel == nullptr)
             throw Null_Pointer("Panel");
 
-        cord_t size = panel->get_size();
-        panel_ = panel;
-        locations_ = new cord_t *[size.x];
-        orders_ = new Color_Order *[size.x];
-        for (uint16_t i = 0; i < size.x; i++) {
-            locations_[i] = new cord_t[size.y];
-            orders_[i] = new Color_Order[size.y];
+        // Get Panel Size from config
+        size_ = panel_->get_size();
+        locations_ = new cord_t *[size_.x];
+        orders_ = new Color_Order *[size_.x];
+        for (uint16_t i = 0; i < size_.x; i++) {
+            locations_[i] = new cord_t[size_.y];
+            orders_[i] = new Color_Order[size_.y];
         }
-        
-        map();
     }   
 
     Pixel::~Pixel() {
@@ -91,7 +89,18 @@ namespace rgb_matrix {
         panel_->show(protocol, schedule);
     }
 
+    cord_t Pixel::get_size() {
+        return size_;
+    }
+
+    // TODO: Think about this! (Does nesting work?)
+    void Pixel::resize(cord_t size) {
+        panel_->resize(size);
+    }
+
     void Pixel::map() {
+        panel_->resize(get_actual_size());
+
         for (uint16_t i = 0; i < panel_->get_size().x; i++) {
             for (uint16_t j = 0; j < panel_->get_size().y; j++) {
                 locations_[i][j] = map_location(i, j);

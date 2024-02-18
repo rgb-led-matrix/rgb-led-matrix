@@ -2,6 +2,7 @@
 #define DOTCORRECT_H
 
 #include <stdint.h>
+#include <mutex>
 
 namespace rgb_matrix {
     struct DOTCorrect {
@@ -21,6 +22,7 @@ namespace rgb_matrix {
             uint16_t rows;
             uint16_t cols;
             float *table_;
+            std::mutex lock_;
     };
 }
 #endif

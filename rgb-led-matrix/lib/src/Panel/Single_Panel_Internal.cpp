@@ -17,21 +17,21 @@ namespace rgb_matrix {
         throw Illegal("Single Panel Internal");
     }
 
-    template <typename T> Single_Panel_Internal<T>::Single_Panel_Internal(CFG *cfg) : cfg_(cfg) {
+    template <typename T> Single_Panel_Internal<T>::Single_Panel_Internal(CFG *cfg) : cfg_(cfg), width_(cfg->get_cols()), height_(cfg->get_rows()) {
         if (cfg == nullptr)
             throw Null_Pointer("CFG");
 
         build_table();
 
-        buffer_ = new T *[cfg->get_cols()];
-        for (uint16_t i = 0; i < cfg->get_cols(); i++)
-            buffer_[i] = new T[cfg->get_rows()];
+        buffer_ = new T *[width_];
+        for (uint16_t i = 0; i < width_; i++)
+            buffer_[i] = new T[height_];
 
-        brightness_ = 100;
+        brightness_ = 99;
     }
 
     template <typename T> Single_Panel_Internal<T>::~Single_Panel_Internal() {
-        for (uint16_t i = 0; i < cfg_->get_cols(); i++)
+        for (uint16_t i = 0; i < width_; i++)
             delete buffer_[i];
         delete buffer_;
     }
@@ -53,8 +53,8 @@ namespace rgb_matrix {
         brightness_ = std::max(std::min(brightness, (uint8_t) 100), (uint8_t) 0);
 
         // Apply the new values to the buffer
-        for (uint16_t i = 0; i < cfg_->get_cols(); i++) {
-            for (uint16_t j = 0; j < cfg_->get_rows(); i++) {
+        for (uint16_t i = 0; i < width_; i++) {
+            for (uint16_t j = 0; j < height_; i++) {
                 buffer_[i][j].red = lut[brightness_][lookup[0][buffer_[i][j].red]].red;
                 buffer_[i][j].green = lut[brightness_][lookup[1][buffer_[i][j].green]].green;
                 buffer_[i][j].blue = lut[brightness_][lookup[2][buffer_[i][j].blue]].blue;
@@ -105,8 +105,8 @@ namespace rgb_matrix {
         }
 
         // Apply new values to the buffer
-        for (uint16_t i = 0; i < cfg_->get_cols(); i++) {
-            for (uint16_t j = 0; j < cfg_->get_rows(); i++) {
+        for (uint16_t i = 0; i < width_; i++) {
+            for (uint16_t j = 0; j < height_; i++) {
                 switch (index) {
                     case Color::Red:
                         buffer_[i][j].red = lut[brightness_][lookup[buffer_[i][j].red]].red;
@@ -128,28 +128,32 @@ namespace rgb_matrix {
 
     template <typename T> cord_t Single_Panel_Internal<T>::get_size() {
         cord_t result;
-        result.x = cfg_->get_cols();
-        result.y = cfg_->get_rows();
+        lock_.lock();
+        result.x = width_;
+        result.y = height_;
+        lock_.unlock();
         return result;
     }
 
     template<typename T> void Single_Panel_Internal<T>::show(Protocol *protocol, bool schedule) {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
-        
+
+        lock_.lock();
         if (!schedule)
-            protocol->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
+            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_);
         else {
             Scheduler *scheduler = new Scheduler();
             scheduler->add_protocol(protocol);
-            protocol->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
+            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_);
             scheduler->start();
             delete scheduler;
         }
+        lock_.unlock();
     }
 
     template <typename T> void Single_Panel_Internal<T>::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
-        if (x >= cfg_->get_cols() || y >= cfg_->get_rows())
+        if (x >= width_ || y >= height_)
             throw Illegal("Location");
             
         MapColors(x, y, red, green, blue, &buffer_[x][y]);
@@ -178,6 +182,24 @@ namespace rgb_matrix {
         pixel->red = (uint16_t) round(this->lut[bright][r].red / T::red_max * fr);
         pixel->green = (uint16_t) round(this->lut[bright][g].green / T::green_max * fg);
         pixel->blue = (uint16_t) round(this->lut[bright][b].blue / T::blue_max * fb);
+        lock_.unlock();
+    }
+
+    template <typename T> void Single_Panel_Internal<T>::resize(cord_t size) {
+        if (size.x * size.y != width_ * height_)
+            throw Illegal("Size");
+
+        lock_.lock();
+        for (uint16_t i = 0; i < width_; i++)
+            delete buffer_[i];
+        delete buffer_;
+
+        width_ = size.x;
+        height_ = size.y;
+
+        buffer_ = new T *[width_];
+        for (uint16_t i = 0; i < width_; i++)
+            buffer_[i] = new T[height_];
         lock_.unlock();
     }
 

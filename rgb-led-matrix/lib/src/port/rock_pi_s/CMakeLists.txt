@@ -12,6 +12,12 @@ target_include_directories(rock_pi_s PUBLIC
 target_link_directories(rock_pi_s PUBLIC
     ../../../../../external/FTDI/FTDI_D2XX/Linux/ARMv8_hard-float/build)
 
+target_compile_options(rock_pi_s PRIVATE
+    -Wall
+    -Werror
+    -O3
+)
+
 target_link_libraries(rock_pi_s
     Exception
     CFG

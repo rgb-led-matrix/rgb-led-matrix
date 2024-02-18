@@ -76,8 +76,10 @@ namespace rgb_matrix {
 
     cord_t MultiPanel_Internal::get_size() {
         cord_t result;
+        lock_.lock();
         result.x = width_;
         result.y = height_;
+        lock_.unlock();
         return result;
     }
 
@@ -105,9 +107,6 @@ namespace rgb_matrix {
 
     void MultiPanel_Internal::set_brightness(uint8_t brightness) {
         lock_.lock();
-
-        if (--brightness >= 100)
-            throw Illegal("Brightness");
 
         // Quick and dirty loop
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
