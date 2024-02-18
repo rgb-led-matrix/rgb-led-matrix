@@ -1,7 +1,7 @@
 #include <iostream>
 #include <RGBMatrix.h>
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
-#include <IO/Root/FT4232/FT4232.h>
+#include <IO/Node/FTDI_UART/FTDI_UART.h>
 #include <Frame/Frame_Manager/Frame_Manager.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
@@ -11,8 +11,7 @@ using namespace rgb_matrix;
 int main(int argc, char **argv) {
     try {
         // Setup IO
-        FT4232 *root = new FT4232("000");
-        Node *node = root->GetNode(0);
+        Node *node = new FTDI_UART("000", 0);
         RP2040_UART *protocol = new RP2040_UART(node);
 
         // Setup config
