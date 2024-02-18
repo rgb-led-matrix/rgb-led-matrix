@@ -56,7 +56,7 @@ namespace rgb_matrix {
             if (f->isMulti_)
                 f->multi_->show();
             else
-                f->single_->show(f->protocol_);
+                f->single_->show(f->protocol_, true, true);
 
             object->lock_.lock();
             f->isFree_ = true;

@@ -85,7 +85,7 @@ namespace rgb_matrix {
         lock_.lock();
         // TODO: Convert pixel_ to panels_[x]->panel->set_pixel (implement runnables?)
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
-            (*it)->panel->show((*it)->protocol, true);
+            (*it)->panel->show((*it)->protocol, false);
         scheduler_->start();
         while(!scheduler_->isFinished()) std::this_thread::sleep_for (std::chrono::seconds(1));
         lock_.unlock();
