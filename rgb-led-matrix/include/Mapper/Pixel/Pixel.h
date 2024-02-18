@@ -18,6 +18,8 @@ namespace rgb_matrix {
         protected:
             Pixel();
 
+            // This will be the physical size rather than the logic size reported by get_size from Mapper
+            virtual cord_t get_actual_size() = 0;
             virtual cord_t map_location(uint16_t x, uint16_t y) = 0;
             virtual Color_Order map_color(uint16_t x, uint16_t y) = 0;
 

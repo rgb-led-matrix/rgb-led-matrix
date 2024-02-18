@@ -13,7 +13,7 @@ namespace rgb_matrix {
         if (panel == nullptr)
             throw Null_Pointer("Panel");
 
-        cord_t size = panel->get_size();
+        cord_t size = get_size();
         panel_ = panel;
         locations_ = new cord_t *[size.x];
         orders_ = new Color_Order *[size.x];
@@ -21,6 +21,8 @@ namespace rgb_matrix {
             locations_[i] = new cord_t[size.y];
             orders_[i] = new Color_Order[size.y];
         }
+
+        panel_->resize(get_actual_size());
         
         map();
     }   
