@@ -128,15 +128,18 @@ namespace rgb_matrix {
 
     template <typename T> cord_t Single_Panel_Internal<T>::get_size() {
         cord_t result;
+        lock_.lock();
         result.x = width_;
         result.y = height_;
+        lock_.unlock();
         return result;
     }
 
     template<typename T> void Single_Panel_Internal<T>::show(Protocol *protocol, bool schedule) {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
-        
+
+        lock_.lock();
         if (!schedule)
             protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_);
         else {
@@ -146,6 +149,7 @@ namespace rgb_matrix {
             scheduler->start();
             delete scheduler;
         }
+        lock_.unlock();
     }
 
     template <typename T> void Single_Panel_Internal<T>::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {

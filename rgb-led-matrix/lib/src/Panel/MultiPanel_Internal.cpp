@@ -76,8 +76,10 @@ namespace rgb_matrix {
 
     cord_t MultiPanel_Internal::get_size() {
         cord_t result;
+        lock_.lock();
         result.x = width_;
         result.y = height_;
+        lock_.unlock();
         return result;
     }
 
