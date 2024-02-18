@@ -5,18 +5,16 @@
 #include <list>
 #include <Panel/MultiPanel.h>
 #include <IO/Scheduler/Scheduler.h>
-using std::mutex;
-using std::list;
 
 namespace rgb_matrix {
     class MultiPanel_Internal : public MultiPanel {
         public:
-            MultiPanel_Internal(int width, int height);
+            MultiPanel_Internal(uint16_t width, uint16_t height);
             ~MultiPanel_Internal();
 
-            bool map_panel(int x, int y, Single_Panel *panel, Protocol *protocol);
+            bool map_panel(uint16_t x, uint16_t y, Single_Panel *panel, Protocol *protocol);
 
-            void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
+            void SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue);
             cord_t get_size();
             void show();
             void set_brightness(uint8_t brightness);
@@ -27,15 +25,15 @@ namespace rgb_matrix {
 
             struct Panel_t {
                 Single_Panel *panel;
-                int x;
-                int y;
+                uint16_t x;
+                uint16_t y;
                 Protocol *protocol;
             };
 
-            int width_;
-            int height_;
-            mutex lock_;
-            list<Panel_t *> *panel_;
+            uint16_t width_;
+            uint16_t height_;
+            std::mutex lock_;
+            std::list<Panel_t *> *panel_;
             pixel_t **pixel_;
             Scheduler *scheduler_;
     };

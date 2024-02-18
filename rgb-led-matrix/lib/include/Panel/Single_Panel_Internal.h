@@ -2,10 +2,8 @@
 #define SINGLE_PANEL_INTERNAL_H
 
 #include <mutex>
-#include <stdint.h>
 #include <CFG/CFG.h>
 #include <Panel/Single_Panel.h>
-using std::mutex;
 
 namespace rgb_matrix {
     template <typename T> class Single_Panel_Internal : public Single_Panel {
@@ -13,7 +11,7 @@ namespace rgb_matrix {
             Single_Panel_Internal(CFG *cfg);
             ~Single_Panel_Internal();
 
-            void SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue);
+            void SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue);
             void show(Protocol *protocol, bool schedule = true);
             cord_t get_size();
             
@@ -23,12 +21,12 @@ namespace rgb_matrix {
         protected:
             Single_Panel_Internal();
             void build_table();
-            void MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *color);
+            void MapColors(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, T *color);
 
             CFG *cfg_;
             T **buffer_;
             T lut[100][256];
-            mutex lock_;
+            std::mutex lock_;
             volatile uint8_t brightness_;
     };
 }

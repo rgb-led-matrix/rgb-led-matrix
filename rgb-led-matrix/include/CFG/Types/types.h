@@ -5,8 +5,8 @@
 
 namespace rgb_matrix {
     struct cord_t {
-        int x;
-        int y;
+        uint16_t x;
+        uint16_t y;
     };
 
     enum Color_Order {

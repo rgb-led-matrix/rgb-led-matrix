@@ -7,7 +7,7 @@ namespace rgb_matrix {
         throw Illegal("CFG");
     }
 
-    CFG::CFG(int rows, int cols, Data_Format_ID data_format, GAMMA gamma) : dot_(rows, cols) {
+    CFG::CFG(uint16_t rows, uint16_t cols, Data_Format_ID data_format, GAMMA gamma) : dot_(rows, cols) {
         dot_ = DOTCorrect(rows_, cols_);
         data_format_ = data_format;
         gamma_ = gamma;
@@ -21,11 +21,11 @@ namespace rgb_matrix {
         return gamma_; 
     }
 
-    int CFG::get_rows() { 
+    uint16_t CFG::get_rows() { 
         return rows_; 
     }
 
-    int CFG::get_cols() { 
+    uint16_t CFG::get_cols() { 
         return cols_; 
     }
 

@@ -1,8 +1,7 @@
 #include <RGBMatrix.h>
-#include <CFG/CFG.h>
-#include <Exception/Unknown_Type.h>
 #include <Panel/Single_Panel_Internal.h>
 #include <Panel/MultiPanel_Internal.h>
+#include <Exception/Unknown_Type.h>
 #include <Panel/RGB/RGB24.h>
 #include <Panel/RGB/RGB48.h>
 #include <Panel/RGB/RGB_555.h>
@@ -25,7 +24,7 @@ namespace rgb_matrix {
         }
     }
 
-    MultiPanel *RGBMatrix::Create_MultiPanel(int width, int height) {
+    MultiPanel *RGBMatrix::Create_MultiPanel(uint16_t width, uint16_t height) {
         return new MultiPanel_Internal(width, height);
     }
  };

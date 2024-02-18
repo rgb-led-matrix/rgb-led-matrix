@@ -1,19 +1,15 @@
 #include <algorithm>
 #include <map>
-#include <thread>
-#include <chrono>
 #include <math.h>
+#include <Panel/Single_Panel_Internal.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
 #include <Exception/Unknown_Type.h>
-#include <Panel/Single_Panel_Internal.h>
 #include <Panel/RGB/RGB24.h>
 #include <Panel/RGB/RGB48.h>
 #include <Panel/RGB/RGB_555.h>
 #include <Panel/RGB/RGB_222.h>
 #include <IO/Scheduler/Scheduler.h>
-using std::min;
-using std::max;
 
 namespace rgb_matrix {
     // Do not use this!    
@@ -28,14 +24,14 @@ namespace rgb_matrix {
         build_table();
 
         buffer_ = new T *[cfg->get_cols()];
-        for (int i = 0; i < cfg->get_cols(); i++)
+        for (uint16_t i = 0; i < cfg->get_cols(); i++)
             buffer_[i] = new T[cfg->get_rows()];
 
         brightness_ = 100;
     }
 
     template <typename T> Single_Panel_Internal<T>::~Single_Panel_Internal() {
-        for (int i = 0; i < cfg_->get_cols(); i++)
+        for (uint16_t i = 0; i < cfg_->get_cols(); i++)
             delete buffer_[i];
         delete buffer_;
     }
@@ -51,11 +47,11 @@ namespace rgb_matrix {
         }
 
         // Make the update
-        brightness_ = max(min(brightness, (uint8_t) 100), (uint8_t) 0);
+        brightness_ = std::max(std::min(brightness, (uint8_t) 100), (uint8_t) 0);
 
         // Apply the new values to the buffer
-        for (int i = 0; i < cfg_->get_cols(); i++) {
-            for (int j = 0; j < cfg_->get_rows(); i++) {
+        for (uint16_t i = 0; i < cfg_->get_cols(); i++) {
+            for (uint16_t j = 0; j < cfg_->get_rows(); i++) {
                 buffer_[i][j].red = lut[brightness_][lookup[0][buffer_[i][j].red]].red;
                 buffer_[i][j].green = lut[brightness_][lookup[1][buffer_[i][j].green]].green;
                 buffer_[i][j].blue = lut[brightness_][lookup[2][buffer_[i][j].blue]].blue;
@@ -88,7 +84,7 @@ namespace rgb_matrix {
         }
 
         // Make the update to the table
-        for (int j = 0; j < 100; j++) {
+        for (uint16_t j = 0; j < 100; j++) {
             switch (index) {
                 case Color::Red:
                     lut[j][color].red = (uint16_t) round(pow(value / 65535.0, 1 / g.get_red()) * T::red_lim * j / 99.0);
@@ -106,8 +102,8 @@ namespace rgb_matrix {
         }
 
         // Apply new values to the buffer
-        for (int i = 0; i < cfg_->get_cols(); i++) {
-            for (int j = 0; j < cfg_->get_rows(); i++) {
+        for (uint16_t i = 0; i < cfg_->get_cols(); i++) {
+            for (uint16_t j = 0; j < cfg_->get_rows(); i++) {
                 switch (index) {
                     case Color::Red:
                         buffer_[i][j].red = lut[brightness_][lookup[buffer_[i][j].red]].red;
@@ -149,7 +145,7 @@ namespace rgb_matrix {
         }
     }
 
-    template <typename T> void Single_Panel_Internal<T>::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+    template <typename T> void Single_Panel_Internal<T>::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
         T **ptr = (T **) buffer_;
 
         if (x > 0 && x < cfg_->get_cols() && y > 0 && y < cfg_->get_rows())
@@ -166,7 +162,7 @@ namespace rgb_matrix {
     }
 
     // Handles dot correction
-    template <typename T> inline void Single_Panel_Internal<T>::MapColors(int x, int y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
+    template <typename T> inline void Single_Panel_Internal<T>::MapColors(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
         float fr, fg, fb;
 
         if (pixel == nullptr)

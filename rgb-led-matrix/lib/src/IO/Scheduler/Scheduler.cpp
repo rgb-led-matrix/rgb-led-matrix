@@ -1,12 +1,11 @@
 #include <chrono>
 #include <thread>
 #include <IO/Scheduler/Scheduler.h>
-using std::thread;
 
 namespace rgb_matrix {
     void Scheduler::start() {
         bool isFinished = true;
-        
+
         lock_.lock();
         while (isFinished) {
             // Wait for sync point

@@ -1,7 +1,7 @@
+#include <Mapper/Pixel/Pixel.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
 #include <Exception/Unknown_Type.h>
-#include <Mapper/Pixel/Pixel.h>
 
 namespace rgb_matrix {
     // Do not use this!    
@@ -17,7 +17,7 @@ namespace rgb_matrix {
         panel_ = panel;
         locations_ = new cord_t *[size.x];
         orders_ = new Color_Order *[size.x];
-        for (int i = 0; i < size.x; i++) {
+        for (uint16_t i = 0; i < size.x; i++) {
             locations_[i] = new cord_t[size.y];
             orders_[i] = new Color_Order[size.y];
         }
@@ -26,7 +26,7 @@ namespace rgb_matrix {
     }   
 
     Pixel::~Pixel() {
-        for (int i = 0; i < panel_->get_size().x; i++) {
+        for (uint16_t i = 0; i < panel_->get_size().x; i++) {
             delete locations_[i];
             delete orders_[i];
         }
@@ -34,7 +34,7 @@ namespace rgb_matrix {
         delete orders_;
     }
 
-    void Pixel::SetPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue) {
+    void Pixel::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
         pixel_t pixel;
 
         if (x < 0 || x >= panel_->get_size().x || y < 0 || y >= panel_->get_size().y)
@@ -92,8 +92,8 @@ namespace rgb_matrix {
     }
 
     void Pixel::map() {
-        for (int i = 0; i < panel_->get_size().x; i++) {
-            for (int j = 0; j < panel_->get_size().y; j++) {
+        for (uint16_t i = 0; i < panel_->get_size().x; i++) {
+            for (uint16_t j = 0; j < panel_->get_size().y; j++) {
                 locations_[i][j] = map_location(i, j);
                 orders_[i][j] = map_color(i, j);
             }

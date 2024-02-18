@@ -6,11 +6,11 @@
 namespace rgb_matrix {
     struct DOTCorrect {
         public:
-            DOTCorrect(int rows, int cols);
+            DOTCorrect(uint16_t rows, uint16_t cols);
             ~DOTCorrect();
 
-            bool set(int x, int y, uint8_t r, uint8_t g, uint8_t b, float red, float green, float blue);
-            void get(int x, int y, uint8_t r, uint8_t g, uint8_t b, float *red, float *green, float *blue);
+            bool set(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, float red, float green, float blue);
+            void get(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, float *red, float *green, float *blue);
 
         protected:
             DOTCorrect();
@@ -18,8 +18,8 @@ namespace rgb_matrix {
         private:
             bool check(float f);
 
-            int rows;
-            int cols;
+            uint16_t rows;
+            uint16_t cols;
             float *table_;
     };
 }
