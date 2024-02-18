@@ -88,7 +88,7 @@ namespace rgb_matrix {
     }
 
     void Pixel::show(Protocol *protocol, bool schedule) {
-        panel_->show(protoocl, schedule);
+        panel_->show(protocol, schedule);
     }
 
     void Pixel::map() {
