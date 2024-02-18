@@ -134,19 +134,18 @@ namespace rgb_matrix {
         return result;
     }
 
-    template<typename T> void Single_Panel_Internal<T>::show(Protocol *protocol, bool schedule, bool threadless) {
+    template<typename T> void Single_Panel_Internal<T>::show(Protocol *protocol, bool schedule) {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
         
         if (!schedule)
             protocol->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
         else {
-            Scheduler *scheduler_ = new Scheduler();
-            scheduler_->add_protocol(protocol);
+            Scheduler *scheduler = new Scheduler();
+            scheduler->add_protocol(protocol);
             protocol->send((uint8_t *) buffer_, sizeof(T) * cfg_->get_cols() * cfg_->get_rows());
-            scheduler_->start(threadless);
-            while(!scheduler_->isFinished()) std::this_thread::sleep_for (std::chrono::seconds(1));
-            delete scheduler_;
+            scheduler->start();
+            delete scheduler;
         }
     }
 

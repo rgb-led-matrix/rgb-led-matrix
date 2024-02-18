@@ -87,7 +87,6 @@ namespace rgb_matrix {
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->show((*it)->protocol, false);
         scheduler_->start();
-        while(!scheduler_->isFinished()) std::this_thread::sleep_for (std::chrono::seconds(1));
         lock_.unlock();
     }
 
