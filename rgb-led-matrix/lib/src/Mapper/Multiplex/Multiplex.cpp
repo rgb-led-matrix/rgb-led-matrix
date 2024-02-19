@@ -9,7 +9,7 @@ namespace rgb_matrix {
         throw Illegal("Panel Multiplex Mapper");
     }
 
-    Multiplex::Multiplex(Single_Panel *panel) : panel_(panel) {
+    Multiplex::Multiplex(Panel *panel) : panel_(panel) {
         if (panel == nullptr)
             throw Null_Pointer("Panel");
 
@@ -91,10 +91,6 @@ namespace rgb_matrix {
 
     cord_t Multiplex::get_size() {
         return size_;
-    }
-
-    void Multiplex::resize(cord_t size) {
-        throw Illegal("You did a bad bad thing");
     }
 
     void Multiplex::map() {

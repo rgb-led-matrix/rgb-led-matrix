@@ -8,7 +8,7 @@ namespace rgb_matrix {
     // Factory for creating individual panels from configuration
     class RGBMatrix {
         public:
-            static Single_Panel *Create_Single_Panel(CFG *cfg);
+            static Panel *Create_Panel(CFG *cfg);
             static MultiPanel *Create_MultiPanel(uint16_t width, uint16_t height);
     };
 }

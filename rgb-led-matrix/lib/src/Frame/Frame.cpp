@@ -8,7 +8,7 @@ namespace rgb_matrix {
         throw Illegal("Frame");
     }
 
-    Frame::Frame(Single_Panel *panel, Protocol *protocol) {
+    Frame::Frame(Panel *panel, Protocol *protocol) {
         if (panel == nullptr)
             throw Null_Pointer("Single Panel");
 

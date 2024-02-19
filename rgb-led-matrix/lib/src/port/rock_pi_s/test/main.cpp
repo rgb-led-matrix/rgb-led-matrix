@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
         cfg->get_dot().set(0, 10, 255, 128, 0, 0.5, 1.0, 0.9);
 
         // Create panels (Double Buffered)
-        Single_Panel *panel[2] = { RGBMatrix::Create_Single_Panel(cfg), RGBMatrix::Create_Single_Panel(cfg) };
+        Panel *panel[2] = { RGBMatrix::Create_Panel(cfg), RGBMatrix::Create_Panel(cfg) };
         MultiPanel *frame[2] = { RGBMatrix::Create_MultiPanel(32, 16), RGBMatrix::Create_MultiPanel(32, 16) };
         frame[0]->map_panel(0, 0, MultiPanel::Direction::Right, panel[0], protocol);
         frame[1]->map_panel(0, 0, MultiPanel::Direction::Right, panel[1], protocol);
