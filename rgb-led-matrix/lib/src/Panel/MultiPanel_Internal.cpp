@@ -169,7 +169,7 @@ namespace rgb_matrix {
 
     ThreadPool<void *, MultiPanel_Internal::show_packet> *MultiPanel_Internal::get_show_thread_pool() {
         if (show_thread_pool_ == nullptr) {
-
+            // TODO:
         }
 
         return show_thread_pool_;
@@ -177,7 +177,7 @@ namespace rgb_matrix {
 
     ThreadPool<void *, MultiPanel_Internal::set_brightness_packet> *MultiPanel_Internal::get_set_brightness_thread_pool() {
         if (set_brightness_thread_pool_ == nullptr) {
-
+            // TODO:
         }
 
         return set_brightness_thread_pool_;
@@ -185,7 +185,7 @@ namespace rgb_matrix {
 
     ThreadPool<void *, MultiPanel_Internal::map_wavelength_packet> *MultiPanel_Internal::get_map_wavelength_thread_pool() {
         if (map_wavelength_thread_pool_ == nullptr) {
-
+            // TODO:
         }
 
         return map_wavelength_thread_pool_;
