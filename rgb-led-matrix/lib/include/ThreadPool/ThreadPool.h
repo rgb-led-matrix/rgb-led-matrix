@@ -11,12 +11,11 @@
 namespace rgb_matrix {
     template <typename R, typename F> class ThreadPool {
         public:
-            void start(uint8_t count = 0);
+            void start(uint8_t count = 1);
             void submit(const std::function<void(R, F)>& job, R return_args, F args);
 
         private:
             static void ThreadLoop(ThreadPool *object);
-            bool busy();
 
             struct payload {
                 std::function<void(R, F)> function;

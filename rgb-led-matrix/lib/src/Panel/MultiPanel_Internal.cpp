@@ -6,9 +6,9 @@
 #include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
-    ThreadPool<void *, MultiPanel_Internal::show_packet> *MultiPanel_Internal::show_thread_pool_ = nullptr;
-    ThreadPool<void *, MultiPanel_Internal::set_brightness_packet> *MultiPanel_Internal::set_brightness_thread_pool_ = nullptr;
-    ThreadPool<void *, MultiPanel_Internal::map_wavelength_packet> *MultiPanel_Internal::map_wavelength_thread_pool_ = nullptr;
+    ThreadPool<volatile bool *, MultiPanel_Internal::show_packet> *MultiPanel_Internal::show_thread_pool_ = nullptr;
+    ThreadPool<volatile bool *, MultiPanel_Internal::set_brightness_packet> *MultiPanel_Internal::set_brightness_thread_pool_ = nullptr;
+    ThreadPool<volatile bool *, MultiPanel_Internal::map_wavelength_packet> *MultiPanel_Internal::map_wavelength_thread_pool_ = nullptr;
 
     // Do not use this!
     MultiPanel_Internal::MultiPanel_Internal() {
@@ -93,17 +93,26 @@ namespace rgb_matrix {
 
     void MultiPanel_Internal::show() {
         lock_.lock();
-
+        std::queue<volatile bool *> results;
+        
         // Fork/Join Acceleration
-        ThreadPool<void *, show_packet> *pool = get_show_thread_pool();
+        ThreadPool<volatile bool *, show_packet> *pool = get_show_thread_pool();
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
             show_packet p;
+            volatile bool *r;
             p.object = this;
             p.panel = (*it);
-            pool->submit(&MultiPanel_Internal::show_worker, nullptr, p);
+            r = new bool;
+            *r = false;
+            results.push(r);
+            pool->submit(&MultiPanel_Internal::show_worker, r, p);
         }
 
-        // TODO: Wait for them to complete (look at return values???)
+        while (!results.empty()) {
+            volatile bool *r = results.front();
+            while(*r == false);
+            results.pop();
+        }
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->show((*it)->protocol, false);
@@ -169,32 +178,38 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    ThreadPool<void *, MultiPanel_Internal::show_packet> *MultiPanel_Internal::get_show_thread_pool() {
+    ThreadPool<volatile bool *, MultiPanel_Internal::show_packet> *MultiPanel_Internal::get_show_thread_pool() {
         if (show_thread_pool_ == nullptr) {
-            // TODO:
+            uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
+            show_thread_pool_ = new ThreadPool<volatile bool *, MultiPanel_Internal::show_packet>();
+            show_thread_pool_->start(count);
         }
 
         return show_thread_pool_;
     }
 
-    ThreadPool<void *, MultiPanel_Internal::set_brightness_packet> *MultiPanel_Internal::get_set_brightness_thread_pool() {
+    ThreadPool<volatile bool *, MultiPanel_Internal::set_brightness_packet> *MultiPanel_Internal::get_set_brightness_thread_pool() {
         if (set_brightness_thread_pool_ == nullptr) {
-            // TODO:
+            uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
+            set_brightness_thread_pool_ = new ThreadPool<volatile bool *, MultiPanel_Internal::set_brightness_packet>();
+            set_brightness_thread_pool_->start(count);
         }
 
         return set_brightness_thread_pool_;
     }
 
-    ThreadPool<void *, MultiPanel_Internal::map_wavelength_packet> *MultiPanel_Internal::get_map_wavelength_thread_pool() {
+    ThreadPool<volatile bool *, MultiPanel_Internal::map_wavelength_packet> *MultiPanel_Internal::get_map_wavelength_thread_pool() {
         if (map_wavelength_thread_pool_ == nullptr) {
-            // TODO:
+            uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
+            map_wavelength_thread_pool_ = new ThreadPool<volatile bool *, MultiPanel_Internal::map_wavelength_packet>();
+            map_wavelength_thread_pool_->start(count);
         }
 
         return map_wavelength_thread_pool_;
     }
 
     // Must be read only!
-    void MultiPanel_Internal::show_worker(void *, show_packet args) {
+    void MultiPanel_Internal::show_worker(volatile bool *, show_packet args) {
         // Quick and dirty loop(s)!
         for (uint16_t x = 0; x < args.object->width_; x++) {
             for (uint16_t y = 0; y < args.object->height_; y++) {
@@ -218,12 +233,12 @@ namespace rgb_matrix {
     }
 
     // Must be read only!
-    void MultiPanel_Internal::map_wavelength_worker(void *, map_wavelength_packet args) {
+    void MultiPanel_Internal::map_wavelength_worker(volatile bool *, map_wavelength_packet args) {
         args.panel->panel->map_wavelength(args.color, args.index, args.value);
     }
 
     // Must be read only!
-    void MultiPanel_Internal::set_brightness_worker(void *, set_brightness_packet args) {
+    void MultiPanel_Internal::set_brightness_worker(volatile bool *, set_brightness_packet args) {
         args.panel->panel->set_brightness(args.brightness);
     }
 }

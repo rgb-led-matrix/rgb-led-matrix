@@ -49,17 +49,17 @@ namespace rgb_matrix {
                 uint8_t brightness;
             };
 
-            static void show_worker(void *result, show_packet args);
-            static void map_wavelength_worker(void *result, map_wavelength_packet args);
-            static void set_brightness_worker(void *result, set_brightness_packet args);
+            static void show_worker(volatile bool *result, show_packet args);
+            static void map_wavelength_worker(volatile bool *result, map_wavelength_packet args);
+            static void set_brightness_worker(volatile bool *result, set_brightness_packet args);
 
-            static ThreadPool<void *, show_packet> *get_show_thread_pool();
-            static ThreadPool<void *, map_wavelength_packet> *get_map_wavelength_thread_pool();
-            static ThreadPool<void *, set_brightness_packet> *get_set_brightness_thread_pool();
+            static ThreadPool<volatile bool *, show_packet> *get_show_thread_pool();
+            static ThreadPool<volatile bool *, map_wavelength_packet> *get_map_wavelength_thread_pool();
+            static ThreadPool<volatile bool *, set_brightness_packet> *get_set_brightness_thread_pool();
 
-            static ThreadPool<void *, show_packet> *show_thread_pool_;
-            static ThreadPool<void *, set_brightness_packet> *set_brightness_thread_pool_;
-            static ThreadPool<void *, map_wavelength_packet> *map_wavelength_thread_pool_;
+            static ThreadPool<volatile bool *, show_packet> *show_thread_pool_;
+            static ThreadPool<volatile bool *, set_brightness_packet> *set_brightness_thread_pool_;
+            static ThreadPool<volatile bool *, map_wavelength_packet> *map_wavelength_thread_pool_;
 
             uint16_t width_;
             uint16_t height_;

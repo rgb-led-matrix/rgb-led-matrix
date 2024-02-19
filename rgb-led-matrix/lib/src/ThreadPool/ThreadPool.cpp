@@ -4,21 +4,8 @@
 namespace rgb_matrix {
 
     template <typename R, typename F> void ThreadPool<R, F>::start(uint8_t count) {
-        if (count == 0)
-            count = std::thread::hardware_concurrency();
-
-        for (uint8_t i = 0; i <= count; i++)
+        for (uint8_t i = 0; i < count; i++)
             threads_.emplace_back(std::thread(&ThreadPool::ThreadLoop, this));
-    }
-
-    template <typename R, typename F> bool ThreadPool<R, F>::busy() {
-        bool result;
-
-        lock_.lock();
-        result = !work_queue_.empty();
-        lock_.unlock();
-
-        return result;
     }
 
     template <typename R, typename F> void ThreadPool<R, F>::submit(const std::function<void(R, F)>& job, R return_args, F args) {
@@ -49,7 +36,7 @@ namespace rgb_matrix {
         }
     }
 
-    template class ThreadPool<void *, MultiPanel_Internal::show_packet>;
-    template class ThreadPool<void *, MultiPanel_Internal::set_brightness_packet>;
-    template class ThreadPool<void *, MultiPanel_Internal::map_wavelength_packet>;
+    template class ThreadPool<volatile bool *, MultiPanel_Internal::show_packet>;
+    template class ThreadPool<volatile bool *, MultiPanel_Internal::set_brightness_packet>;
+    template class ThreadPool<volatile bool *, MultiPanel_Internal::map_wavelength_packet>;
 }
