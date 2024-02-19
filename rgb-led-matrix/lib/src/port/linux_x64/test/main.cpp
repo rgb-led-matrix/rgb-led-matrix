@@ -2,7 +2,7 @@
 #include <RGBMatrix.h>
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
-#include <Mapper/Pixel/Outdoor/Outdoor.h>
+#include <Mapper/Multiplex/Outdoor/Outdoor.h>
 #include <Frame/Frame_Manager/Frame_Manager.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
