@@ -110,7 +110,10 @@ namespace rgb_matrix {
 
         while (!results.empty()) {
             volatile bool *r = results.front();
-            while(*r == false);
+            while(*r == false) {
+                // Well hopefully the OS does something
+                // std::this_thread::sleep_for(std::chrono::milliseconds(2));
+            }
             results.pop();
         }
 
