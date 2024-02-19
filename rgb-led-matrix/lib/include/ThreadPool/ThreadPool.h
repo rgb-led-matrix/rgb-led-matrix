@@ -5,6 +5,7 @@
 #include <thread>
 #include <queue>
 #include <mutex>
+#include <condition_variable>
 #include <functional>
 
 namespace rgb_matrix {
@@ -24,6 +25,7 @@ namespace rgb_matrix {
             };
 
             std::mutex lock_;
+            std::condition_variable conditional_;
             std::vector<std::thread> threads_;
             std::queue<payload *> work_queue_;
     };

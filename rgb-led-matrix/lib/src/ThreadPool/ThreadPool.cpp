@@ -4,16 +4,11 @@
 namespace rgb_matrix {
 
     template <typename R, typename F> void ThreadPool<R, F>::start(uint8_t count) {
-        if (count == 0) {
+        if (count == 0)
             count = std::thread::hardware_concurrency();
 
-            if (count == 0)
-                count = 1;
-        }
-
-        for (uint8_t i = 0; i < count; i++) {
-            threads_.emplace_back(std::thread(&ThreadPool::ThreadLoop,this));
-        }
+        for (uint8_t i = 0; i <= count; i++)
+            threads_.emplace_back(std::thread(&ThreadPool::ThreadLoop, this));
     }
 
     template <typename R, typename F> bool ThreadPool<R, F>::busy() {
@@ -35,21 +30,19 @@ namespace rgb_matrix {
 
         lock_.lock();
         work_queue_.push(p);
+        conditional_.notify_one();
         lock_.unlock();
     }
 
-    // Probably should use conditional but the interface is silly so polling instead.
     template <typename R, typename F> void ThreadPool<R, F>::ThreadLoop(ThreadPool<R, F> *object) {
         payload *p;
 
         while(true) {
-            while (!object->busy())
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-            
-            object->lock_.lock();
+            std::unique_lock<std::mutex> lk(object->lock_);
+            object->conditional_.wait(lk, [object]{ return !object->work_queue_.empty(); });
             p = object->work_queue_.front();
             object->work_queue_.pop();
-            object->lock_.unlock();
+            lk.unlock();
 
             p->function(p->return_args, p->args);
             delete p;

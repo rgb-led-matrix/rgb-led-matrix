@@ -94,6 +94,7 @@ namespace rgb_matrix {
     void MultiPanel_Internal::show() {
         lock_.lock();
 
+        // Fork/Join Acceleration
         ThreadPool<void *, show_packet> *pool = get_show_thread_pool();
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
             show_packet p;
