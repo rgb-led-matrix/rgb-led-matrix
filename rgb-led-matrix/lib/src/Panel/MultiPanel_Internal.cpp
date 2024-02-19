@@ -209,7 +209,7 @@ namespace rgb_matrix {
     }
 
     // Must be read only!
-    void MultiPanel_Internal::show_worker(volatile bool *, show_packet args) {
+    void MultiPanel_Internal::show_worker(volatile bool *result, show_packet args) {
         // Quick and dirty loop(s)!
         for (uint16_t x = 0; x < args.object->width_; x++) {
             for (uint16_t y = 0; y < args.object->height_; y++) {
@@ -230,15 +230,19 @@ namespace rgb_matrix {
                 }
             }
         }
+
+        *result = true;
     }
 
     // Must be read only!
-    void MultiPanel_Internal::map_wavelength_worker(volatile bool *, map_wavelength_packet args) {
+    void MultiPanel_Internal::map_wavelength_worker(volatile bool *result, map_wavelength_packet args) {
         args.panel->panel->map_wavelength(args.color, args.index, args.value);
+        *result = true;
     }
 
     // Must be read only!
-    void MultiPanel_Internal::set_brightness_worker(volatile bool *, set_brightness_packet args) {
+    void MultiPanel_Internal::set_brightness_worker(volatile bool *result, set_brightness_packet args) {
         args.panel->panel->set_brightness(args.brightness);
+        *result = true;
     }
 }
