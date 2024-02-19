@@ -8,12 +8,14 @@ namespace rgb_matrix {
         throw Illegal("Panel Pixel Mapper");
     }
 
-    Pixel::Pixel(Panel *panel) : Multiplex(panel) {
+    Pixel::Pixel(Multiplex *panel) {
         if (panel == nullptr)
             throw Null_Pointer("Panel");
+        
+        panel_ = panel;
     }  
 
     cord_t Pixel::get_actual_size() {
-        panel_->get_size();
+        return panel_->get_size();
     }
 }

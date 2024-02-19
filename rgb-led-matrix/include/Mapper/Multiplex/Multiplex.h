@@ -26,7 +26,8 @@ namespace rgb_matrix {
 
             void map();
 
-            Panel *panel_;
+            Panel *full_panel_;
+            Simple_Panel *panel_;
             cord_t **locations_;
             Color_Order **orders_;
             cord_t size_;
