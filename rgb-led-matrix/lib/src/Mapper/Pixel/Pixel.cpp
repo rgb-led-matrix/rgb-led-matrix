@@ -4,7 +4,7 @@
 
 namespace rgb_matrix {
     // Do not use this!    
-    Pixel::Pixel() : Multiplex() {
+    Pixel::Pixel() {
         throw Illegal("Panel Pixel Mapper");
     }
 
