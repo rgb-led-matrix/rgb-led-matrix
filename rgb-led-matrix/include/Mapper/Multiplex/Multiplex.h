@@ -10,7 +10,7 @@ namespace rgb_matrix {
             Multiplex(Single_Panel *panel);
             virtual ~Multiplex();
 
-            virtual void SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue);
+            void SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue);
             void set_brightness(uint8_t brightness);
             void map_wavelength(uint8_t color, Color index, uint16_t value);
             void show(Protocol *protocol, bool schedule = true);
@@ -24,7 +24,7 @@ namespace rgb_matrix {
             virtual cord_t map_location(uint16_t x, uint16_t y) = 0;
             virtual Color_Order map_color(uint16_t x, uint16_t y);
 
-            virtual void resize(cord_t size);
+            void resize(cord_t size);
             virtual void map();
 
             Single_Panel *panel_;

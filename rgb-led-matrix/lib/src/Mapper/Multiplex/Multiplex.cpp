@@ -93,9 +93,8 @@ namespace rgb_matrix {
         return size_;
     }
 
-    // TODO: Think about this! (Does nesting work?)
     void Multiplex::resize(cord_t size) {
-        panel_->resize(size);
+        throw Illegal("You did a bad bad thing");
     }
 
     void Multiplex::map() {
