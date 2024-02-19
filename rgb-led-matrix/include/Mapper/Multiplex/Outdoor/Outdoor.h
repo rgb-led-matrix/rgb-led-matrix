@@ -6,7 +6,7 @@
 namespace rgb_matrix {
     class Outdoor : public Multiplex {
         public:
-            Outdoor(Single_Panel *panel);
+            Outdoor(Panel *panel);
 
         protected:
             Outdoor();

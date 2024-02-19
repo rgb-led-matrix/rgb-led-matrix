@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <map>
 #include <math.h>
-#include <Panel/Single_Panel_Internal.h>
+#include <Panel/Panel_Internal.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
 #include <Exception/Unknown_Type.h>
@@ -13,11 +13,11 @@
 
 namespace rgb_matrix {
     // Do not use this!    
-    template <typename T> Single_Panel_Internal<T>::Single_Panel_Internal() : cfg_(nullptr), buffer_(NULL) {
-        throw Illegal("Single Panel Internal");
+    template <typename T> Panel_Internal<T>::Panel_Internal() : cfg_(nullptr), buffer_(NULL) {
+        throw Illegal("Panel Internal");
     }
 
-    template <typename T> Single_Panel_Internal<T>::Single_Panel_Internal(CFG *cfg) : cfg_(cfg), width_(cfg->get_cols()), height_(cfg->get_rows()) {
+    template <typename T> Panel_Internal<T>::Panel_Internal(CFG *cfg) : cfg_(cfg), width_(cfg->get_cols()), height_(cfg->get_rows()) {
         if (cfg == nullptr)
             throw Null_Pointer("CFG");
 
@@ -30,13 +30,13 @@ namespace rgb_matrix {
         brightness_ = 99;
     }
 
-    template <typename T> Single_Panel_Internal<T>::~Single_Panel_Internal() {
+    template <typename T> Panel_Internal<T>::~Panel_Internal() {
         for (uint16_t i = 0; i < width_; i++)
             delete buffer_[i];
         delete buffer_;
     }
 
-    template <typename T> void Single_Panel_Internal<T>::set_brightness(uint8_t brightness) {
+    template <typename T> void Panel_Internal<T>::set_brightness(uint8_t brightness) {
         if (--brightness >= 100)
             throw Illegal("Brightness");
 
@@ -63,7 +63,7 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    template <typename T> void Single_Panel_Internal<T>::map_wavelength(uint8_t color, Color index, uint16_t value) {
+    template <typename T> void Panel_Internal<T>::map_wavelength(uint8_t color, Color index, uint16_t value) {
         lock_.lock();
         GAMMA g = cfg_->get_gamma();
 
@@ -126,7 +126,7 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    template <typename T> cord_t Single_Panel_Internal<T>::get_size() {
+    template <typename T> cord_t Panel_Internal<T>::get_size() {
         cord_t result;
         lock_.lock();
         result.x = width_;
@@ -135,7 +135,7 @@ namespace rgb_matrix {
         return result;
     }
 
-    template<typename T> void Single_Panel_Internal<T>::show(Protocol *protocol, bool schedule) {
+    template<typename T> void Panel_Internal<T>::show(Protocol *protocol, bool schedule) {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
 
@@ -152,7 +152,7 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    template <typename T> void Single_Panel_Internal<T>::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
+    template <typename T> void Panel_Internal<T>::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
         if (x >= width_ || y >= height_)
             throw Illegal("Location");
             
@@ -160,7 +160,7 @@ namespace rgb_matrix {
     }
 
     // Handles brightness and gamma
-    template <typename T> void Single_Panel_Internal<T>::build_table() {
+    template <typename T> void Panel_Internal<T>::build_table() {
         for (uint32_t i = 0; i < 256; i++) {
             map_wavelength(i, Color::Red, i * 65536 / 256);
             map_wavelength(i, Color::Green, i * 65536 / 256);
@@ -169,7 +169,7 @@ namespace rgb_matrix {
     }
 
     // Handles dot correction
-    template <typename T> inline void Single_Panel_Internal<T>::MapColors(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
+    template <typename T> inline void Panel_Internal<T>::MapColors(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
         float fr, fg, fb;
 
         if (pixel == nullptr)
@@ -185,7 +185,7 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    template <typename T> void Single_Panel_Internal<T>::resize(cord_t size) {
+    template <typename T> void Panel_Internal<T>::resize(cord_t size) {
         if (size.x * size.y != width_ * height_)
             throw Illegal("Size");
 
@@ -203,8 +203,8 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    template class Single_Panel_Internal<RGB48>;
-    template class Single_Panel_Internal<RGB24>;
-    template class Single_Panel_Internal<RGB_555>;
-    template class Single_Panel_Internal<RGB_222>;
+    template class Panel_Internal<RGB48>;
+    template class Panel_Internal<RGB24>;
+    template class Panel_Internal<RGB_555>;
+    template class Panel_Internal<RGB_222>;
 }

@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
         cfg->get_dot().set(0, 10, 255, 128, 0, 0.5, 1.0, 0.9);
 
         // Create panels (Double Buffered)
-        Single_Panel *panel[2] = { RGBMatrix::Create_Single_Panel(cfg), RGBMatrix::Create_Single_Panel(cfg) };
+        Panel *panel[2] = { RGBMatrix::Create_Panel(cfg), RGBMatrix::Create_Panel(cfg) };
         Outdoor *od[2] = { new Outdoor(panel[0]), new Outdoor(panel[1]) };
         MultiPanel *frame[2] = { RGBMatrix::Create_MultiPanel(32, 16), RGBMatrix::Create_MultiPanel(32, 16) };
         frame[0]->map_panel(0, 0, MultiPanel::Direction::Right, od[0], protocol);

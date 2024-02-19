@@ -9,7 +9,7 @@ namespace rgb_matrix {
         throw Illegal("Outdoor Multiplex Mapper");
     }
 
-    Outdoor::Outdoor(Single_Panel *panel) : Multiplex(panel) {
+    Outdoor::Outdoor(Panel *panel) : Multiplex(panel) {
         map();
     }
 

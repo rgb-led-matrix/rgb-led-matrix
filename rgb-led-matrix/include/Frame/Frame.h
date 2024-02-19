@@ -9,7 +9,7 @@ namespace rgb_matrix {
 
     class Frame : public Mapper {
         public:
-            Frame(Single_Panel *panel, Protocol *protocol);
+            Frame(Panel *panel, Protocol *protocol);
             Frame(MultiPanel *panel);
 
             bool isFree();
@@ -22,7 +22,7 @@ namespace rgb_matrix {
         protected:
             Frame();
 
-            Single_Panel *single_;
+            Panel *single_;
             MultiPanel *multi_;
             Protocol *protocol_;
             bool isMulti_;

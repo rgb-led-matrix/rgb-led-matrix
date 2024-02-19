@@ -1,15 +1,15 @@
-#ifndef SINGLE_PANEL_INTERNAL_H
-#define SINGLE_PANEL_INTERNAL_H
+#ifndef PANEL_INTERNAL_H
+#define PANEL_INTERNAL_H
 
 #include <mutex>
 #include <CFG/CFG.h>
-#include <Panel/Single_Panel.h>
+#include <Panel/Panel.h>
 
 namespace rgb_matrix {
-    template <typename T> class Single_Panel_Internal : public Single_Panel {
+    template <typename T> class Panel_Internal : public Panel {
         public:
-            Single_Panel_Internal(CFG *cfg);
-            ~Single_Panel_Internal();
+            Panel_Internal(CFG *cfg);
+            ~Panel_Internal();
 
             void SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue);
             void show(Protocol *protocol, bool schedule = true);
@@ -19,7 +19,7 @@ namespace rgb_matrix {
             void map_wavelength(uint8_t color, Color index, uint16_t value);
 
         protected:
-            Single_Panel_Internal();
+            Panel_Internal();
             void build_table();
             void MapColors(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, T *color);
 
