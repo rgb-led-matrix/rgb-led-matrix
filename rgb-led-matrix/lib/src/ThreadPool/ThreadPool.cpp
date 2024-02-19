@@ -2,13 +2,6 @@
 #include <Panel/MultiPanel_Internal.h>
 
 namespace rgb_matrix {
-    template <typename R, typename F> ThreadPool<R, F>::ThreadPool() {
-        shutdown_ = false;
-    }
-
-    template <typename R, typename F> ThreadPool<R, F>::~ThreadPool() {
-        stop();
-    }
 
     template <typename R, typename F> void ThreadPool<R, F>::start(uint8_t count) {
         if (count == 0) {
@@ -18,16 +11,9 @@ namespace rgb_matrix {
                 count = 1;
         }
 
-        shutdown_ = false;
         for (uint8_t i = 0; i < count; i++) {
             threads_.emplace_back(std::thread(&ThreadPool::ThreadLoop,this));
         }
-    }
-
-    template <typename R, typename F> void ThreadPool<R, F>::stop() {
-        shutdown_ = true;
-        // TODO: Join threads
-        // TODO: Clear out work_queue_;
     }
 
     template <typename R, typename F> bool ThreadPool<R, F>::busy() {
@@ -56,7 +42,7 @@ namespace rgb_matrix {
     template <typename R, typename F> void ThreadPool<R, F>::ThreadLoop(ThreadPool<R, F> *object) {
         payload *p;
 
-        while(!object->shutdown_) {
+        while(true) {
             while (!object->busy())
                 std::this_thread::sleep_for(std::chrono::seconds(1));
             

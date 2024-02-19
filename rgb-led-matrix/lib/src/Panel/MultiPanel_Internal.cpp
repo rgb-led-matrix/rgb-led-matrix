@@ -1,12 +1,15 @@
 #include <thread>
 #include <algorithm>
 #include <Panel/MultiPanel_Internal.h>
-#include <ThreadPool/ThreadPool.h>
 #include <Exception/Illegal.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
+    ThreadPool<void *, MultiPanel_Internal::show_packet> *MultiPanel_Internal::show_thread_pool_ = nullptr;
+    ThreadPool<void *, MultiPanel_Internal::set_brightness_packet> *MultiPanel_Internal::set_brightness_thread_pool_ = nullptr;
+    ThreadPool<void *, MultiPanel_Internal::map_wavelength_packet> *MultiPanel_Internal::map_wavelength_thread_pool_ = nullptr;
+
     // Do not use this!
     MultiPanel_Internal::MultiPanel_Internal() {
         throw Illegal("MultiPanel_Internal Panel");
@@ -91,9 +94,7 @@ namespace rgb_matrix {
     void MultiPanel_Internal::show() {
         lock_.lock();
 
-        ThreadPool<void *, show_packet> *pool = new ThreadPool<void *, show_packet>();
-        pool->start();
-
+        ThreadPool<void *, show_packet> *pool = get_show_thread_pool();
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
             show_packet p;
             p.object = this;
@@ -101,8 +102,7 @@ namespace rgb_matrix {
             pool->submit(&MultiPanel_Internal::show_worker, nullptr, p);
         }
 
-        while (pool->busy());
-        delete pool;
+        // TODO: Wait for them to complete (look at return values???)
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->show((*it)->protocol, false);
@@ -165,6 +165,30 @@ namespace rgb_matrix {
         }*/
 
         lock_.unlock();
+    }
+
+    ThreadPool<void *, MultiPanel_Internal::show_packet> *MultiPanel_Internal::get_show_thread_pool() {
+        if (show_thread_pool_ == nullptr) {
+
+        }
+
+        return show_thread_pool_;
+    }
+
+    ThreadPool<void *, MultiPanel_Internal::set_brightness_packet> *MultiPanel_Internal::get_set_brightness_thread_pool() {
+        if (set_brightness_thread_pool_ == nullptr) {
+
+        }
+
+        return set_brightness_thread_pool_;
+    }
+
+    ThreadPool<void *, MultiPanel_Internal::map_wavelength_packet> *MultiPanel_Internal::get_map_wavelength_thread_pool() {
+        if (map_wavelength_thread_pool_ == nullptr) {
+
+        }
+
+        return map_wavelength_thread_pool_;
     }
 
     // Must be read only!

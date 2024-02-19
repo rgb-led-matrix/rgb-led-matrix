@@ -5,6 +5,7 @@
 #include <list>
 #include <Panel/MultiPanel.h>
 #include <IO/Scheduler/Scheduler.h>
+#include <ThreadPool/ThreadPool.h>
 
 namespace rgb_matrix {
     class MultiPanel_Internal : public MultiPanel {
@@ -52,7 +53,15 @@ namespace rgb_matrix {
             static void map_wavelength_worker(void *result, map_wavelength_packet args);
             static void set_brightness_worker(void *result, set_brightness_packet args);
 
+            static ThreadPool<void *, show_packet> *get_show_thread_pool();
+            static ThreadPool<void *, map_wavelength_packet> *get_map_wavelength_thread_pool();
+            static ThreadPool<void *, set_brightness_packet> *get_set_brightness_thread_pool();
+
             static constexpr uint32_t num_threads = 4;
+            static ThreadPool<void *, show_packet> *show_thread_pool_;
+            static ThreadPool<void *, set_brightness_packet> *set_brightness_thread_pool_;
+            static ThreadPool<void *, map_wavelength_packet> *map_wavelength_thread_pool_;
+
             uint16_t width_;
             uint16_t height_;
             std::mutex lock_;
