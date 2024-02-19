@@ -17,6 +17,7 @@ target_compile_options(linux_x64 PRIVATE
 
 target_link_libraries(linux_x64
     Exception
+    ThreadPool
     Mapper
     CFG
     IO

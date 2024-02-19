@@ -31,7 +31,7 @@ namespace rgb_matrix {
                 Protocol *protocol;
             };
 
-            static void show_worker(MultiPanel_Internal *object, Panel_t *panel);
+            static void show_worker(void *result, MultiPanel_Internal *object, Panel_t *panel);
             static void map_wavelength_worker(Panel_t *panel, uint8_t color, Color index, uint16_t value);
             static void set_brightness_worker(Panel_t *panel, uint8_t brightness);
 

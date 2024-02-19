@@ -1,6 +1,7 @@
 #include <thread>
 #include <algorithm>
 #include <Panel/MultiPanel_Internal.h>
+#include <ThreadPool/ThreadPool.h>
 #include <Exception/Illegal.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Unknown_Type.h>
@@ -87,7 +88,7 @@ namespace rgb_matrix {
         return result;
     }
 
-    void MultiPanel_Internal::show() {
+    /*void MultiPanel_Internal::show() {
         lock_.lock();
         uint32_t size = panel_->size();
         std::list<std::thread *> threads;
@@ -111,6 +112,26 @@ namespace rgb_matrix {
             if (size == 0)
                 break;
         }
+
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
+            (*it)->panel->show((*it)->protocol, false);
+
+        scheduler_->start();
+        lock_.unlock();
+    }*/
+
+    void MultiPanel_Internal::show() {
+        lock_.lock();
+
+        ThreadPool<void *, MultiPanel_Internal *, Panel_t *> *pool = new ThreadPool<void *, MultiPanel_Internal *, Panel_t *>();
+        pool->start();
+
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
+            pool->submit(&MultiPanel_Internal::show_worker, nullptr, this, (*it));
+        }
+
+        while (pool->busy());
+        pool->stop();
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->show((*it)->protocol, false);
@@ -176,7 +197,7 @@ namespace rgb_matrix {
     }
 
     // Must be read only!
-    void MultiPanel_Internal::show_worker(MultiPanel_Internal *object, Panel_t *panel) {
+    void MultiPanel_Internal::show_worker(void *, MultiPanel_Internal *object, Panel_t *panel) {
         // Quick and dirty loop(s)!
         for (uint16_t x = 0; x < object->width_; x++) {
             for (uint16_t y = 0; y < object->height_; y++) {
