@@ -12,11 +12,11 @@ namespace rgb_matrix {
             virtual void show(Protocol *protocol, bool schedule = true) = 0;
 
         protected:
-            // Used by Pixel to resize into physical size.
+            // Used by Multiplex to resize into physical size.
             //  Config will have logic size. (They will contain the same number of pixels.)
             virtual void resize(cord_t size) = 0;
 
-            friend class Pixel;
+            friend class Multiplex;
     };
 }
 #endif

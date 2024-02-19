@@ -2,7 +2,7 @@
 #include <RGBMatrix.h>
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
-#include <Mapper/Pixel/Outdoor/Outdoor.h>
+#include <Mapper/Multiplex/Outdoor/Outdoor.h>
 #include <Frame/Frame_Manager/Frame_Manager.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
@@ -24,8 +24,8 @@ int main(int argc, char **argv) {
         Single_Panel *panel[2] = { RGBMatrix::Create_Single_Panel(cfg), RGBMatrix::Create_Single_Panel(cfg) };
         Outdoor *od[2] = { new Outdoor(panel[0]), new Outdoor(panel[1]) };
         MultiPanel *frame[2] = { RGBMatrix::Create_MultiPanel(32, 16), RGBMatrix::Create_MultiPanel(32, 16) };
-        frame[0]->map_panel(0, 0, od[0], protocol);
-        frame[1]->map_panel(0, 0, od[1], protocol);
+        frame[0]->map_panel(0, 0, MultiPanel::Direction::Right, od[0], protocol);
+        frame[1]->map_panel(0, 0, MultiPanel::Direction::Right, od[1], protocol);
 
         // Create frame (Double Buffered)
         Frame *f[2] = { new Frame(frame[0]), new Frame(frame[1]) };

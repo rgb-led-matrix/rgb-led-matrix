@@ -1,15 +1,15 @@
-#include <Mapper/Pixel/Pixel.h>
+#include <Mapper/Multiplex/Multiplex.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
 #include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
     // Do not use this!    
-    Pixel::Pixel() {
-        throw Illegal("Panel Pixel Mapper");
+    Multiplex::Multiplex() {
+        throw Illegal("Panel Multiplex Mapper");
     }
 
-    Pixel::Pixel(Single_Panel *panel) : panel_(panel) {
+    Multiplex::Multiplex(Single_Panel *panel) : panel_(panel) {
         if (panel == nullptr)
             throw Null_Pointer("Panel");
 
@@ -23,7 +23,7 @@ namespace rgb_matrix {
         }
     }   
 
-    Pixel::~Pixel() {
+    Multiplex::~Multiplex() {
         for (uint16_t i = 0; i < panel_->get_size().x; i++) {
             delete locations_[i];
             delete orders_[i];
@@ -32,7 +32,7 @@ namespace rgb_matrix {
         delete orders_;
     }
 
-    void Pixel::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
+    void Multiplex::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
         pixel_t pixel;
 
         if (x >= get_size().x || y >= get_size().y)
@@ -77,28 +77,27 @@ namespace rgb_matrix {
         panel_->SetPixel(locations_[x][y], pixel);
     }
 
-    void Pixel::set_brightness(uint8_t brightness) {
+    void Multiplex::set_brightness(uint8_t brightness) {
         panel_->set_brightness(brightness);
     }
 
-    void Pixel::map_wavelength(uint8_t color, Color index, uint16_t value) {
+    void Multiplex::map_wavelength(uint8_t color, Color index, uint16_t value) {
         panel_->map_wavelength(color, index, value);
     }
 
-    void Pixel::show(Protocol *protocol, bool schedule) {
+    void Multiplex::show(Protocol *protocol, bool schedule) {
         panel_->show(protocol, schedule);
     }
 
-    cord_t Pixel::get_size() {
+    cord_t Multiplex::get_size() {
         return size_;
     }
 
-    // TODO: Think about this! (Does nesting work?)
-    void Pixel::resize(cord_t size) {
-        panel_->resize(size);
+    void Multiplex::resize(cord_t size) {
+        throw Illegal("You did a bad bad thing");
     }
 
-    void Pixel::map() {
+    void Multiplex::map() {
         panel_->resize(get_actual_size());
 
         for (uint16_t i = 0; i < panel_->get_size().x; i++) {
@@ -107,5 +106,9 @@ namespace rgb_matrix {
                 orders_[i][j] = map_color(i, j);
             }
         }
+    }
+
+    Color_Order Multiplex::map_color(uint16_t x, uint16_t y) {
+        return Color_Order::RGB;
     }
 }
