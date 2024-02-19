@@ -57,7 +57,6 @@ namespace rgb_matrix {
             static ThreadPool<void *, map_wavelength_packet> *get_map_wavelength_thread_pool();
             static ThreadPool<void *, set_brightness_packet> *get_set_brightness_thread_pool();
 
-            static constexpr uint32_t num_threads = 4;
             static ThreadPool<void *, show_packet> *show_thread_pool_;
             static ThreadPool<void *, set_brightness_packet> *set_brightness_thread_pool_;
             static ThreadPool<void *, map_wavelength_packet> *map_wavelength_thread_pool_;

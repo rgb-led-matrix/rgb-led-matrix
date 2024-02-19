@@ -111,7 +111,7 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-
+    // TODO:
     void MultiPanel_Internal::set_brightness(uint8_t brightness) {
         lock_.lock();
         /*uint32_t size = panel_->size();
@@ -139,6 +139,7 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
+    // TODO:
     void MultiPanel_Internal::map_wavelength(uint8_t color, Color index, uint16_t value) {
         lock_.lock();
         /*uint32_t size = panel_->size();
