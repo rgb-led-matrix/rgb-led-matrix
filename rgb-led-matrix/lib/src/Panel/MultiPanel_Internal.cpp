@@ -88,50 +88,21 @@ namespace rgb_matrix {
         return result;
     }
 
-    /*void MultiPanel_Internal::show() {
-        lock_.lock();
-        uint32_t size = panel_->size();
-        std::list<std::thread *> threads;
-        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end();) {
-            uint32_t num = std::min(size, num_threads);
-
-            for (uint32_t i = 0; i < num; i++) {
-                threads.push_back(new std::thread(&MultiPanel_Internal::show_worker, this, (*it)));
-                ++it;
-            }
-
-            for (uint32_t i = 0; i < num; i++) {
-                std::thread *t = threads.front();
-                threads.pop_front();
-                t->join();
-                delete t;
-            }
-
-            size -= num;
-
-            if (size == 0)
-                break;
-        }
-
-        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
-            (*it)->panel->show((*it)->protocol, false);
-
-        scheduler_->start();
-        lock_.unlock();
-    }*/
-
     void MultiPanel_Internal::show() {
         lock_.lock();
 
-        ThreadPool<void *, MultiPanel_Internal *, Panel_t *> *pool = new ThreadPool<void *, MultiPanel_Internal *, Panel_t *>();
+        ThreadPool<void *, show_packet> *pool = new ThreadPool<void *, show_packet>();
         pool->start();
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
-            pool->submit(&MultiPanel_Internal::show_worker, nullptr, this, (*it));
+            show_packet p;
+            p.object = this;
+            p.panel = (*it);
+            pool->submit(&MultiPanel_Internal::show_worker, nullptr, p);
         }
 
         while (pool->busy());
-        pool->stop();
+        delete pool;
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->show((*it)->protocol, false);
@@ -143,7 +114,7 @@ namespace rgb_matrix {
 
     void MultiPanel_Internal::set_brightness(uint8_t brightness) {
         lock_.lock();
-        uint32_t size = panel_->size();
+        /*uint32_t size = panel_->size();
         std::list<std::thread *> threads;
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end();) {
             uint32_t num = std::min(size, num_threads);
@@ -164,13 +135,13 @@ namespace rgb_matrix {
 
             if (size == 0)
                 break;
-        }
+        }*/
         lock_.unlock();
     }
 
     void MultiPanel_Internal::map_wavelength(uint8_t color, Color index, uint16_t value) {
         lock_.lock();
-        uint32_t size = panel_->size();
+        /*uint32_t size = panel_->size();
         std::list<std::thread *> threads;
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end();) {
             uint32_t num = std::min(size, num_threads);
@@ -191,20 +162,20 @@ namespace rgb_matrix {
 
             if (size == 0)
                 break;
-        }
+        }*/
 
         lock_.unlock();
     }
 
     // Must be read only!
-    void MultiPanel_Internal::show_worker(void *, MultiPanel_Internal *object, Panel_t *panel) {
+    void MultiPanel_Internal::show_worker(void *, show_packet args) {
         // Quick and dirty loop(s)!
-        for (uint16_t x = 0; x < object->width_; x++) {
-            for (uint16_t y = 0; y < object->height_; y++) {
-                switch (panel->direction) {
+        for (uint16_t x = 0; x < args.object->width_; x++) {
+            for (uint16_t y = 0; y < args.object->height_; y++) {
+                switch (args.panel->direction) {
                     case MultiPanel::Direction::Right:
-                        if (((x >= panel->x) &&  (x < (panel->x + panel->panel->get_size().x))) && ((y >= panel->y) &&  (y < (panel->y + panel->panel->get_size().y)))) {
-                            panel->panel->SetPixel(x % panel->panel->get_size().x, y % panel->panel->get_size().y, object->pixel_[x][y].red, object->pixel_[x][y].green, object->pixel_[x][y].blue);
+                        if (((x >= args.panel->x) &&  (x < (args.panel->x + args.panel->panel->get_size().x))) && ((y >= args.panel->y) &&  (y < (args.panel->y + args.panel->panel->get_size().y)))) {
+                            args.panel->panel->SetPixel(x % args.panel->panel->get_size().x, y % args.panel->panel->get_size().y, args.object->pixel_[x][y].red, args.object->pixel_[x][y].green, args.object->pixel_[x][y].blue);
                         }
                         break;
                     case MultiPanel::Direction::Down:       // TODO: Finish
@@ -221,12 +192,12 @@ namespace rgb_matrix {
     }
 
     // Must be read only!
-    void MultiPanel_Internal::map_wavelength_worker(Panel_t *panel, uint8_t color, Color index, uint16_t value) {
-        panel->panel->map_wavelength(color, index, value);
+    void MultiPanel_Internal::map_wavelength_worker(void *, map_wavelength_packet args) {
+        args.panel->panel->map_wavelength(args.color, args.index, args.value);
     }
 
     // Must be read only!
-    void MultiPanel_Internal::set_brightness_worker(Panel_t *panel, uint8_t brightness) {
-        panel->panel->set_brightness(brightness);
+    void MultiPanel_Internal::set_brightness_worker(void *, set_brightness_packet args) {
+        args.panel->panel->set_brightness(args.brightness);
     }
 }

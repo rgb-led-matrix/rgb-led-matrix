@@ -31,9 +31,26 @@ namespace rgb_matrix {
                 Protocol *protocol;
             };
 
-            static void show_worker(void *result, MultiPanel_Internal *object, Panel_t *panel);
-            static void map_wavelength_worker(Panel_t *panel, uint8_t color, Color index, uint16_t value);
-            static void set_brightness_worker(Panel_t *panel, uint8_t brightness);
+            struct show_packet {
+                MultiPanel_Internal *object;
+                Panel_t *panel;
+            };
+
+            struct map_wavelength_packet {
+                Panel_t *panel;
+                uint8_t color;
+                Color index;
+                uint16_t value;
+            };
+
+            struct set_brightness_packet {
+                Panel_t *panel;
+                uint8_t brightness;
+            };
+
+            static void show_worker(void *result, show_packet args);
+            static void map_wavelength_worker(void *result, map_wavelength_packet args);
+            static void set_brightness_worker(void *result, set_brightness_packet args);
 
             static constexpr uint32_t num_threads = 4;
             uint16_t width_;
