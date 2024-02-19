@@ -12,7 +12,7 @@ namespace rgb_matrix {
             MultiPanel_Internal(uint16_t width, uint16_t height);
             ~MultiPanel_Internal();
 
-            bool map_panel(uint16_t x, uint16_t y, Single_Panel *panel, Protocol *protocol);
+            bool map_panel(uint16_t x, uint16_t y, Direction direction, Single_Panel *panel, Protocol *protocol);
 
             void SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue);
             cord_t get_size();
@@ -27,9 +27,15 @@ namespace rgb_matrix {
                 Single_Panel *panel;
                 uint16_t x;
                 uint16_t y;
+                Direction direction;
                 Protocol *protocol;
             };
 
+            static void show_worker(MultiPanel_Internal *object, Panel_t *panel);
+            static void map_wavelength_worker(Panel_t *panel, uint8_t color, Color index, uint16_t value);
+            static void set_brightness_worker(Panel_t *panel, uint8_t brightness);
+
+            static constexpr uint32_t num_threads = 4;
             uint16_t width_;
             uint16_t height_;
             std::mutex lock_;

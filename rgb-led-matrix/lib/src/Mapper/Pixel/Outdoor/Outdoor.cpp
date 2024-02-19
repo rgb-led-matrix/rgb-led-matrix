@@ -6,7 +6,7 @@
 namespace rgb_matrix {
     // Do not use this!    
     Outdoor::Outdoor() : Pixel() {
-        throw Illegal("Panel Pixel Mapper");
+        throw Illegal("Outdoor Pixel Mapper");
     }
 
     Outdoor::Outdoor(Single_Panel *panel) : Pixel(panel) {
@@ -22,16 +22,13 @@ namespace rgb_matrix {
 
 
     cord_t Outdoor::map_location(uint16_t x, uint16_t y) {
-        // TODO:
         cord_t result;
-        result.x = 0;
-        result.y = 0;
+        result.x = (x * y) % (size_.x * 2);
+        result.y = (x * y) / (size_.x * 2);
         return result;
     }
 
     Color_Order Outdoor::map_color(uint16_t x, uint16_t y) {
-        // TODO:
-
         return Color_Order::RGB;
     }
 }
