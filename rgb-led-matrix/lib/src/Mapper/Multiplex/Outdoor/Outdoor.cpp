@@ -20,7 +20,6 @@ namespace rgb_matrix {
         return result;
     }
 
-
     cord_t Outdoor::map_location(uint16_t x, uint16_t y) {
         cord_t result;
         result.x = (x * y) % (size_.x * 2);

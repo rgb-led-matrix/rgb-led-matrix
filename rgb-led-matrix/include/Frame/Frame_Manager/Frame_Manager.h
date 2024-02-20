@@ -22,7 +22,7 @@ namespace rgb_matrix {
             std::thread *thread_;
             std::mutex lock_;
             uint16_t framerate_;
-            bool shutdown_;
+            volatile bool shutdown_;
             bool isAsync_;
     };
 }
