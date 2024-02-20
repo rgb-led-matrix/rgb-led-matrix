@@ -9,10 +9,23 @@ namespace rgb_matrix {
 
     RP2040_UART::RP2040_UART(Node *node) : Protocol(node) {
         throw String_Exception("Not finished");
+
+        state_ = 0;
+        counter_ = 0;
     }
 
     Protocol::Status RP2040_UART::internal_state_machine() {
-        // TODO:
-        return Protocol::Status::NOT_FINISHED;
+        Protocol::Status result = Protocol::Status::NOT_FINISHED;
+
+        switch (state_) {
+            case 0:
+                // TODO:
+                break;
+            default:
+                throw Illegal("State");
+                break;
+        }
+
+        return result;
     }
 }

@@ -30,6 +30,7 @@ namespace rgb_matrix {
                         (*it)->acknowledge();
                         break;
                     case Protocol::Status::NEXT:
+                        isFinished = false;
                         isNext &= true;
                         break;
                     default:
