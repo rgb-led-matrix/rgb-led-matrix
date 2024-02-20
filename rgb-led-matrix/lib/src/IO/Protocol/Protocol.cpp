@@ -1,6 +1,7 @@
 #include <IO/Protocol/Protocol.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
+#include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
     // Do not use this!

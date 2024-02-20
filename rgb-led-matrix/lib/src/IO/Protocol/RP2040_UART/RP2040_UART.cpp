@@ -1,7 +1,5 @@
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
 #include <Exception/Illegal.h>
-#include <Exception/Null_Pointer.h>
-#include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
     // Do not use this!
