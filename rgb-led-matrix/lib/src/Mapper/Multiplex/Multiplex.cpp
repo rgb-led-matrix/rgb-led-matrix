@@ -94,7 +94,7 @@ namespace rgb_matrix {
     }
 
     void Multiplex::map() {
-        panel_->resize(get_actual_size());
+        full_panel_->resize(get_actual_size());
 
         for (uint16_t i = 0; i < panel_->get_size().x; i++) {
             for (uint16_t j = 0; j < panel_->get_size().y; j++) {

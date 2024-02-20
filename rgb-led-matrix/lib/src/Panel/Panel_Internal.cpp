@@ -37,7 +37,7 @@ namespace rgb_matrix {
     }
 
     template <typename T> void Panel_Internal<T>::set_brightness(uint8_t brightness) {
-        if (--brightness >= 100)
+        if (brightness >= 100)
             throw Illegal("Brightness");
 
         lock_.lock();

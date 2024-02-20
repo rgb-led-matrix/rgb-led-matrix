@@ -5,6 +5,7 @@
 
 namespace rgb_matrix {
     // Required construct for OSI Layer 2 and above
+    //    Note this uses something like the Mediator Pattern
     class Protocol {
         public:
             Protocol(Node *node);

@@ -1,7 +1,7 @@
 #ifndef PIXEL_H
 #define PIXEL_H
 
-#include <Panel/Multiplex/Multiplex.h>
+#include <Mapper/Multiplex/Multiplex.h>
 
 namespace rgb_matrix {
     // Optional construct for handling Pixel locations and RGB ordering

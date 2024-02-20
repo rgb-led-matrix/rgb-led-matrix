@@ -5,10 +5,10 @@
 #include <IO/Protocol/Protocol.h>
 
 namespace rgb_matrix {
-    // Pure interface for Single Panel
+    // Pure interface for Simple Panel
     class Simple_Panel : public Mapper {
         public:
-            // Using Single_Panel directly should always schedule (we may delete this option)
+            // Using Simple Panel directly should always schedule (we may delete this option)
             virtual void show(Protocol *protocol, bool schedule = true) = 0;
     };
 }

@@ -23,13 +23,16 @@ namespace rgb_matrix {
             virtual cord_t get_actual_size() = 0;
             virtual cord_t map_location(uint16_t x, uint16_t y) = 0;
             virtual Color_Order map_color(uint16_t x, uint16_t y);
-
             void map();
 
-            Panel *panel_;
+            Simple_Panel *panel_;
             cord_t **locations_;
             Color_Order **orders_;
             cord_t size_;
+        
+        private:
+            Panel *full_panel_;
+
     };
 }
 #endif
