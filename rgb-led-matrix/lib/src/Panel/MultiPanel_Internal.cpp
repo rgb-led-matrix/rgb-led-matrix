@@ -217,16 +217,61 @@ namespace rgb_matrix {
         // Quick and dirty loop(s)!
         for (uint16_t x = 0; x < args.object->width_; x++) {
             for (uint16_t y = 0; y < args.object->height_; y++) {
+                uint16_t map_x, map_y, panel_x, panel_y, range_x, range_y;
+                pixel_t pixel;
+
                 switch (args.panel->direction) {
                     case MultiPanel::Direction::Right:
-                        if (((x >= args.panel->x) &&  (x < (args.panel->x + args.panel->panel->get_size().x))) && ((y >= args.panel->y) &&  (y < (args.panel->y + args.panel->panel->get_size().y)))) {
-                            args.panel->panel->SetPixel(x % args.panel->panel->get_size().x, y % args.panel->panel->get_size().y, args.object->pixel_[x][y].red, args.object->pixel_[x][y].green, args.object->pixel_[x][y].blue);
+                        map_x = args.panel->x;
+                        map_y = args.panel->y;
+                        panel_x = args.panel->panel->get_size().x;
+                        panel_y = args.panel->panel->get_size().y;
+                        range_x = map_x + panel_x;
+                        range_y = map_y + panel_y;
+                        pixel = args.object->pixel_[x][y];
+
+                        if (((x >= map_x) &&  (x < range_x)) && ((y >= map_y) &&  (y < range_y))) {
+                            args.panel->panel->SetPixel(x % panel_x, y % panel_y, pixel.red, pixel.green, pixel.blue);
                         }
                         break;
-                    case MultiPanel::Direction::Down:       // TODO: Finish
+                    case MultiPanel::Direction::Down:
+                        map_x = args.panel->x;
+                        map_y = args.panel->y;
+                        panel_x = args.panel->panel->get_size().x;
+                        panel_y = args.panel->panel->get_size().y;
+                        range_x = map_x + panel_y;
+                        range_y = map_y - panel_x; // Look at me
+                        pixel = args.object->pixel_[x][y];
+
+                        if (((x >= map_x) &&  (x < range_x)) && ((y >= range_y) &&  (y < map_y))) {
+                            args.panel->panel->SetPixel(x % panel_x, y % panel_y, pixel.red, pixel.green, pixel.blue);
+                        }
+                        break;
                     case MultiPanel::Direction::Left:       // TODO: Finish
+                        map_x = args.panel->x;
+                        map_y = args.panel->y;
+                        panel_x = args.panel->panel->get_size().x;
+                        panel_y = args.panel->panel->get_size().y;
+                        range_x = map_x - panel_x; // Look at me
+                        range_y = map_y - panel_y; // Look at me
+                        pixel = args.object->pixel_[x][y];
+
+                        if (((x >= range_x) &&  (x < map_x)) && ((y >= range_y) &&  (y < map_y))) {
+                            args.panel->panel->SetPixel(x % panel_x, y % panel_y, pixel.red, pixel.green, pixel.blue);
+                        }
+                        break;
                     case MultiPanel::Direction::Up:         // TODO: Finish
-                        String_Exception("Not implemented");
+                        map_x = args.panel->x;
+                        map_y = args.panel->y;
+                        panel_x = args.panel->panel->get_size().x;
+                        panel_y = args.panel->panel->get_size().y;
+                        range_x = map_x - panel_y; // Look at me
+                        range_y = map_y + panel_x;
+                        pixel = args.object->pixel_[x][y];
+
+                        if (((x >= range_y) &&  (x < map_x)) && ((y >= map_y) &&  (y < range_y))) {
+                            args.panel->panel->SetPixel(x % panel_x, y % panel_y, pixel.red, pixel.green, pixel.blue);
+                        }
                         break;
                     default:
                         throw Unknown_Type("Direction");
