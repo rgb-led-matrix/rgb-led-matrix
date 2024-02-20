@@ -6,6 +6,7 @@
 #include <IO/Protocol/Protocol.h>
 
 namespace rgb_matrix {
+    // Uses Mediator Pattern to synchronize panels in MultiPanel::show
     class Scheduler {
         public:
             void start();

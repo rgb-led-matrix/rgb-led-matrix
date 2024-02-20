@@ -2,33 +2,39 @@
 #define PROTOCOL_H
 
 #include <IO/Node/Node.h>
+#include <mutex>
 
 namespace rgb_matrix {
     // Required construct for OSI Layer 2 and above
-    //    Note this uses something like the Mediator Pattern
+    //    Note these are client implementations for an internal Mediator Pattern
     class Protocol {
         public:
             Protocol(Node *node);
             virtual ~Protocol() {}
 
             enum Status {
-                MACRO_FINISHED,
-                MICRO_FINISHED,
                 NOT_FINISHED,
+                NEXT,
                 FINISHED
             };
 
             // For Panel
-            virtual void send(uint8_t *buf, uint32_t size) = 0;
+            void send(uint8_t *buf, uint32_t size);
 
             // For Scheduler
-            virtual Status get_protocol_status() = 0;
-            virtual void acknowledge(Status) = 0;
+            Status get_protocol_status();
+            void acknowledge();
 
         protected:
             Protocol();
 
+            virtual Status internal_state_machine() = 0;
+
             Node *node_;
+            uint8_t *buf_;
+            uint32_t size_;
+            volatile Status status_;
+            std::mutex lock_;
     };
 }
 #endif

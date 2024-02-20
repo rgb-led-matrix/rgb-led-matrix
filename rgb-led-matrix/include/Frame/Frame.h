@@ -26,7 +26,7 @@ namespace rgb_matrix {
             MultiPanel *multi_;
             Protocol *protocol_;
             bool isMulti_;
-            bool isFree_;
+            volatile bool isFree_;
 
             friend class Frame_Manager;
     };
