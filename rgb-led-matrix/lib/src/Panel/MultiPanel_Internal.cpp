@@ -212,6 +212,13 @@ namespace rgb_matrix {
         return map_wavelength_thread_pool_;
     }
 
+    uint16_t range_helper(uint16_t map, uint16_t panel) {
+        if (panel > map)
+            return 0;
+        else
+            return map - panel;
+    }
+
     // Must be read only!
     void MultiPanel_Internal::show_worker(volatile bool *result, show_packet args) {
         // Quick and dirty loop(s)!
@@ -240,32 +247,32 @@ namespace rgb_matrix {
                         panel_x = args.panel->panel->get_size().x;
                         panel_y = args.panel->panel->get_size().y;
                         range_x = map_x + panel_y;
-                        range_y = map_y - panel_x; // Look at me
+                        range_y = range_helper(map_y, panel_x);
                         pixel = args.object->pixel_[x][y];
 
                         if (((x >= map_x) &&  (x < range_x)) && ((y >= range_y) &&  (y < map_y))) {
                             args.panel->panel->SetPixel(x % panel_x, y % panel_y, pixel.red, pixel.green, pixel.blue);
                         }
                         break;
-                    case MultiPanel::Direction::Left:       // TODO: Finish
+                    case MultiPanel::Direction::Left:
                         map_x = args.panel->x;
                         map_y = args.panel->y;
                         panel_x = args.panel->panel->get_size().x;
                         panel_y = args.panel->panel->get_size().y;
-                        range_x = map_x - panel_x; // Look at me
-                        range_y = map_y - panel_y; // Look at me
+                        range_x = range_helper(map_x, panel_x);
+                        range_y = range_helper(map_y, panel_y);
                         pixel = args.object->pixel_[x][y];
 
                         if (((x >= range_x) &&  (x < map_x)) && ((y >= range_y) &&  (y < map_y))) {
                             args.panel->panel->SetPixel(x % panel_x, y % panel_y, pixel.red, pixel.green, pixel.blue);
                         }
                         break;
-                    case MultiPanel::Direction::Up:         // TODO: Finish
+                    case MultiPanel::Direction::Up:
                         map_x = args.panel->x;
                         map_y = args.panel->y;
                         panel_x = args.panel->panel->get_size().x;
                         panel_y = args.panel->panel->get_size().y;
-                        range_x = map_x - panel_y; // Look at me
+                        range_x = range_helper(map_x, panel_y);
                         range_y = map_y + panel_x;
                         pixel = args.object->pixel_[x][y];
 
