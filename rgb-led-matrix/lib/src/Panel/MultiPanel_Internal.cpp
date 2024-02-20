@@ -124,59 +124,60 @@ namespace rgb_matrix {
         lock_.unlock();
     }
 
-    // TODO:
     void MultiPanel_Internal::set_brightness(uint8_t brightness) {
         lock_.lock();
-        /*uint32_t size = panel_->size();
-        std::list<std::thread *> threads;
-        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end();) {
-            uint32_t num = std::min(size, num_threads);
+        std::queue<volatile bool *> results;
 
-            for (uint32_t i = 0; i < num; i++) {
-                threads.push_back(new std::thread(&MultiPanel_Internal::set_brightness_worker, (*it), brightness));
-                ++it;
+        // Fork/Join Acceleration
+        ThreadPool<volatile bool *, set_brightness_packet> *pool = get_set_brightness_thread_pool();
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
+            set_brightness_packet p;
+            volatile bool *r;
+            p.panel = (*it);
+            p.brightness = brightness;
+            r = new bool;
+            *r = false;
+            pool->submit(&MultiPanel_Internal::set_brightness_worker, r, p);
+        }
+
+        while (!results.empty()) {
+            volatile bool *r = results.front();
+            while(*r == false) {
+                // Well hopefully the OS does something
+                // std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
+            results.pop();
+        }
 
-            for (uint32_t i = 0; i < num; i++) {
-                std::thread *t = threads.front();
-                threads.pop_front();
-                t->join();
-                delete t;
-            }
-
-            size -= num;
-
-            if (size == 0)
-                break;
-        }*/
         lock_.unlock();
     }
 
-    // TODO:
     void MultiPanel_Internal::map_wavelength(uint8_t color, Color index, uint16_t value) {
         lock_.lock();
-        /*uint32_t size = panel_->size();
-        std::list<std::thread *> threads;
-        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end();) {
-            uint32_t num = std::min(size, num_threads);
+        std::queue<volatile bool *> results;
 
-            for (uint32_t i = 0; i < num; i++) {
-                threads.push_back(new std::thread(&MultiPanel_Internal::map_wavelength_worker, (*it), color, index, value));
-                 ++it;
+        // Fork/Join Acceleration
+        ThreadPool<volatile bool *, map_wavelength_packet> *pool = get_map_wavelength_thread_pool();
+        for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
+            map_wavelength_packet p;
+            volatile bool *r;
+            p.panel = (*it);
+            p.color = color;
+            p.index = index;
+            p.value = value;
+            r = new bool;
+            *r = false;
+            pool->submit(&MultiPanel_Internal::map_wavelength_worker, r, p);
+        }
+
+        while (!results.empty()) {
+            volatile bool *r = results.front();
+            while(*r == false) {
+                // Well hopefully the OS does something
+                // std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
-
-            for (uint32_t i = 0; i < num; i++) {
-                std::thread *t = threads.front();
-                threads.pop_front();
-                t->join();
-                delete t;
-            }
-
-            size -= num;
-
-            if (size == 0)
-                break;
-        }*/
+            results.pop();
+        }
 
         lock_.unlock();
     }
