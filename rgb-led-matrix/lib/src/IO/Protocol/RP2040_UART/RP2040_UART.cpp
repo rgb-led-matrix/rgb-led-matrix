@@ -24,6 +24,7 @@ namespace rgb_matrix {
         //  FINISHED -> FINISHED (hold till reset)
         // Illegal transisitions:
         //  NEXT -> FINISHED
+        //  NEXT -> NEXT
         //  FINISHED -> NOT_FINISHED
         //  FINISHED -> NEXT
         switch (state_) {
