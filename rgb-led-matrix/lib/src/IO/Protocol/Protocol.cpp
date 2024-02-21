@@ -16,7 +16,7 @@ namespace rgb_matrix {
         node_ = node;
     }
 
-    void Protocol::send(uint8_t *buf, uint32_t size) {
+    void Protocol::send(uint8_t *buf, uint32_t size, uint8_t scan) {
         lock_.lock();
 
         if (buf == nullptr)
@@ -27,6 +27,7 @@ namespace rgb_matrix {
 
         buf_ = buf;
         size_ = size;
+        scan_ = scan;
         status_ = Status::NOT_FINISHED;
     }
 

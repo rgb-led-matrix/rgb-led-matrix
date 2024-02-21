@@ -176,11 +176,11 @@ namespace rgb_matrix {
 
         lock_.lock();
         if (!schedule)
-            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_);
+            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, scan_);
         else {
             Scheduler *scheduler = new Scheduler();
             scheduler->add_protocol(protocol);
-            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_);
+            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, scan_);
             scheduler->start();
             delete scheduler;
         }

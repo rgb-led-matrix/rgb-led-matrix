@@ -38,7 +38,7 @@ namespace rgb_matrix {
             };
 
             // For Panel
-            void send(uint8_t *buf, uint32_t size);
+            void send(uint8_t *buf, uint32_t size, uint8_t scan);
 
             // For Scheduler
             Status get_protocol_status();
@@ -54,6 +54,7 @@ namespace rgb_matrix {
             uint32_t size_;
             volatile Status status_;
             std::mutex lock_;
+            uint8_t scan_;
     };
 }
 #endif
