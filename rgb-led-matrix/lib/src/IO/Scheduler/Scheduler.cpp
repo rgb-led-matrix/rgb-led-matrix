@@ -37,6 +37,7 @@ namespace rgb_matrix {
                         isNext &= true;
                         break;
                     default:
+                        lock_.unlock();
                         throw Unknown_Type("Status");
                         break;
                 }

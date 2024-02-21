@@ -121,6 +121,7 @@ namespace rgb_matrix {
                     lookup[lut[brightness_][i].blue] = i;
                     break;
                 default:
+                    lock_.unlock();
                     throw Unknown_Type("Color");
                     break;
             }
@@ -139,6 +140,7 @@ namespace rgb_matrix {
                     lut[j][color].blue = (uint16_t) round(pow(value / 65535.0, 1 / g.get_blue()) * T::blue_lim * j / 99.0);
                     break;
                 default:
+                    lock_.unlock();
                     throw Unknown_Type("Color");
                     break;
             }
@@ -158,6 +160,7 @@ namespace rgb_matrix {
                         buffer_[i][j].blue = lut[brightness_][lookup[buffer_[i][j].blue]].blue;
                         break;
                     default:
+                        lock_.unlock();
                         throw Unknown_Type("Color");
                         break;
                 }
