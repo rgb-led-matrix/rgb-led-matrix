@@ -13,21 +13,26 @@
 
 namespace rgb_matrix {
     // Do not use this!    
-    template <typename T> Panel_Internal<T>::Panel_Internal() : cfg_(nullptr), buffer_(NULL) {
+    template <typename T> Panel_Internal<T>::Panel_Internal() {
         throw Illegal("Panel Internal");
     }
 
-    template <typename T> Panel_Internal<T>::Panel_Internal(CFG *cfg) : cfg_(cfg), width_(cfg->get_cols()), height_(cfg->get_rows()) {
+    template <typename T> Panel_Internal<T>::Panel_Internal(CFG *cfg) {
         if (cfg == nullptr)
             throw Null_Pointer("CFG");
 
+        brightness_ = 99;
+        cfg_ = cfg;
+
         build_table();
+
+        // TODO: Resize
+        // TODO: Size and Size Actual
+        // TODO: Map
 
         buffer_ = new T *[width_];
         for (uint16_t i = 0; i < width_; i++)
             buffer_[i] = new T[height_];
-
-        brightness_ = 99;
     }
 
     template <typename T> Panel_Internal<T>::~Panel_Internal() {
@@ -182,24 +187,6 @@ namespace rgb_matrix {
         pixel->red = (uint16_t) round(this->lut[bright][r].red / T::red_max * fr);
         pixel->green = (uint16_t) round(this->lut[bright][g].green / T::green_max * fg);
         pixel->blue = (uint16_t) round(this->lut[bright][b].blue / T::blue_max * fb);
-        lock_.unlock();
-    }
-
-    template <typename T> void Panel_Internal<T>::resize(cord_t size) {
-        if (size.x * size.y != width_ * height_)
-            throw Illegal("Size");
-
-        lock_.lock();
-        for (uint16_t i = 0; i < width_; i++)
-            delete buffer_[i];
-        delete buffer_;
-
-        width_ = size.x;
-        height_ = size.y;
-
-        buffer_ = new T *[width_];
-        for (uint16_t i = 0; i < width_; i++)
-            buffer_[i] = new T[height_];
         lock_.unlock();
     }
 
