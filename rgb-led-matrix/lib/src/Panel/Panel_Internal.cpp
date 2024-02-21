@@ -54,8 +54,10 @@ namespace rgb_matrix {
                     locations_[x][y].y = y;
                 }
                 else {
-                    locations_[x][y] = cfg_->get_mapper()->map_location(x, y, size_, scan_);
                     orders_[x][y] = cfg_->get_mapper()->map_color(x, y);
+                    locations_[x][y] = cfg_->get_mapper()->map_location(x, y, size_, scan_);
+                    if (locations_[x][y].x >= width_ || locations_[x][y].y >= height_)
+                        throw Illegal("Location");
                 }
             }
         }
