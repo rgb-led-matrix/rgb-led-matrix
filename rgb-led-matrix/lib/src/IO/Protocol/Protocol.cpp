@@ -17,8 +17,6 @@ namespace rgb_matrix {
     }
 
     void Protocol::send(uint8_t *buf, uint32_t size, uint8_t scan) {
-        lock_.lock();
-
         if (buf == nullptr)
             throw Null_Pointer("Buffer");
         
@@ -52,8 +50,6 @@ namespace rgb_matrix {
         switch (status_) {
             case Status::NOT_FINISHED:
                 status_ = internal_state_machine();
-                if (status_ == Status::FINISHED)
-                    lock_.unlock();
                 break;
             case Status::NEXT:
                 status_ = internal_state_machine();

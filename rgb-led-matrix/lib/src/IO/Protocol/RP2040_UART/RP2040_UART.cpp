@@ -50,6 +50,7 @@ namespace rgb_matrix {
                 }
                 break;
             default:
+                state_ = 0;
                 throw Illegal("State");
                 break;
         }
