@@ -1,17 +1,15 @@
 #ifndef PANEL_H
 #define PANEL_H
 
-#include <Panel/Simple_Panel.h>
+#include <Drawer/Drawer.h>
+#include <IO/Protocol/Protocol.h>
 
 namespace rgb_matrix {
-    // Pure interface for Single Panel
-    class Panel : public Simple_Panel {
-        protected:
-            // Used by Multiplex to resize into physical size.
-            //  Config will have logic size. (They will contain the same number of pixels.)
-            virtual void resize(cord_t size) = 0;
-
-            friend class Multiplex;
+    // Pure interface for Panel
+    class Panel : public Drawer {
+        public:
+            // Using Panel directly should always schedule (we may delete this option)
+            virtual void show(Protocol *protocol, bool schedule = true) = 0;
     };
 }
 #endif

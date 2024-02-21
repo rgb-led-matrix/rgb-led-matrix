@@ -2,25 +2,47 @@
 #include <thread>
 #include <IO/Scheduler/Scheduler.h>
 #include <Exception/Null_Pointer.h>
+#include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
     void Scheduler::start() {
-        bool isFinished = true;
+        bool isNext, isFinished = false;
 
         lock_.lock();
-        while (isFinished) {
+        while (!isFinished) {
+            isFinished = true;
+            isNext = true;
+
             // Wait for sync point
             for (std::list<Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
                 while((*it)->get_protocol_status() == Protocol::Status::NOT_FINISHED) {
                     std::this_thread::sleep_for (std::chrono::seconds(1));
                 }
 
-                isFinished &= (*it)->get_protocol_status() == Protocol::Status::FINISHED;
+                switch ((*it)->get_protocol_status()) {
+                    case Protocol::Status::FINISHED:
+                        isFinished &= true;
+                        isNext &= true;
+                        break;
+                    case Protocol::Status::NOT_FINISHED:
+                        isFinished &= false;
+                        isNext &= false;
+                        (*it)->acknowledge();
+                        break;
+                    case Protocol::Status::NEXT:
+                        isFinished = false;
+                        isNext &= true;
+                        break;
+                    default:
+                        throw Unknown_Type("Status");
+                        break;
+                }
             }
 
             // Advance the state
-            for (std::list<Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
-                (*it)->acknowledge((*it)->get_protocol_status());
+            if (isNext)
+                for (std::list<Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
+                    (*it)->acknowledge();
             }
         }
         lock_.unlock();

@@ -2,7 +2,7 @@
 #include <RGBMatrix.h>
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
-#include <Mapper/Multiplex/Outdoor/Outdoor.h>
+#include <Mapper/Outdoor/Outdoor.h>
 #include <Frame/Frame_Manager/Frame_Manager.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
@@ -17,15 +17,15 @@ int main(int argc, char **argv) {
 
         // Setup config
         GAMMA gamma(2.2, 2.2, 2.2);
-        CFG *cfg = new CFG(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, gamma);
+        Outdoor *od = new Outdoor();
+        CFG *cfg = new CFG(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, 4, gamma, od);
         cfg->get_dot().set(0, 10, 255, 128, 0, 0.5, 1.0, 0.9);
 
         // Create panels (Double Buffered)
         Panel *panel[2] = { RGBMatrix::Create_Panel(cfg), RGBMatrix::Create_Panel(cfg) };
-        Outdoor *od[2] = { new Outdoor(panel[0]), new Outdoor(panel[1]) };
         MultiPanel *frame[2] = { RGBMatrix::Create_MultiPanel(32, 16), RGBMatrix::Create_MultiPanel(32, 16) };
-        frame[0]->map_panel(0, 0, MultiPanel::Direction::Right, od[0], protocol);
-        frame[1]->map_panel(0, 0, MultiPanel::Direction::Right, od[1], protocol);
+        frame[0]->map_panel(0, 0, MultiPanel::Direction::Right, panel[0], protocol);
+        frame[1]->map_panel(0, 0, MultiPanel::Direction::Right, panel[1], protocol);
 
         // Create frame (Double Buffered)
         Frame *f[2] = { new Frame(frame[0]), new Frame(frame[1]) };

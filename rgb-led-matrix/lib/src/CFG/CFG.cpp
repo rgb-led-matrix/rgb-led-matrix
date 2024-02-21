@@ -7,9 +7,11 @@ namespace rgb_matrix {
         throw Illegal("CFG");
     }
 
-    CFG::CFG(uint16_t rows, uint16_t cols, Data_Format_ID data_format, GAMMA gamma) : dot_(rows, cols) {
+    CFG::CFG(uint16_t rows, uint16_t cols, Data_Format_ID data_format, uint8_t scan, GAMMA gamma, Mapper *mapper) : dot_(rows, cols) {
         data_format_ = data_format;
         gamma_ = gamma;
+        scan_ = scan;
+        mapper_ = mapper;
     }
 
     DOTCorrect& CFG::get_dot() { 
@@ -28,7 +30,15 @@ namespace rgb_matrix {
         return cols_; 
     }
 
+    uint8_t CFG::get_scan() {
+        return scan_;
+    }
+
     Data_Format_ID CFG::get_data_format() { 
         return data_format_; 
+    }
+
+    Mapper *CFG::get_mapper() {
+        return mapper_;
     }
 };

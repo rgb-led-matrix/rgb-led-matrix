@@ -32,7 +32,7 @@ namespace rgb_matrix {
         delete scheduler_;
     }
 
-    bool MultiPanel_Internal::map_panel(uint16_t x, uint16_t y, Direction direction, Simple_Panel *panel, Protocol *protocol) {
+    bool MultiPanel_Internal::map_panel(uint16_t x, uint16_t y, Direction direction, Panel *panel, Protocol *protocol) {
         Panel_t *ptr = new Panel_t;
 
         if (panel == nullptr)

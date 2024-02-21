@@ -13,13 +13,21 @@
 
 namespace rgb_matrix {
     // Do not use this!    
-    template <typename T> Panel_Internal<T>::Panel_Internal() : cfg_(nullptr), buffer_(NULL) {
+    template <typename T> Panel_Internal<T>::Panel_Internal() {
         throw Illegal("Panel Internal");
     }
 
-    template <typename T> Panel_Internal<T>::Panel_Internal(CFG *cfg) : cfg_(cfg), width_(cfg->get_cols()), height_(cfg->get_rows()) {
+    template <typename T> Panel_Internal<T>::Panel_Internal(CFG *cfg) {
         if (cfg == nullptr)
             throw Null_Pointer("CFG");
+
+        brightness_ = 99;
+        cfg_ = cfg;
+        scan_ = cfg->get_scan();
+        width_ = cfg_->get_cols() * (cfg_->get_rows() / scan_);
+        height_ = scan_;
+        size_.x = cfg_->get_cols();
+        size_.y = cfg_->get_rows();
 
         build_table();
 
@@ -27,13 +35,43 @@ namespace rgb_matrix {
         for (uint16_t i = 0; i < width_; i++)
             buffer_[i] = new T[height_];
 
-        brightness_ = 99;
+        locations_ = new cord_t *[size_.x];
+        orders_ = new Color_Order *[size_.x];
+        for (uint16_t i = 0; i < size_.x; i++) {
+            locations_[i] = new cord_t[size_.y];
+            orders_[i] = new Color_Order[size_.y];
+        }
+
+        if (cfg_->get_mapper() == nullptr)
+            if (size_.x != width_)
+                throw Illegal("Mapper null");
+
+        for (uint16_t x = 0; x < size_.x; x++) {
+            for (uint16_t y = 0; y < size_.y; y++) {
+                if (cfg_->get_mapper() == nullptr) {
+                    orders_[x][y] = Color_Order::RGB;
+                    locations_[x][y].x = x;
+                    locations_[x][y].y = y;
+                }
+                else {
+                    locations_[x][y] = cfg_->get_mapper()->map_location(x, y, size_, scan_);
+                    orders_[x][y] = cfg_->get_mapper()->map_color(x, y);
+                }
+            }
+        }
     }
 
     template <typename T> Panel_Internal<T>::~Panel_Internal() {
         for (uint16_t i = 0; i < width_; i++)
             delete buffer_[i];
         delete buffer_;
+
+        for (uint16_t i = 0; i < size_.x; i++) {
+            delete locations_[i];
+            delete orders_[i];
+        }
+        delete locations_;
+        delete orders_;
     }
 
     template <typename T> void Panel_Internal<T>::set_brightness(uint8_t brightness) {
@@ -127,12 +165,7 @@ namespace rgb_matrix {
     }
 
     template <typename T> cord_t Panel_Internal<T>::get_size() {
-        cord_t result;
-        lock_.lock();
-        result.x = width_;
-        result.y = height_;
-        lock_.unlock();
-        return result;
+        return size_;
     }
 
     template<typename T> void Panel_Internal<T>::show(Protocol *protocol, bool schedule) {
@@ -153,10 +186,33 @@ namespace rgb_matrix {
     }
 
     template <typename T> void Panel_Internal<T>::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
-        if (x >= width_ || y >= height_)
+        if (x >= size_.x || y >= size_.y)
             throw Illegal("Location");
-            
-        MapColors(x, y, red, green, blue, &buffer_[x][y]);
+        
+        cord_t location = locations_[x][y];
+        switch (orders_[x][y]) {
+            case Color_Order::BGR:
+                MapColors(location.x, location.y, blue, green, red, &buffer_[location.x][location.y]);
+                break;
+            case Color_Order::BRG:
+                MapColors(location.x, location.y, blue, red, green, &buffer_[location.x][location.y]);
+                break;
+            case Color_Order::GRB:
+                MapColors(location.x, location.y, green, red, blue, &buffer_[location.x][location.y]);
+                break;
+            case Color_Order::GBR:
+                MapColors(location.x, location.y, green, blue, red, &buffer_[location.x][location.y]);
+                break;
+            case Color_Order::RBG:
+                MapColors(location.x, location.y, red, blue, green, &buffer_[location.x][location.y]);
+                break;
+            case Color_Order::RGB:
+                MapColors(location.x, location.y, red, green, blue, &buffer_[location.x][location.y]);
+                break;
+            default:
+                throw Unknown_Type("Color Order");
+                break;
+        }
     }
 
     // Handles brightness and gamma
@@ -182,24 +238,6 @@ namespace rgb_matrix {
         pixel->red = (uint16_t) round(this->lut[bright][r].red / T::red_max * fr);
         pixel->green = (uint16_t) round(this->lut[bright][g].green / T::green_max * fg);
         pixel->blue = (uint16_t) round(this->lut[bright][b].blue / T::blue_max * fb);
-        lock_.unlock();
-    }
-
-    template <typename T> void Panel_Internal<T>::resize(cord_t size) {
-        if (size.x * size.y != width_ * height_)
-            throw Illegal("Size");
-
-        lock_.lock();
-        for (uint16_t i = 0; i < width_; i++)
-            delete buffer_[i];
-        delete buffer_;
-
-        width_ = size.x;
-        height_ = size.y;
-
-        buffer_ = new T *[width_];
-        for (uint16_t i = 0; i < width_; i++)
-            buffer_[i] = new T[height_];
         lock_.unlock();
     }
 
