@@ -7,6 +7,7 @@
 namespace rgb_matrix {
     // Required construct for OSI Layer 2 and above
     //  Note these are client implementations for an internal Mediator Pattern
+    //
     //  Warning a glitch is possible and there really is no solution in software
     //      We send out a packet of information and we expect this to arrive at
     //  the same time. It is like a foot race, we attempt to have all racers
@@ -18,6 +19,13 @@ namespace rgb_matrix {
     //  impact on the outcome of the race. However should there be road blocks
     //  in some racers path we cannot mitigate this. Hardware should attempt
     //  to give each racer a clean path before hand.
+    // 
+    //      It is recommended to keep the performance of the L1/L2 around 150uS
+    //  regardless of framerate. L7 is more relaxed with something like 15mS
+    //  requirements (assuming 30FPS). L1/L2 needs to make sure than all protocols/pipes
+    //  (assuming MultiPanel) finish with a max delta of 150uS between fastest and slowest
+    //  pipe. Otherwise frame switches may become noticable to cameras. (Assuming 3kHz
+    //  is enough to hide from them.)
     class Protocol {
         public:
             Protocol(Node *node);
