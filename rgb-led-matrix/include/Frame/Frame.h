@@ -7,7 +7,7 @@
 namespace rgb_matrix {
     class Frame_Manager;
 
-    class Frame : public Mapper {
+    class Frame : public Drawer {
         public:
             Frame(Panel *panel, Protocol *protocol);
             Frame(MultiPanel *panel);

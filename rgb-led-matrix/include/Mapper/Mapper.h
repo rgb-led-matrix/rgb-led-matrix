@@ -5,14 +5,11 @@
 #include <CFG/Types/types.h>
 
 namespace rgb_matrix {
-    // Pure interface for drawing
+    // Pure interface for mapping
     class Mapper {
         public:
-            virtual void SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) = 0;
-            virtual void SetPixel(cord_t cord, pixel_t pixel) { SetPixel(cord.x, cord.y, pixel.red, pixel.green, pixel.blue); }
-            virtual cord_t get_size() = 0;
-            virtual void set_brightness(uint8_t brightness) = 0;
-            virtual void map_wavelength(uint8_t color, Color index, uint16_t value) = 0;
+            virtual Color_Order map_color(uint16_t x, uint16_t y) = 0;
+            virtual cord_t map_location(uint16_t x, uint16_t y, cord_t size, uint8_t scan) = 0;
     };
 }
 #endif

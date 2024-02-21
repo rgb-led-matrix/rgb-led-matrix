@@ -29,6 +29,8 @@ namespace rgb_matrix {
             T **buffer_;
             T lut[100][256];
             std::mutex lock_;
+            cord_t **locations_;
+            Color_Order **orders_;
             volatile uint8_t brightness_;
             uint16_t width_;
             uint16_t height_;

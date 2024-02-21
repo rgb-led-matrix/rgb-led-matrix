@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
 
         // Setup config
         GAMMA gamma(2.2, 2.2, 2.2);
-        CFG *cfg = new CFG(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, gamma);
+        CFG *cfg = new CFG(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, 8, gamma);
         cfg->get_dot().set(0, 10, 255, 128, 0, 0.5, 1.0, 0.9);
 
         // Create panels (Double Buffered)
