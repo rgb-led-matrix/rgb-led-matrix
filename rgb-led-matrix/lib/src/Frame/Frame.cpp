@@ -39,6 +39,9 @@ namespace rgb_matrix {
     }
 
     void Frame::SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue) {
+        if (!isFree())
+            throw Illegal("Free");
+
         if (isMulti_)
             multi_->SetPixel(x, y, red, green, blue);
         else
@@ -46,6 +49,9 @@ namespace rgb_matrix {
     }
 
     cord_t Frame::get_size() {
+        if (!isFree())
+            throw Illegal("Free");
+
         if (isMulti_)
             return multi_->get_size();
         else
@@ -53,6 +59,9 @@ namespace rgb_matrix {
     }
     
     void Frame::set_brightness(uint8_t brightness) {
+        if (!isFree())
+            throw Illegal("Free");
+
         if (isMulti_)
             multi_->set_brightness(brightness);
         else
@@ -60,6 +69,9 @@ namespace rgb_matrix {
     }
     
     void Frame::map_wavelength(uint8_t color, Color index, uint16_t value) {
+        if (!isFree())
+            throw Illegal("Free");
+
         if (isMulti_)
             multi_->map_wavelength(color, index, value);
         else
