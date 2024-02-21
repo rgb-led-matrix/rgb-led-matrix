@@ -37,4 +37,8 @@ namespace rgb_matrix {
     Data_Format_ID CFG::get_data_format() { 
         return data_format_; 
     }
+
+    Mapper *CFG::get_mapper() {
+        return mapper_;
+    }
 };

@@ -17,6 +17,7 @@ namespace rgb_matrix {
             uint16_t get_cols();
             uint8_t get_scan();
             Data_Format_ID get_data_format();
+            Mapper *get_mapper();
         
         protected:
             CFG();

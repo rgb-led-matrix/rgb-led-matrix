@@ -15,7 +15,7 @@ namespace rgb_matrix {
             cord_t get_size();
             void set_brightness(uint8_t brightness);
             void map_wavelength(uint8_t color, Color index, uint16_t value);
-            
+
             void show(Protocol *protocol, bool schedule = true);
 
         protected:
@@ -33,6 +33,8 @@ namespace rgb_matrix {
             volatile uint8_t brightness_;
             uint16_t width_;
             uint16_t height_;
+            uint8_t scan_;
+            cord_t size_;
     };
 }
 #endif
