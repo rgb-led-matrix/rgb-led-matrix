@@ -7,6 +7,7 @@
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
 #include <Exception/Unknown_Type.h>
+#include <CFG/HUB75.h>
 using namespace rgb_matrix;
 
 int main(int argc, char **argv) {
@@ -18,7 +19,7 @@ int main(int argc, char **argv) {
         // Setup config
         GAMMA gamma(2.2, 2.2, 2.2);
         Outdoor *od = new Outdoor();
-        CFG *cfg = new CFG(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, 4, gamma, od);
+        CFG *cfg = new HUB75(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, 4, gamma, od);
         cfg->get_dot().set(0, 10, 255, 128, 0, 0.5, 1.0, 0.9);
 
         // Create panels (Double Buffered)
