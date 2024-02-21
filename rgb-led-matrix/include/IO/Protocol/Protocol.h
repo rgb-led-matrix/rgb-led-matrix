@@ -55,6 +55,8 @@ namespace rgb_matrix {
             volatile Status status_;
             std::mutex lock_;
             uint8_t scan_;
+            uint32_t counter_;
+            uint8_t state_;
     };
 }
 #endif

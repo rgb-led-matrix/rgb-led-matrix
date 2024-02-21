@@ -28,6 +28,8 @@ namespace rgb_matrix {
         buf_ = buf;
         size_ = size;
         scan_ = scan;
+        state_ = 0;
+        counter_ = 0;
         status_ = Status::NOT_FINISHED;
     }
 
@@ -35,6 +37,17 @@ namespace rgb_matrix {
         return status_;
     }
 
+
+    // Required transitions:
+    //  NOT_FINISHED -> NOT_FINISHED
+    //  NOT_FINISHED -> NEXT
+    //  NEXT -> NOT_FINISHED
+    //  NOT_FINISHED -> FINISHED
+    //  FINISHED -> FINISHED (hold till reset)
+    // Illegal transisitions:
+    //  NEXT -> FINISHED
+    //  FINISHED -> NOT_FINISHED
+    //  FINISHED -> NEXT
     void Protocol::acknowledge() {
         switch (status_) {
             case Status::NOT_FINISHED:

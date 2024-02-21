@@ -19,6 +19,9 @@ namespace rgb_matrix {
                     std::this_thread::sleep_for (std::chrono::seconds(1));
                 }
 
+                // FINISHED is always a no operation so can hold there
+                // NEXT requires all to be ready
+                // Selectively acknowledge NOT_FINISHED
                 switch ((*it)->get_protocol_status()) {
                     case Protocol::Status::FINISHED:
                         isFinished &= true;
@@ -39,7 +42,8 @@ namespace rgb_matrix {
                 }
             }
 
-            // Advance the state
+            // Advance the state if all are ready (Acknowledge NEXT and/or FINISHED)
+            //  We do not need to explicitly acknowledge FINISHED
             if (isNext)
                 for (std::list<Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
                     (*it)->acknowledge();
