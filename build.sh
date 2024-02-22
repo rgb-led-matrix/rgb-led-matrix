@@ -4,4 +4,4 @@ cd rgb-led-matrix
 mkdir build
 cd build
 cmake ..
-make -j16
+make -j8
