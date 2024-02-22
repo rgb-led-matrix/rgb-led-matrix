@@ -12,9 +12,7 @@ namespace rgb_matrix {
             RP2040_UART();
 
             Status internal_state_machine();
-
-            uint32_t counter_;
-            uint8_t state_;
+            char prev_;
     };
 }
 #endif

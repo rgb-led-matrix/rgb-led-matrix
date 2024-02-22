@@ -16,9 +16,7 @@ namespace rgb_matrix {
         node_ = node;
     }
 
-    void Protocol::send(uint8_t *buf, uint32_t size) {
-        lock_.lock();
-
+    void Protocol::send(uint8_t *buf, uint32_t size, uint8_t scan) {
         if (buf == nullptr)
             throw Null_Pointer("Buffer");
         
@@ -27,6 +25,9 @@ namespace rgb_matrix {
 
         buf_ = buf;
         size_ = size;
+        scan_ = scan;
+        state_ = 0;
+        counter_ = 0;
         status_ = Status::NOT_FINISHED;
     }
 
@@ -34,12 +35,22 @@ namespace rgb_matrix {
         return status_;
     }
 
+
+    // Required transitions:
+    //  NOT_FINISHED -> NOT_FINISHED
+    //  NOT_FINISHED -> NEXT
+    //  NEXT -> NOT_FINISHED
+    //  NOT_FINISHED -> FINISHED
+    //  FINISHED -> FINISHED (hold till reset)
+    // Illegal transisitions:
+    //  NEXT -> FINISHED
+    //  NEXT -> NEXT
+    //  FINISHED -> NOT_FINISHED
+    //  FINISHED -> NEXT
     void Protocol::acknowledge() {
         switch (status_) {
             case Status::NOT_FINISHED:
                 status_ = internal_state_machine();
-                if (status_ == Status::FINISHED)
-                    lock_.unlock();
                 break;
             case Status::NEXT:
                 status_ = internal_state_machine();

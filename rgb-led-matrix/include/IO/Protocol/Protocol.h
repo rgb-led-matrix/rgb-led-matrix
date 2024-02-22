@@ -2,7 +2,6 @@
 #define PROTOCOL_H
 
 #include <IO/Node/Node.h>
-#include <mutex>
 
 namespace rgb_matrix {
     // Required construct for OSI Layer 2 and above
@@ -38,7 +37,7 @@ namespace rgb_matrix {
             };
 
             // For Panel
-            void send(uint8_t *buf, uint32_t size);
+            void send(uint8_t *buf, uint32_t size, uint8_t scan);
 
             // For Scheduler
             Status get_protocol_status();
@@ -53,7 +52,9 @@ namespace rgb_matrix {
             uint8_t *buf_;
             uint32_t size_;
             volatile Status status_;
-            std::mutex lock_;
+            uint8_t scan_;
+            uint32_t counter_;
+            uint8_t state_;
     };
 }
 #endif
