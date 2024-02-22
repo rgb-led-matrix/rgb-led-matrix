@@ -9,10 +9,12 @@ namespace rgb_matrix {
 
     RP2040_UART::RP2040_UART(Node *node) : Protocol(node) {
         throw String_Exception("Not finished");
+        prev_ = 'y';
     }
 
     Protocol::Status RP2040_UART::internal_state_machine() {
         Protocol::Status result = Protocol::Status::NOT_FINISHED;
+        uint8_t str[10];
         uint32_t size;
         bool ack;
 
@@ -43,7 +45,16 @@ namespace rgb_matrix {
                 break;
             case 2:
                 ack = false;
-                // TODO: Wait for ack
+                size = node_->read((char **) &str, sizeof(str), (uint32_t) 2);
+                for (uint32_t i = 0; i < size; i++) {
+                    if ((str[i] != prev_) && (str[i] == 'y' || str[i] == 'n'))
+                        prev_ = str[i];
+
+                    if (prev_ == 'n' && str[i] == 'y') {
+                        ack |= true;
+                        prev_ = 'y';
+                    }
+                }
 
                 if (ack) {              // Done flag
                     state_ = 0;
