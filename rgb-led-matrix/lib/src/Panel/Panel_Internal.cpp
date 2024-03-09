@@ -183,6 +183,13 @@ namespace rgb_matrix {
         else {
             Scheduler *scheduler = new Scheduler();
             scheduler->add_protocol(protocol);
+
+            // TODO:
+            //  Add checksum (Is this really needed/recommended?)
+            //  Add header (size of T, size of buffer, rows, columns)
+            //      This is basically for verfication of data format (protobuf would work)
+            //      Note: Use of recovery protocol is highly recommended
+
             protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, scan_);
             scheduler->start();
             delete scheduler;
