@@ -11,7 +11,7 @@ namespace rgb_matrix {
                 ERROR
             };
 
-            virtual void write(Level level, const char *str);
+            virtual void write(Level level, const char *str) = 0;
 
             static Logger *get_logger();
 
