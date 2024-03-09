@@ -2,6 +2,7 @@
 #include <Frame/Frame_Manager/Frame_Manager.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
+#include <Logger/Logger.h>
 
 namespace rgb_matrix {
     Frame_Manager::Frame_Manager(uint16_t framerate, bool isAsync) {
@@ -41,6 +42,13 @@ namespace rgb_matrix {
                         object->frames_.pop();
 
                     time += range;
+
+                    try {
+                        Logger::get_logger()->write(Logger::Level::WARN, "Frame was dropped due to timing violation.");
+                    }
+                    catch (const String_Exception &e) {
+                        // We tried
+                    }
                 }
 
                 time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
