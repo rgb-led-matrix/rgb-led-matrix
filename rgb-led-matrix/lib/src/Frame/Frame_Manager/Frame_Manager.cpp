@@ -9,6 +9,9 @@ namespace rgb_matrix {
         if (framerate >= 1000)
             throw Illegal("Framerate");
 
+        if (isAsync)
+            Logger::get_logger()->write(Logger::Level::WARN, "Frame Manager is configured to allow async, which is generally discouraged. Use/proceed with caution!");
+
         isAsync_ = isAsync;
         framerate_ = framerate;
         shutdown_ = false;
