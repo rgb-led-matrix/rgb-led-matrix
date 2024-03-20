@@ -31,11 +31,11 @@ namespace rgb_matrix {
         //  FINISHED -> NEXT
         switch (state_) {
             case 0:
-                if (counter_ >= 2)  // Done flag
+                if (counter_ >= scan_)  // Done flag
                     state_ = 1;
                 else {
                     state_ = 2;
-                    size = size_ / 2;
+                    size = size_ / scan_;
                     node_->write((char *) buf_ + (size * counter_), size);
                     ++counter_;
                 }
