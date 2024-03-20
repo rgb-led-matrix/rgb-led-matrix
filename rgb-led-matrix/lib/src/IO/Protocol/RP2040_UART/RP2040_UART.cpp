@@ -33,12 +33,12 @@ namespace rgb_matrix {
             case 0:
                 if (counter_ >= 2)  // Done flag
                     state_ = 1;
-                else
+                else {
                     state_ = 2;
-
-                size = size_ / 2;
-                node_->write((char *) buf_ + (size * counter_), size);
-                ++counter_;
+                    size = size_ / 2;
+                    node_->write((char *) buf_ + (size * counter_), size);
+                    ++counter_;
+                }
                 break;
             case 1:
                 result = Protocol::Status::FINISHED;
