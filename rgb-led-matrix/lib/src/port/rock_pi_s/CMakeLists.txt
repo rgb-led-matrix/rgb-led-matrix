@@ -20,7 +20,6 @@ target_compile_options(rock_pi_s PRIVATE
 
 target_link_libraries(rock_pi_s
     Exception
-    ThreadPool
     CFG
     IO
     Panel

@@ -22,12 +22,9 @@ int main(int argc, char **argv) {
 
         // Create panels (Double Buffered)
         Panel *panel[2] = { RGBMatrix::Create_Panel(cfg), RGBMatrix::Create_Panel(cfg) };
-        MultiPanel *frame[2] = { RGBMatrix::Create_MultiPanel(32, 16), RGBMatrix::Create_MultiPanel(32, 16) };
-        frame[0]->map_panel(0, 0, MultiPanel::Direction::Right, panel[0], protocol);
-        frame[1]->map_panel(0, 0, MultiPanel::Direction::Right, panel[1], protocol);
 
         // Create frame (Double Buffered)
-        Frame *f[2] = { new Frame(frame[0]), new Frame(frame[1]) };
+        Frame *f[2] = { new Frame(panel[0], protocol), new Frame(panel[1], protocol) };
         Frame_Manager *manager = new Frame_Manager();
 
         // Draw (Double Buffered)
