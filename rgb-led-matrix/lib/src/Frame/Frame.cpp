@@ -15,22 +15,9 @@ namespace rgb_matrix {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
 
-        isMulti_ = false;
         isFree_ = true;
         single_ = panel;
-        multi_ = nullptr;
         protocol_ = protocol;
-    }
-
-    Frame::Frame(MultiPanel *panel) {
-        if (panel == nullptr)
-            throw Null_Pointer("MultiPanel");
-
-        isMulti_ = true;
-        isFree_ = true;
-        single_ = nullptr;
-        multi_ = panel;
-        protocol_ = nullptr;
     }
 
 
@@ -42,39 +29,27 @@ namespace rgb_matrix {
         if (!isFree())
             throw Illegal("Free");
 
-        if (isMulti_)
-            multi_->SetPixel(x, y, red, green, blue);
-        else
-            single_->SetPixel(x, y, red, green, blue);
+        single_->SetPixel(x, y, red, green, blue);
     }
 
     cord_t Frame::get_size() {
         if (!isFree())
             throw Illegal("Free");
 
-        if (isMulti_)
-            return multi_->get_size();
-        else
-            return single_->get_size();
+        return single_->get_size();
     }
     
     void Frame::set_brightness(uint8_t brightness) {
         if (!isFree())
             throw Illegal("Free");
 
-        if (isMulti_)
-            multi_->set_brightness(brightness);
-        else
-            single_->set_brightness(brightness);
+        single_->set_brightness(brightness);
     }
     
     void Frame::map_wavelength(uint8_t color, Color index, uint16_t value) {
         if (!isFree())
             throw Illegal("Free");
 
-        if (isMulti_)
-            multi_->map_wavelength(color, index, value);
-        else
-            single_->map_wavelength(color, index, value);
+        single_->map_wavelength(color, index, value);
     }
 }
