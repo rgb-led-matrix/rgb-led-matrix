@@ -1,5 +1,6 @@
 #include <RGBMatrix.h>
 #include <Panel/Panel_Internal.h>
+#include <Panel/MultiPanel_Internal.h>
 #include <Exception/Unknown_Type.h>
 #include <Panel/RGB/RGB24.h>
 #include <Panel/RGB/RGB48.h>
@@ -21,5 +22,9 @@ namespace rgb_matrix {
                 throw Unknown_Type("Data_Format_ID");
                 break;
         }
+    }
+
+    MultiPanel *RGBMatrix::Create_MultiPanel(uint16_t width, uint16_t height) {
+        return new MultiPanel_Internal(width, height);
     }
  };

@@ -20,6 +20,7 @@ target_compile_options(rpi PRIVATE
 
 target_link_libraries(rpi
     Exception
+    ThreadPool
     CFG
     IO
     Panel
