@@ -10,6 +10,8 @@ namespace rgb_matrix {
     RP2040_UART::RP2040_UART(Node *node) : Protocol(node) {
         throw String_Exception("Not finished");
         prev_ = 'y';
+
+        // TODO: Create thread for updating status/state
     }
 
     Protocol::Status RP2040_UART::internal_state_machine() {
@@ -29,6 +31,7 @@ namespace rgb_matrix {
         //  NEXT -> NEXT
         //  FINISHED -> NOT_FINISHED
         //  FINISHED -> NEXT
+        lock_.lock();
         switch (state_) {
             case 0:
                 if (counter_ >= scan_)  // Done flag
@@ -66,7 +69,24 @@ namespace rgb_matrix {
                 throw Illegal("State");
                 break;
         }
+        lock_.unlock();
 
         return result;
+    }
+
+    void RP2040_UART::write(frame_head *data) {
+
+    }
+
+    void RP2040_UART::write(frame_tail *data) {
+
+    }
+
+    void RP2040_UART::read(frame_head *data) {
+
+    }
+
+    void RP2040_UART::read(frame_tail *data) {
+
     }
 }
