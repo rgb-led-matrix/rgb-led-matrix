@@ -8,7 +8,12 @@ namespace rgb_matrix {
         public:
             COM_Control(Node *node);
         
-            void signal();
+            enum class Commands {
+                Trigger,
+                Reset
+            };
+
+            void signal(Commands command);
 
         protected:
             COM_Control();

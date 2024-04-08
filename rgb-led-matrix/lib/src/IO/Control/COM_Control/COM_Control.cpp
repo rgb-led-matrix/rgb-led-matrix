@@ -1,5 +1,6 @@
 #include <IO/Control/COM_Control/COM_Control.h>
 #include <Exception/Illegal.h>
+#include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
     // Do not use this!
@@ -12,7 +13,14 @@ namespace rgb_matrix {
         // TODO:
     }
 
-    void COM_Control::signal() {
+    void COM_Control::signal(Commands command) {
         // TODO:
+        switch (command) {
+            case Commands::Trigger:
+            case Commands::Reset:
+            default:
+                throw Unknown_Type("Commands");
+                break;
+        }
     }
 }

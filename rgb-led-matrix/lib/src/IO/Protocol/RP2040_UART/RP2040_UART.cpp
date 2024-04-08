@@ -33,6 +33,7 @@ namespace rgb_matrix {
         //  FINISHED -> NEXT
         lock_.lock();
         switch (state_) {
+            // TODO: Replace this with new protocol
             case 0:
                 if (counter_ >= scan_)  // Done flag
                     state_ = 1;
@@ -75,18 +76,18 @@ namespace rgb_matrix {
     }
 
     void RP2040_UART::write(frame_head *data) {
-
+        // TODO
     }
 
     void RP2040_UART::write(frame_tail *data) {
-
+        // TODO
     }
 
     void RP2040_UART::read(frame_head *data) {
-
+        // TODO
     }
 
     void RP2040_UART::read(frame_tail *data) {
-
+        // TODO
     }
 }
