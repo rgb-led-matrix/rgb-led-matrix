@@ -8,9 +8,14 @@ namespace rgb_matrix {
         public:
             Control(Node *node);
             virtual ~Control() {}
+        
+            enum class Commands {
+                Trigger,
+                Reset
+            };
 
             // For Scheduler
-            virtual void signal() = 0;
+            virtual void signal(Commands command) = 0;
 
         protected:
             Control();

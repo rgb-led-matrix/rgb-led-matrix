@@ -1,5 +1,6 @@
 #include <IO/Control/COM_Control/COM_Control.h>
 #include <IO/CRC/CRC.h>
+#include <IO/machine.h>
 #include <Exception/Illegal.h>
 #include <Exception/Unknown_Type.h>
 
@@ -15,7 +16,7 @@ namespace rgb_matrix {
     }
 
     void COM_Control::signal(Commands command) {
-        Control_Message *msg = new Control_Message(command);
+        //Control_Message *msg = new Control_Message(command);
         // TODO: Send it
     }
 
@@ -42,7 +43,7 @@ namespace rgb_matrix {
 
     static inline uint32_t checksum_chunk(uint32_t checksum, uint32_t v, uint8_t bits) {
         for (int i = 0; i < bits; i += 8)
-            checksum = rgb_matrix::CRC::crc32(checksum, (v >> i) & 0xFF);
+            checksum = CRC::crc32(checksum, (v >> i) & 0xFF);
         
         return checksum;
     }
@@ -53,7 +54,6 @@ namespace rgb_matrix {
         checksum = checksum_chunk(checksum, header, 32);
         checksum = checksum_chunk(checksum, cmd, 8);
         checksum = checksum_chunk(checksum, len, 16);
-        checksum = checksum_chunk(checksum, status, 32);
 
         return ~checksum;
     }

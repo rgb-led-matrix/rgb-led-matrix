@@ -51,7 +51,7 @@ namespace rgb_matrix {
             }
         }
 
-        control->signal();
+        control->signal(Control::Commands::Trigger);
         lock_.unlock();
     }
 
