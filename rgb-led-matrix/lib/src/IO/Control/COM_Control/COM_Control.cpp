@@ -25,16 +25,16 @@ namespace rgb_matrix {
         write(msg.delimiter, sizeof(msg.delimiter));
     }
 
-    void COM_Control::write(uint32_t val, uint8_t bits) {
+    void COM_Control::write(uint32_t val, uint8_t bytes) {
         char buf[4];
 
-        if (bits == 0 || bits > 32 || bits % 8 != 0)
-            throw Illegal("bits");
+        if (bytes == 0 || bytes > 4)
+            throw Illegal("bytes");
 
-        for (int i = 0; i < bits; i += 8)
-            buf [i / 8] = (val >> i) & 0xFF;
+        for (int i = 0; i < bytes; i++)
+            buf[i] = (val >> (i * 8)) & 0xFF;
         
-        node_->write(buf, bits / 8);
+        node_->write(buf, bytes);
     }
 
     COM_Control::Control_Message::Control_Message(Commands command) {
