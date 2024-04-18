@@ -173,7 +173,7 @@ namespace rgb_matrix {
         return size_;
     }
 
-    template<typename T> void Panel_Internal<T>::show(Protocol *protocol, bool schedule) {
+    template<typename T> void Panel_Internal<T>::show(Protocol *protocol, Control *control, bool schedule) {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
 
@@ -183,8 +183,15 @@ namespace rgb_matrix {
         else {
             Scheduler *scheduler = new Scheduler();
             scheduler->add_protocol(protocol);
+
+            // TODO:
+            //  Add checksum (Is this really needed/recommended?)
+            //  Add header (size of T, size of buffer, rows, columns)
+            //      This is basically for verfication of data format (protobuf would work)
+            //      Note: Use of recovery protocol is highly recommended
+
             protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, scan_);
-            scheduler->start();
+            scheduler->start(control);
             delete scheduler;
         }
         lock_.unlock();

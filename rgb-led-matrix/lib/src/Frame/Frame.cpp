@@ -8,7 +8,7 @@ namespace rgb_matrix {
         throw Illegal("Frame");
     }
 
-    Frame::Frame(Panel *panel, Protocol *protocol) {
+    Frame::Frame(Panel *panel, Protocol *protocol, Control *control) {
         if (panel == nullptr)
             throw Null_Pointer("Single Panel");
 
@@ -20,9 +20,10 @@ namespace rgb_matrix {
         single_ = panel;
         multi_ = nullptr;
         protocol_ = protocol;
+        control_ = control;
     }
 
-    Frame::Frame(MultiPanel *panel) {
+    Frame::Frame(MultiPanel *panel, Control *control) {
         if (panel == nullptr)
             throw Null_Pointer("MultiPanel");
 
@@ -31,6 +32,7 @@ namespace rgb_matrix {
         single_ = nullptr;
         multi_ = panel;
         protocol_ = nullptr;
+        control_ = control;
     }
 
 

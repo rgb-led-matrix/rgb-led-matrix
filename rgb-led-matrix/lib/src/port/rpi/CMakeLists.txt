@@ -25,6 +25,7 @@ target_link_libraries(rpi
     IO
     Panel
     Frame
+    Logger
     ftd2xx
     pthread)
 

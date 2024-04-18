@@ -1,6 +1,7 @@
 #include <iostream>
 #include <RGBMatrix.h>
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
+#include <IO/Control/COM_Control/COM_Control.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
 #include <Frame/Frame_Manager/Frame_Manager.h>
 #include <Exception/Null_Pointer.h>
@@ -12,8 +13,10 @@ using namespace rgb_matrix;
 int main(int argc, char **argv) {
     try {
         // Setup IO
-        Node *node = new FTDI_UART("000", 0);
-        RP2040_UART *protocol = new RP2040_UART(node);
+        Node *data_node = new FTDI_UART("000", 0);
+        Node *control_node = new FTDI_UART("001", 0);
+        RP2040_UART *protocol = new RP2040_UART(data_node);
+        COM_Control *control = new COM_Control(control_node);
 
         // Setup config
         GAMMA gamma(2.2, 2.2, 2.2);
@@ -27,7 +30,7 @@ int main(int argc, char **argv) {
         frame[1]->map_panel(0, 0, MultiPanel::Direction::Right, panel[1], protocol);
 
         // Create frame (Double Buffered)
-        Frame *f[2] = { new Frame(frame[0]), new Frame(frame[1]) };
+        Frame *f[2] = { new Frame(frame[0], control), new Frame(frame[1], control) };
         Frame_Manager *manager = new Frame_Manager();
 
         // Draw (Double Buffered)

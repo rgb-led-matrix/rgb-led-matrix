@@ -25,6 +25,7 @@ target_link_libraries(rock_pi_s
     IO
     Panel
     Frame
+    Logger
     ftd2xx
     pthread)
 

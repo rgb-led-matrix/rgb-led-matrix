@@ -23,6 +23,7 @@ target_link_libraries(linux_x64
     IO
     Panel
     Frame
+    Logger
     ftd2xx
     pthread)
 

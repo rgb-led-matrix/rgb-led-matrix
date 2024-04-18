@@ -6,18 +6,6 @@
 namespace rgb_matrix {
     // Required construct for OSI Layer 2 and above
     //  Note these are client implementations for an internal Mediator Pattern
-    //
-    //  Warning a glitch is possible and there really is no solution in software
-    //      We send out a packet of information and we expect this to arrive at
-    //  the same time. It is like a foot race, we attempt to have all racers
-    //  start the race against each other with a single shot. Should their really
-    //  be multiple shots to start the race it is not much of a competition as
-    //  the one who starts with the first shot is very much likely to win. The only
-    //  real solution we can do on the software side is try to make these multiple
-    //  shots take place in rapid succession. If so they should not have a huge
-    //  impact on the outcome of the race. However should there be road blocks
-    //  in some racers path we cannot mitigate this. Hardware should attempt
-    //  to give each racer a clean path before hand.
     // 
     //      It is recommended to keep the performance of the L1/L2 around 150uS
     //  regardless of framerate. L7 is more relaxed with something like 15mS
