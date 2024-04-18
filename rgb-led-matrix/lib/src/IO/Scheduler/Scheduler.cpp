@@ -52,6 +52,10 @@ namespace rgb_matrix {
         }
 
         control->signal(Control::Commands::Trigger);
+
+        // TODO: Verify that we have moved to the correct state
+        //  Error handle as required
+
         lock_.unlock();
     }
 

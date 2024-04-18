@@ -17,7 +17,8 @@ namespace rgb_matrix {
     void COM_Control::signal(Commands command) {
         static Control_Message *msg = nullptr;
         
-        // TODO: Block back to back calls
+        // This should never be an issue when used with scheduler
+        //  ASYNC issue may appear from back to back calls.
         if (msg != nullptr)
             delete msg;
 
