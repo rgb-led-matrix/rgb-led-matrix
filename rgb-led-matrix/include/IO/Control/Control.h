@@ -14,7 +14,7 @@ namespace rgb_matrix {
                 Reset
             };
 
-            // For Scheduler Only
+            // For Scheduler
             virtual void signal(Commands command) = 0;
 
         protected:
