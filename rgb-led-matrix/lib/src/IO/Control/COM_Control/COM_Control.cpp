@@ -15,22 +15,26 @@ namespace rgb_matrix {
     }
 
     void COM_Control::signal(Commands command) {
-        static Control_Message *msg = nullptr;
+        Control_Message msg(command);
+
+        write(msg.header, sizeof(msg.header));
+        write(msg.cmd, sizeof(msg.cmd));
+        write(msg.len, sizeof(msg.len));
+        write(msg.id, sizeof(msg.id));
+        write(msg.checksum, sizeof(msg.checksum));
+        write(msg.delimiter, sizeof(msg.delimiter));
+    }
+
+    void COM_Control::write(uint32_t val, uint8_t bits) {
+        char buf[4];
+
+        if (bits == 0 || bits > 32 || bits % 8 != 0)
+            throw Illegal("bits");
+
+        for (int i = 0; i < bits; i += 8)
+            buf [i / 8] = (val >> i) & 0xFF;
         
-        // This should never be an issue when used with scheduler
-        //  ASYNC issue may appear from back to back calls.
-        if (msg != nullptr)
-            delete msg;
-
-        msg = new Control_Message(command);
-
-        // TODO: Clean up casts
-        node_->write((char *) &msg->header, sizeof(msg->header));
-        node_->write((char *) &msg->cmd, sizeof(msg->cmd));
-        node_->write((char *) &msg->len, sizeof(msg->len));
-        node_->write((char *) &msg->id, sizeof(msg->id));
-        node_->write((char *) &msg->checksum, sizeof(msg->checksum));
-        node_->write((char *) &msg->delimiter, sizeof(msg->delimiter));
+        node_->write(buf, bits / 8);
     }
 
     COM_Control::Control_Message::Control_Message(Commands command) {

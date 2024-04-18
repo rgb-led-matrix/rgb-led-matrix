@@ -26,6 +26,8 @@ namespace rgb_matrix {
                 private:
                     uint32_t compute_checksum();
             };
+
+            void write(uint32_t val, uint8_t bits);
     };
 }
 #endif
