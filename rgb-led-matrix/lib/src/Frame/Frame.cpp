@@ -8,16 +8,31 @@ namespace rgb_matrix {
         throw Illegal("Frame");
     }
 
-    Frame::Frame(Panel *panel, Protocol *protocol) {
+    Frame::Frame(Panel *panel, Protocol *protocol, Control *control) {
         if (panel == nullptr)
             throw Null_Pointer("Single Panel");
 
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
 
+        isMulti_ = false;
         isFree_ = true;
         single_ = panel;
+        multi_ = nullptr;
         protocol_ = protocol;
+        control_ = control;
+    }
+
+    Frame::Frame(MultiPanel *panel, Control *control) {
+        if (panel == nullptr)
+            throw Null_Pointer("MultiPanel");
+
+        isMulti_ = true;
+        isFree_ = true;
+        single_ = nullptr;
+        multi_ = panel;
+        protocol_ = nullptr;
+        control_ = control;
     }
 
 
@@ -29,27 +44,39 @@ namespace rgb_matrix {
         if (!isFree())
             throw Illegal("Free");
 
-        single_->SetPixel(x, y, red, green, blue);
+        if (isMulti_)
+            multi_->SetPixel(x, y, red, green, blue);
+        else
+            single_->SetPixel(x, y, red, green, blue);
     }
 
     cord_t Frame::get_size() {
         if (!isFree())
             throw Illegal("Free");
 
-        return single_->get_size();
+        if (isMulti_)
+            return multi_->get_size();
+        else
+            return single_->get_size();
     }
     
     void Frame::set_brightness(uint8_t brightness) {
         if (!isFree())
             throw Illegal("Free");
 
-        single_->set_brightness(brightness);
+        if (isMulti_)
+            multi_->set_brightness(brightness);
+        else
+            single_->set_brightness(brightness);
     }
     
     void Frame::map_wavelength(uint8_t color, Color index, uint16_t value) {
         if (!isFree())
             throw Illegal("Free");
 
-        single_->map_wavelength(color, index, value);
+        if (isMulti_)
+            multi_->map_wavelength(color, index, value);
+        else
+            single_->map_wavelength(color, index, value);
     }
 }

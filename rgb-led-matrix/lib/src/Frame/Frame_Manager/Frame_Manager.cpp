@@ -61,7 +61,10 @@ namespace rgb_matrix {
             Frame *f = object->frames_.front();
             object->lock_.unlock();
 
-            f->single_->show(f->protocol_);
+            if (f->isMulti_)
+                f->multi_->show(f->control_);
+            else
+                f->single_->show(f->protocol_, f->control_);
 
             object->lock_.lock();
             f->isFree_ = true;

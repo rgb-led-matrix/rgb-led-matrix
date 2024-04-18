@@ -27,6 +27,8 @@ namespace rgb_matrix {
             FT_SetLatencyTimer(handle, 2);
             FT_Close(handle);
         }
+
+        // Future: Enable Hardware Flow control
     }
 
     void FTDI_UART::write(char *buf, uint32_t len) {

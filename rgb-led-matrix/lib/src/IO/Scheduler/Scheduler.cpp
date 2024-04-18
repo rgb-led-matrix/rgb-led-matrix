@@ -5,7 +5,7 @@
 #include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
-    void Scheduler::start() {
+    void Scheduler::start(Control *control) {
         bool isNext, isFinished = false;
 
         lock_.lock();
@@ -50,6 +50,12 @@ namespace rgb_matrix {
                     (*it)->acknowledge();
             }
         }
+
+        control->signal(Control::Commands::Trigger);
+
+        // TODO: Verify that we have moved to the correct state
+        //  Error handle as required
+
         lock_.unlock();
     }
 

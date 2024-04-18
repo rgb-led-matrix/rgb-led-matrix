@@ -1,7 +1,7 @@
 #ifndef FRAME_H
 #define FRAME_H
 
-#include <Panel/Panel.h>
+#include <Panel/MultiPanel.h>
 #include <IO/Protocol/Protocol.h>
 
 namespace rgb_matrix {
@@ -9,7 +9,8 @@ namespace rgb_matrix {
 
     class Frame : public Drawer {
         public:
-            Frame(Panel *panel, Protocol *protocol);
+            Frame(Panel *panel, Protocol *protocol, Control *control);
+            Frame(MultiPanel *panel, Control *control);
 
             bool isFree();
 
@@ -22,7 +23,10 @@ namespace rgb_matrix {
             Frame();
 
             Panel *single_;
+            MultiPanel *multi_;
             Protocol *protocol_;
+            Control *control_;
+            bool isMulti_;
             volatile bool isFree_;
 
             friend class Frame_Manager;
