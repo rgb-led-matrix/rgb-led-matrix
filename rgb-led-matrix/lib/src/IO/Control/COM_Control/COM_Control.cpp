@@ -11,13 +11,25 @@ namespace rgb_matrix {
     }
 
     COM_Control::COM_Control(Node *node) : Control(node) {
-        throw String_Exception("Not finished");
-        // TODO:
+        // Do nothing
     }
 
     void COM_Control::signal(Commands command) {
-        //Control_Message *msg = new Control_Message(command);
-        // TODO: Send it
+        static Control_Message *msg = nullptr;
+        
+        // TODO: Block back to back calls
+        if (msg != nullptr)
+            delete msg;
+
+        msg = new Control_Message(command);
+
+        // TODO: Clean up casts
+        node_->write((char *) &msg->header, sizeof(msg->header));
+        node_->write((char *) &msg->cmd, sizeof(msg->cmd));
+        node_->write((char *) &msg->len, sizeof(msg->len));
+        node_->write((char *) &msg->id, sizeof(msg->id));
+        node_->write((char *) &msg->checksum, sizeof(msg->checksum));
+        node_->write((char *) &msg->delimiter, sizeof(msg->delimiter));
     }
 
     COM_Control::Control_Message::Control_Message(Commands command) {
@@ -54,6 +66,7 @@ namespace rgb_matrix {
         checksum = checksum_chunk(checksum, header, 32);
         checksum = checksum_chunk(checksum, cmd, 8);
         checksum = checksum_chunk(checksum, len, 16);
+        checksum = checksum_chunk(checksum, id, 8);
 
         return ~checksum;
     }
