@@ -12,6 +12,7 @@ namespace rgb_matrix {
         prev_ = 'y';
 
         // TODO: Create thread for updating status/state
+        //  TODO: Find way to avoid so many threads?
     }
 
     Protocol::Status RP2040_UART::internal_state_machine() {
