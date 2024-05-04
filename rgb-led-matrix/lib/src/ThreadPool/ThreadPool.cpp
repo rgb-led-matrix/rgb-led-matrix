@@ -2,6 +2,7 @@
 #include <Panel/MultiPanel_Internal.h>
 
 namespace rgb_matrix {
+
     template <typename R, typename F> void ThreadPool<R, F>::start(uint8_t count) {
         for (uint8_t i = 0; i < count; i++)
             threads_.emplace_back(std::thread(&ThreadPool::ThreadLoop, this));
@@ -35,7 +36,6 @@ namespace rgb_matrix {
         }
     }
 
-    template class ThreadPool<volatile bool *, void *>;
     template class ThreadPool<volatile bool *, MultiPanel_Internal::show_packet>;
     template class ThreadPool<volatile bool *, MultiPanel_Internal::set_brightness_packet>;
     template class ThreadPool<volatile bool *, MultiPanel_Internal::map_wavelength_packet>;

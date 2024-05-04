@@ -4,19 +4,16 @@
 #include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
-    ThreadPool<volatile bool *, void *> *Protocol::pool_ = nullptr;
-
     // Do not use this!
     Protocol::Protocol() {
         Illegal("Protocol");
     }
 
-    Protocol::Protocol(Node *node, ThreadPool<volatile bool *, void *> *pool) {
+    Protocol::Protocol(Node *node) {
         if (node == nullptr)
             throw Null_Pointer("Node");
         
         node_ = node;
-        custom_pool_ = pool;
     }
 
     void Protocol::send(uint8_t *buf, uint32_t size, uint8_t scan) {
@@ -66,22 +63,5 @@ namespace rgb_matrix {
                 throw Unknown_Type("Status");
                 break;
         }
-    }
-
-    ThreadPool<volatile bool *, void *> *Protocol::get_threadpool() {
-        if (custom_pool_ == nullptr) {
-            return Protocol::get_static_threadpool();
-        }
-
-        return custom_pool_;
-    }
-
-    ThreadPool<volatile bool *, void *> *Protocol::get_static_threadpool() {
-        if (pool_ == nullptr) {
-            pool_ = new ThreadPool<volatile bool *, void *>();
-            pool_->start();
-        }
-
-        return pool_;
     }
 }

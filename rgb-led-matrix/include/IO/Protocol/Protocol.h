@@ -2,7 +2,6 @@
 #define PROTOCOL_H
 
 #include <IO/Node/Node.h>
-#include <ThreadPool/ThreadPool.h>
 
 namespace rgb_matrix {
     // Required construct for OSI Layer 2 and above
@@ -16,7 +15,7 @@ namespace rgb_matrix {
     //  is enough to hide from them.)
     class Protocol {
         public:
-            Protocol(Node *node, ThreadPool<volatile bool *, void *> *pool = nullptr);
+            Protocol(Node *node);
             virtual ~Protocol() {}
 
             enum Status {
@@ -35,7 +34,6 @@ namespace rgb_matrix {
         protected:
             Protocol();
 
-            ThreadPool<volatile bool *, void *> *get_threadpool();
             virtual Status internal_state_machine() = 0;
 
             Node *node_;
@@ -45,12 +43,6 @@ namespace rgb_matrix {
             uint8_t scan_;
             uint32_t counter_;
             uint8_t state_;
-            ThreadPool<volatile bool *, void *> *custom_pool_;
-
-        private:
-            static ThreadPool<volatile bool *, void *> *get_static_threadpool();
-
-            static ThreadPool<volatile bool *, void *> *pool_;
     };
 }
 #endif
