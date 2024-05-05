@@ -26,6 +26,7 @@ namespace rgb_matrix {
             STATUS translate_id(uint32_t id);
 
             std::thread thread_;
+            Node *node_;
     };
 }
 #endif

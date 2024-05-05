@@ -14,6 +14,7 @@ namespace rgb_matrix {
         status_ = new Status(node);
         runnable_ = new Worker();
         runnable_->status = Protocol::Status::FINISHED;
+        runnable_->node = node;
     }
 
     Data::~Data() {

@@ -24,6 +24,7 @@ namespace rgb_matrix {
 
                     uint8_t *buffer;
                     uint32_t length;
+                    Node *node;
                     Protocol::Status status;
             };
 

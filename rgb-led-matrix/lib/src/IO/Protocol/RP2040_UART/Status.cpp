@@ -10,6 +10,8 @@ namespace rgb_matrix {
     Status::Status(Node *node) {
         throw String_Exception("Not finished");
 
+        node_ = node;
+
         // TODO: Create thread for updating status/state
         //  TODO: Find way to avoid so many threads?
     }
