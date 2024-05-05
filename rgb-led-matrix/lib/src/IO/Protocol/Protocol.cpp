@@ -26,7 +26,6 @@ namespace rgb_matrix {
 
         buf_ = buf;
         size_ = size;
-        state_ = 0;
         status_ = Status::NOT_FINISHED;
     }
 

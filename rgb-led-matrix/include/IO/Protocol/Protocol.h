@@ -39,7 +39,6 @@ namespace rgb_matrix {
             uint8_t *buf_;
             uint32_t size_;
             volatile Status status_;
-            uint8_t state_;
     };
 }
 #endif
