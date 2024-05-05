@@ -6,7 +6,6 @@
 #include <queue>
 #include <mutex>
 #include <condition_variable>
-#include <functional>
 
 namespace rgb_matrix {
     class Runnable {
