@@ -32,34 +32,38 @@ namespace rgb_matrix {
                 Protocol *protocol;
             };
 
-            struct show_packet {
-                MultiPanel_Internal *object;
-                Panel_t *panel;
+            class show_packet : public Thread {
+                public:
+                    void run();
+
+                    MultiPanel_Internal *object;
+                    Panel_t *panel;
+                    volatile bool result;
             };
 
-            struct map_wavelength_packet {
-                Panel_t *panel;
-                uint8_t color;
-                Color index;
-                uint16_t value;
+            class map_wavelength_packet : public Thread  {
+                public:
+                    void run();
+
+                    Panel_t *panel;
+                    uint8_t color;
+                    Color index;
+                    uint16_t value;
+                    volatile bool result;
             };
 
-            struct set_brightness_packet {
-                Panel_t *panel;
-                uint8_t brightness;
+            class set_brightness_packet : public Thread {
+                public:
+                    void run();
+
+                    Panel_t *panel;
+                    uint8_t brightness;
+                    volatile bool result;
             };
 
-            static void show_worker(volatile bool *result, show_packet args);
-            static void map_wavelength_worker(volatile bool *result, map_wavelength_packet args);
-            static void set_brightness_worker(volatile bool *result, set_brightness_packet args);
-
-            static ThreadPool<volatile bool *, show_packet> *get_show_thread_pool();
-            static ThreadPool<volatile bool *, map_wavelength_packet> *get_map_wavelength_thread_pool();
-            static ThreadPool<volatile bool *, set_brightness_packet> *get_set_brightness_thread_pool();
-
-            static ThreadPool<volatile bool *, show_packet> *show_thread_pool_;
-            static ThreadPool<volatile bool *, set_brightness_packet> *set_brightness_thread_pool_;
-            static ThreadPool<volatile bool *, map_wavelength_packet> *map_wavelength_thread_pool_;
+            static void show_worker(show_packet *args);
+            static void map_wavelength_worker(map_wavelength_packet *args);
+            static void set_brightness_worker(set_brightness_packet *args);
 
             uint16_t width_;
             uint16_t height_;

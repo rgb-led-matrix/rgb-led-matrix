@@ -9,24 +9,31 @@
 #include <functional>
 
 namespace rgb_matrix {
-    template <typename R, typename F> class ThreadPool {
+    class Thread {
         public:
-            void start(uint8_t count = 1);
-            void submit(const std::function<void(R, F)>& job, R return_args, F args);
+            Thread() {}
+            virtual ~Thread() {}
+
+            virtual void run() = 0;
+    };
+
+    class ThreadPool {
+        public:
+            virtual ~ThreadPool();
+
+            static ThreadPool *get_threadpool();
+            void submit(Thread *t);
 
         private:
-            static void ThreadLoop(ThreadPool *object);
+            ThreadPool();
 
-            struct payload {
-                std::function<void(R, F)> function;
-                R return_args;
-                F args;
-            };
+            static void ThreadLoop(ThreadPool *object);
 
             std::mutex lock_;
             std::condition_variable conditional_;
             std::vector<std::thread> threads_;
-            std::queue<payload *> work_queue_;
+            std::queue<Thread *> work_queue_;
+            static ThreadPool *pool_;
     };
 }
 #endif

@@ -1,43 +1,49 @@
+#include <thread>
+#include <algorithm>
 #include <ThreadPool/ThreadPool.h>
 #include <Panel/MultiPanel_Internal.h>
+#include <Exception/Null_Pointer.h>
 
 namespace rgb_matrix {
-    template <typename R, typename F> void ThreadPool<R, F>::start(uint8_t count) {
+    ThreadPool *ThreadPool::pool_ = nullptr;
+
+    ThreadPool::ThreadPool() {
+        uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
+
         for (uint8_t i = 0; i < count; i++)
             threads_.emplace_back(std::thread(&ThreadPool::ThreadLoop, this));
     }
 
-    template <typename R, typename F> void ThreadPool<R, F>::submit(const std::function<void(R, F)>& job, R return_args, F args) {
-        payload *p = new payload();
+    ThreadPool::~ThreadPool() {
+        // TODO: Clean up
+    }
 
-        p->function = job;
-        p->return_args = return_args;
-        p->args = args;
+    void ThreadPool::submit(Thread *t) {
+        if (t == nullptr)
+            throw Null_Pointer("Thread");
 
         lock_.lock();
-        work_queue_.push(p);
+        work_queue_.push(t);
         conditional_.notify_one();
         lock_.unlock();
     }
 
-    template <typename R, typename F> void ThreadPool<R, F>::ThreadLoop(ThreadPool<R, F> *object) {
-        payload *p;
-
+    void ThreadPool::ThreadLoop(ThreadPool *object) {
         while(true) {
             std::unique_lock<std::mutex> lk(object->lock_);
             object->conditional_.wait(lk, [object]{ return !object->work_queue_.empty(); });
-            p = object->work_queue_.front();
+            Thread *t = object->work_queue_.front();
             object->work_queue_.pop();
             lk.unlock();
 
-            p->function(p->return_args, p->args);
-            delete p;
+            t->run();
         }
     }
 
-    // Stuck with three pools because of three types, which means 3 queues.
-    //  TODO: Fix that?
-    template class ThreadPool<volatile bool *, MultiPanel_Internal::show_packet>;
-    template class ThreadPool<volatile bool *, MultiPanel_Internal::set_brightness_packet>;
-    template class ThreadPool<volatile bool *, MultiPanel_Internal::map_wavelength_packet>;
+    ThreadPool *ThreadPool::get_threadpool() {
+        if (pool_ == nullptr)
+            pool_ = new ThreadPool();
+
+        return pool_;
+    }
 }
