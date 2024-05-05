@@ -8,27 +8,12 @@ namespace rgb_matrix {
     }
 
     RP2040_UART::RP2040_UART(Node *node) : Protocol(node) {
-        throw String_Exception("Not finished");
-
-        // TODO: Create thread for updating status/state
-        //  TODO: Find way to avoid so many threads?
+        data_ = new Data(node);
     }
 
     Protocol::Status RP2040_UART::internal_state_machine() {
         lock_.lock();
-        switch (state_) {
-            // TODO: Replace this with new protocol
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            default:
-                state_ = 0;
-                throw Illegal("State");
-                break;
-        }
+        status_ = data_->send_data(buf_, size_);
         lock_.unlock();
         return status_;
     }

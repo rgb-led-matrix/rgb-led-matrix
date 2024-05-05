@@ -2,6 +2,7 @@
 #define RP2040_UART_STATUS_H
 
 #include <stdint.h>
+#include <thread>
 #include <IO/Node/Node.h>
 
 namespace rgb_matrix {
@@ -13,6 +14,8 @@ namespace rgb_matrix {
         
         protected:
             Status();
+
+            std::thread thread_;
     };
 }
 #endif

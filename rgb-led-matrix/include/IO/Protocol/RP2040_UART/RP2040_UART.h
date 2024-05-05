@@ -1,7 +1,7 @@
 #ifndef RP2040_UART_H
 #define RP2040_UART_H
 
-#include <IO/Protocol/Protocol.h>
+#include <IO/Protocol/RP2040_UART/Data.h>
 #include <mutex>
 
 namespace rgb_matrix {
@@ -15,6 +15,7 @@ namespace rgb_matrix {
             Status internal_state_machine();
 
             std::mutex lock_;
+            Data *data_;
     };
 }
 #endif
