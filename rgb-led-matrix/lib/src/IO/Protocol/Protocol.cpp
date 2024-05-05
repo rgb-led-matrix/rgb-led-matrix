@@ -17,7 +17,7 @@ namespace rgb_matrix {
         status_ = Status::FINISHED;
     }
 
-    void Protocol::send(uint8_t *buf, uint32_t size, uint8_t scan) {
+    void Protocol::send(uint8_t *buf, uint32_t size) {
         if (buf == nullptr)
             throw Null_Pointer("Buffer");
         
@@ -26,9 +26,7 @@ namespace rgb_matrix {
 
         buf_ = buf;
         size_ = size;
-        scan_ = scan;
         state_ = 0;
-        counter_ = 0;
         status_ = Status::NOT_FINISHED;
     }
 

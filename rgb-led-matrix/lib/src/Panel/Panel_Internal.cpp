@@ -179,7 +179,7 @@ namespace rgb_matrix {
 
         lock_.lock();
         if (!schedule)
-            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, scan_);
+            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_);
         else {
             Scheduler *scheduler = new Scheduler();
             scheduler->add_protocol(protocol);
@@ -190,7 +190,7 @@ namespace rgb_matrix {
             //      This is basically for verfication of data format (protobuf would work)
             //      Note: Use of recovery protocol is highly recommended
 
-            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, scan_);
+            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_);
             scheduler->start(control);
             delete scheduler;
         }
