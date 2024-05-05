@@ -14,9 +14,9 @@ namespace rgb_matrix {
         //  TODO: Find way to avoid so many threads?
     }
 
-    uint32_t Status::get_status() {
+    bool Status::get_status(STATUS current, STATUS expected) {
         // TODO:
         
-        return 0;
+        return false;
     }
 }

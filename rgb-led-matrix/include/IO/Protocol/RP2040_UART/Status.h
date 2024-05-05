@@ -10,7 +10,15 @@ namespace rgb_matrix {
         public:
             Status(Node *node);
 
-            uint32_t get_status();
+            enum class STATUS {
+                IDLE_0,
+                IDLE_1,
+                ACTIVE_0,
+                ACTIVE_1,
+                READY
+            };
+
+            bool get_status(STATUS current, STATUS expected);
         
         protected:
             Status();
