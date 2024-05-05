@@ -19,8 +19,6 @@ namespace rgb_matrix {
 
     class ThreadPool {
         public:
-            virtual ~ThreadPool();
-
             static ThreadPool *get_threadpool();
             void submit(Thread *t);
 

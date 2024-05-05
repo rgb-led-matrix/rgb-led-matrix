@@ -14,10 +14,6 @@ namespace rgb_matrix {
             threads_.emplace_back(std::thread(&ThreadPool::ThreadLoop, this));
     }
 
-    ThreadPool::~ThreadPool() {
-        // TODO: Clean up
-    }
-
     void ThreadPool::submit(Thread *t) {
         if (t == nullptr)
             throw Null_Pointer("Thread");
