@@ -14,6 +14,7 @@ namespace rgb_matrix {
         status_ = new Status(node);
     }
 
+    // TODO: Implement in Runnable
     Protocol::Status Data::send_data(uint8_t *buf, uint32_t length) {
         // TODO:
         return Protocol::Status::NOT_FINISHED;
