@@ -23,6 +23,8 @@ namespace rgb_matrix {
         protected:
             Status();
 
+            STATUS translate_id(uint32_t id);
+
             std::thread thread_;
     };
 }

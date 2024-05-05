@@ -19,4 +19,31 @@ namespace rgb_matrix {
         
         return false;
     }
+
+    Status::STATUS Status::translate_id(uint32_t id) {
+        STATUS result;
+
+        switch (id) {
+            case 0:
+                result = STATUS::IDLE_0;
+                break;
+            case 1:
+                result = STATUS::IDLE_1;
+                break;
+            case 2:
+                result = STATUS::ACTIVE_0;
+                break;
+            case 3:
+                result = STATUS::ACTIVE_1;
+                break;
+            case 4:
+                result = STATUS::READY;
+                break;
+            default:
+                throw Illegal("Unknown Status ID");
+                break;
+        }
+
+        return result;
+    }
 }
