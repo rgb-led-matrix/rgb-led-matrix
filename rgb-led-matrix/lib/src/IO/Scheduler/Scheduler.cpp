@@ -22,8 +22,9 @@ namespace rgb_matrix {
                         break;
                     case Protocol::Status::ERROR:
                         isFinished = false;
-                        // TODO: Verify that we have moved to the correct state
-                        //  Error handle as required
+                        // TODO: Error handle as required
+                        lock_.unlock();
+                        throw String_Exception("Houstin we have a problem");
                         break;
                     default:
                         lock_.unlock();
