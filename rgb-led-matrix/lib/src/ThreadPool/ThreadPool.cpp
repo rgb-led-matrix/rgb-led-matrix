@@ -16,7 +16,7 @@ namespace rgb_matrix {
 
     void ThreadPool::submit(Runnable *t) {
         if (t == nullptr)
-            throw Null_Pointer("Thread");
+            throw Null_Pointer("Runnable");
 
         lock_.lock();
         work_queue_.push(t);
