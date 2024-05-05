@@ -11,15 +11,12 @@ namespace rgb_matrix {
     Data::Data(Node *node) {
         throw String_Exception("Not finished");
 
-        status_ = new Status(node);
         runnable_ = new Worker();
         runnable_->status = Protocol::Status::FINISHED;
         runnable_->node = node;
     }
 
     Data::~Data() {
-        delete status_;
-
         // TODO: Figure out better solution?
         while (runnable_->status == Protocol::Status::NOT_FINISHED);
         delete runnable_;
@@ -34,9 +31,22 @@ namespace rgb_matrix {
         return runnable_->status;
     }
 
-    void Data::Worker::run() {
-        // TODO:
+    Data::Worker::Worker() {
+        status_msg_ = new Status(node);
+    }
 
-        status = Protocol::Status::FINISHED;
+    Data::Worker::~Worker() {
+        delete status_msg_;
+    }
+
+    void Data::Worker::run() {
+        if (status == Protocol::Status::NOT_FINISHED) {
+            if (status_msg_->get_status() != Status::STATUS::READY)
+                status = Protocol::Status::ERROR;
+
+            // TODO:
+
+            status = Protocol::Status::FINISHED;
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace rgb_matrix {
             };
 
             bool get_status(STATUS current, STATUS expected);
+            STATUS get_status();
         
         protected:
             Status();

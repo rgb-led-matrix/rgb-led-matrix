@@ -22,6 +22,12 @@ namespace rgb_matrix {
         return false;
     }
 
+    Status::STATUS Status::get_status() {
+        // TODO:
+
+        return STATUS::READY;
+    }
+
     Status::STATUS Status::translate_id(uint32_t id) {
         STATUS result;
 

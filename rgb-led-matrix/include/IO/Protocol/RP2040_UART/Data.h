@@ -20,16 +20,22 @@ namespace rgb_matrix {
 
             class Worker : public Runnable {
                 public:
+                    Worker();
+                    ~Worker();
+
                     void run();
 
                     uint8_t *buffer;
                     uint32_t length;
                     Node *node;
                     Protocol::Status status;
+                
+                private:
+                    Status *status_msg_;
+
             };
 
             Worker *runnable_;
-            Status *status_;
     };
 }
 #endif
