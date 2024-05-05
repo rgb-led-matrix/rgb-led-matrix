@@ -14,6 +14,7 @@ namespace rgb_matrix {
             throw Null_Pointer("Node");
         
         node_ = node;
+        status_ = Status::FINISHED;
     }
 
     void Protocol::send(uint8_t *buf, uint32_t size, uint8_t scan) {
@@ -32,36 +33,6 @@ namespace rgb_matrix {
     }
 
     Protocol::Status Protocol::get_protocol_status() {
-        return status_;
-    }
-
-
-    // Required transitions:
-    //  NOT_FINISHED -> NOT_FINISHED
-    //  NOT_FINISHED -> NEXT
-    //  NEXT -> NOT_FINISHED
-    //  NOT_FINISHED -> FINISHED
-    //  FINISHED -> FINISHED (hold till reset)
-    // Illegal transisitions:
-    //  NEXT -> FINISHED
-    //  NEXT -> NEXT
-    //  FINISHED -> NOT_FINISHED
-    //  FINISHED -> NEXT
-    void Protocol::acknowledge() {
-        switch (status_) {
-            case Status::NOT_FINISHED:
-                status_ = internal_state_machine();
-                break;
-            case Status::NEXT:
-                status_ = internal_state_machine();
-                if (status_ != Status::NOT_FINISHED)
-                    throw Illegal("State Machine");
-                break;
-            case Status::FINISHED:
-                break;
-            default:
-                throw Unknown_Type("Status");
-                break;
-        }
+        return internal_state_machine();
     }
 }

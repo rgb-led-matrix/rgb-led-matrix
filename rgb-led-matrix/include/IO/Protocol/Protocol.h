@@ -20,7 +20,7 @@ namespace rgb_matrix {
 
             enum Status {
                 NOT_FINISHED,
-                NEXT,
+                ERROR,
                 FINISHED
             };
 
@@ -29,7 +29,6 @@ namespace rgb_matrix {
 
             // For Scheduler
             Status get_protocol_status();
-            void acknowledge();
 
         protected:
             Protocol();
