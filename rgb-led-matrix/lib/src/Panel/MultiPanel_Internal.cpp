@@ -87,7 +87,7 @@ namespace rgb_matrix {
 
     void MultiPanel_Internal::show(Control *control) {
         lock_.lock();
-        std::queue<volatile bool *> results;
+        std::queue<show_packet *> results;
         
         // Fork/Join Acceleration
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
@@ -95,23 +95,22 @@ namespace rgb_matrix {
             p->object = this;
             p->panel = (*it);
             p->result = false;
-            results.push(&p->result);
+            results.push(p);
             ThreadPool::get_threadpool()->submit(p);
         }
 
         while (!results.empty()) {
-            volatile bool *r = results.front();
+            volatile bool *r = &results.front()->result;
             while(*r == false) {
                 // Well hopefully the OS does something
                 // std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
+            delete results.front();
             results.pop();
         }
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
             (*it)->panel->show((*it)->protocol, control, false);
-
-        // TODO: Clean up
 
         scheduler_->start(control);
         lock_.unlock();
@@ -119,7 +118,7 @@ namespace rgb_matrix {
 
     void MultiPanel_Internal::set_brightness(uint8_t brightness) {
         lock_.lock();
-        std::queue<volatile bool *> results;
+        std::queue<set_brightness_packet *> results;
 
         // Fork/Join Acceleration
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
@@ -127,27 +126,26 @@ namespace rgb_matrix {
             p->panel = (*it);
             p->brightness = brightness;
             p->result = false;
-            results.push(&p->result);
+            results.push(p);
             ThreadPool::get_threadpool()->submit(p);
         }
 
         while (!results.empty()) {
-            volatile bool *r = results.front();
+            volatile bool *r = &results.front()->result;
             while(*r == false) {
                 // Well hopefully the OS does something
                 // std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
+            delete results.front();
             results.pop();
         }
-
-        // TODO: Clean up
 
         lock_.unlock();
     }
 
     void MultiPanel_Internal::map_wavelength(uint8_t color, Color index, uint16_t value) {
         lock_.lock();
-        std::queue<volatile bool *> results;
+        std::queue<map_wavelength_packet *> results;
 
         // Fork/Join Acceleration
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it) {
@@ -157,20 +155,19 @@ namespace rgb_matrix {
             p->index = index;
             p->value = value;
             p->result = false;
-            results.push(&p->result);
+            results.push(p);
             ThreadPool::get_threadpool()->submit(p);
         }
 
         while (!results.empty()) {
-            volatile bool *r = results.front();
+            volatile bool *r = &results.front()->result;
             while(*r == false) {
                 // Well hopefully the OS does something
                 // std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
+            delete results.front();
             results.pop();
         }
-
-        // TODO: Clean up
 
         lock_.unlock();
     }
