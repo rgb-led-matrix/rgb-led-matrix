@@ -14,7 +14,6 @@ namespace rgb_matrix {
 
             Status internal_state_machine();
 
-            std::mutex lock_;
             Data *data_;
     };
 }

@@ -14,7 +14,6 @@ namespace rgb_matrix {
             throw Null_Pointer("Node");
         
         node_ = node;
-        status_ = Status::FINISHED;
     }
 
     void Protocol::send(uint8_t *buf, uint32_t size) {
@@ -24,9 +23,11 @@ namespace rgb_matrix {
         if (size == 0)
             throw Illegal("Size");
 
+        if (get_protocol_status() == Status::NOT_FINISHED)
+            throw Illegal("Protocol still busy");
+
         buf_ = buf;
         size_ = size;
-        status_ = Status::NOT_FINISHED;
     }
 
     Protocol::Status Protocol::get_protocol_status() {

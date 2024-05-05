@@ -12,9 +12,6 @@ namespace rgb_matrix {
     }
 
     Protocol::Status RP2040_UART::internal_state_machine() {
-        lock_.lock();
-        status_ = data_->send_data(buf_, size_);
-        lock_.unlock();
-        return status_;
+        return data_->send_data(buf_, size_);
     }
 }
