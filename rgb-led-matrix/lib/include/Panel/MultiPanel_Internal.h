@@ -32,7 +32,7 @@ namespace rgb_matrix {
                 Protocol *protocol;
             };
 
-            class show_packet : public Thread {
+            class show_packet : public Runnable {
                 public:
                     void run();
 
@@ -41,7 +41,7 @@ namespace rgb_matrix {
                     volatile bool result;
             };
 
-            class map_wavelength_packet : public Thread  {
+            class map_wavelength_packet : public Runnable  {
                 public:
                     void run();
 
@@ -52,7 +52,7 @@ namespace rgb_matrix {
                     volatile bool result;
             };
 
-            class set_brightness_packet : public Thread {
+            class set_brightness_packet : public Runnable {
                 public:
                     void run();
 

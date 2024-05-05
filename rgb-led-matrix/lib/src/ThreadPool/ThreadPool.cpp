@@ -14,7 +14,7 @@ namespace rgb_matrix {
             threads_.emplace_back(std::thread(&ThreadPool::ThreadLoop, this));
     }
 
-    void ThreadPool::submit(Thread *t) {
+    void ThreadPool::submit(Runnable *t) {
         if (t == nullptr)
             throw Null_Pointer("Thread");
 
@@ -28,7 +28,7 @@ namespace rgb_matrix {
         while(true) {
             std::unique_lock<std::mutex> lk(object->lock_);
             object->conditional_.wait(lk, [object]{ return !object->work_queue_.empty(); });
-            Thread *t = object->work_queue_.front();
+            Runnable *t = object->work_queue_.front();
             object->work_queue_.pop();
             lk.unlock();
 

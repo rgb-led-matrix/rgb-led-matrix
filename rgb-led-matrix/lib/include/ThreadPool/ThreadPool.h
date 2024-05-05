@@ -9,10 +9,10 @@
 #include <functional>
 
 namespace rgb_matrix {
-    class Thread {
+    class Runnable {
         public:
-            Thread() {}
-            virtual ~Thread() {}
+            Runnable() {}
+            virtual ~Runnable() {}
 
             virtual void run() = 0;
     };
@@ -20,7 +20,7 @@ namespace rgb_matrix {
     class ThreadPool {
         public:
             static ThreadPool *get_threadpool();
-            void submit(Thread *t);
+            void submit(Runnable *t);
 
         private:
             ThreadPool();
@@ -30,7 +30,7 @@ namespace rgb_matrix {
             std::mutex lock_;
             std::condition_variable conditional_;
             std::vector<std::thread> threads_;
-            std::queue<Thread *> work_queue_;
+            std::queue<Runnable *> work_queue_;
             static ThreadPool *pool_;
     };
 }
