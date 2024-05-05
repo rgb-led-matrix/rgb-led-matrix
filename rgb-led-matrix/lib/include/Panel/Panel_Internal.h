@@ -30,7 +30,7 @@ namespace rgb_matrix {
             std::mutex lock_;
             cord_t **locations_;
             Color_Order **orders_;
-            volatile uint8_t brightness_;
+            uint8_t brightness_;
             uint16_t width_;
             uint16_t height_;
             uint8_t scan_;

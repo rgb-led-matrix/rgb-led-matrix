@@ -27,7 +27,7 @@ namespace rgb_matrix {
             Protocol *protocol_;
             Control *control_;
             bool isMulti_;
-            volatile bool isFree_;
+            bool isFree_;
 
             friend class Frame_Manager;
     };

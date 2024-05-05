@@ -38,7 +38,7 @@ namespace rgb_matrix {
 
                     MultiPanel_Internal *object;
                     Panel_t *panel;
-                    volatile bool result;
+                    bool result;
             };
 
             class map_wavelength_packet : public Runnable  {
@@ -49,7 +49,7 @@ namespace rgb_matrix {
                     uint8_t color;
                     Color index;
                     uint16_t value;
-                    volatile bool result;
+                    bool result;
             };
 
             class set_brightness_packet : public Runnable {
@@ -58,7 +58,7 @@ namespace rgb_matrix {
 
                     Panel_t *panel;
                     uint8_t brightness;
-                    volatile bool result;
+                    bool result;
             };
 
             static void show_worker(show_packet *args);

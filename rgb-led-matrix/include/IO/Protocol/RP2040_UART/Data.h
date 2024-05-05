@@ -24,7 +24,7 @@ namespace rgb_matrix {
 
                     uint8_t *buffer;
                     uint32_t length;
-                    volatile Protocol::Status status;
+                    Protocol::Status status;
             };
 
             Worker *runnable_;
