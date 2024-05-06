@@ -10,8 +10,8 @@ namespace rgb_matrix {
             FTDI_UART(const char *serial_number, uint8_t chan_num);
 
             // For Protocol
-            void write(char *buf, uint32_t len);
-            int read(char **buf, uint32_t len, uint32_t timeout_us);
+            void write(uint8_t *buf, uint32_t len);
+            void read(uint8_t *buf, uint32_t *len, uint32_t timeout_us);
 
             // For Application (main)
             void set_baud(uint32_t baud);

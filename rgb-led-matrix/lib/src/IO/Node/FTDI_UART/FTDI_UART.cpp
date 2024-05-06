@@ -31,7 +31,7 @@ namespace rgb_matrix {
         // Future: Enable Hardware Flow control
     }
 
-    void FTDI_UART::write(char *buf, uint32_t len) {
+    void FTDI_UART::write(uint8_t *buf, uint32_t len) {
         FT_STATUS status;
         FT_HANDLE handle;
         DWORD written;
@@ -60,7 +60,7 @@ namespace rgb_matrix {
         }
     }
 
-    int FTDI_UART::read(char **buf, uint32_t len, uint32_t timeout_us) {
+    void FTDI_UART::read(uint8_t *buf, uint32_t *len, uint32_t timeout_us) {
         FT_STATUS status;
         FT_HANDLE handle;
         DWORD written;
@@ -76,18 +76,18 @@ namespace rgb_matrix {
             status = FT_SetTimeouts(handle, timeout_ms, 10);
 
             while (status == FT_OK) {
-                status = FT_Read(handle, buf, len, &written);
+                status = FT_Read(handle, buf, *len, &written);
 
                 if (status == FT_OK) {
                     auto end = std::chrono::high_resolution_clock::now();
+
+                    buf += written;
+                    *len -= written;
                     
                     if (std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() < timeout_us)
-                        return 1;
-                    
-                    buf += written;
-                    len -= written;
+                        break;
 
-                    if (len > 0)
+                    if (*len > 0)
                         continue;
                 }
 
@@ -96,8 +96,6 @@ namespace rgb_matrix {
 
             FT_Close(handle);
         }
-
-        return 0;
     }
 
     void FTDI_UART::set_baud(uint32_t baud) {

@@ -9,6 +9,7 @@ namespace rgb_matrix {
     class Status {
         public:
             Status(Node *node);
+            ~Status();
 
             enum class STATUS {
                 IDLE_0,
@@ -24,10 +25,24 @@ namespace rgb_matrix {
         protected:
             Status();
 
+            struct msg {
+                uint32_t header;
+                uint8_t cmd;
+                uint16_t len;
+                uint32_t status;
+                uint32_t checksum;
+                uint32_t delimiter;
+
+                bool valid();
+            };
+
+            static void worker(Status *obj);
             STATUS translate_id(uint32_t id);
 
-            std::thread thread_;
+            STATUS status_;
+            std::thread *thread_;
             Node *node_;
+            bool shutdown_;
     };
 }
 #endif
