@@ -1,5 +1,7 @@
 #include <cstring>
 #include <IO/Protocol/RP2040_UART/Status.h>
+#include <IO/machine.h>
+#include <IO/CRC/CRC.h>
 #include <Exception/Illegal.h>
 
 namespace rgb_matrix {
@@ -9,8 +11,6 @@ namespace rgb_matrix {
     }
 
     Status::Status(Node *node) {
-        throw String_Exception("Not finished");
-
         // Find way to avoid so many threads?
         node_ = node;
         shutdown_ = false;
@@ -55,7 +55,6 @@ namespace rgb_matrix {
             while (len)
                 obj->node_->read(&buffer[count + request - len], &len, 1000);
 
-
             // Note this will block up in complexity if add more message types
             memcpy(&m, &buffer[count], sizeof(msg));
 
@@ -63,7 +62,7 @@ namespace rgb_matrix {
                 ++count;
             else {
                 count += sizeof(msg);
-                obj->status_ = obj->translate_id(m.cmd);
+                obj->status_ = obj->translate_id(m.status);
             }
 
             if (count >= sizeof(msg)) {
@@ -100,8 +99,40 @@ namespace rgb_matrix {
         return result;
     }
 
+    static inline uint32_t checksum_chunk(uint32_t checksum, uint32_t v, uint8_t bits) {
+        for (int i = 0; i < bits; i += 8)
+            checksum = CRC::crc32(checksum, (v >> i) & 0xFF);
+        
+        return checksum;
+    }
+
+    inline uint32_t Status::msg::compute_checksum() {
+        uint32_t checksum = 0xFFFFFFFF;
+
+        checksum = checksum_chunk(checksum, header, 32);
+        checksum = checksum_chunk(checksum, cmd, 8);
+        checksum = checksum_chunk(checksum, len, 16);
+        checksum = checksum_chunk(checksum, status, 32);
+
+        return ~checksum;
+    }
+
     bool Status::msg::valid() {
-        // TODO:
-        return false;
+        if (ntohl(header) != 0xAAEEAAEE)
+            return false;
+
+        if (cmd != 's')
+            return false;
+
+        if (ntohs(len) != 4)
+            return false;
+
+        if (ntohl(delimiter) != 0xAEAEAEAE)
+            return false;
+
+        if (ntohl(checksum) != compute_checksum())
+            return false;
+
+        return true;
     }
 }

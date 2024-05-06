@@ -34,6 +34,7 @@ namespace rgb_matrix {
                 uint32_t delimiter;
 
                 bool valid();
+                uint32_t compute_checksum();
             };
 
             static void worker(Status *obj);
