@@ -23,6 +23,9 @@ namespace rgb_matrix {
         node_->free();
     }
 
+    // TODO: Block multi-submit
+    //  Calling send too fast can trigger multi-submit
+    //      Double buffering, high processing speed, etc.
     void Protocol::send(uint8_t *buf, uint32_t size) {
         if (buf == nullptr)
             throw Null_Pointer("Buffer");
