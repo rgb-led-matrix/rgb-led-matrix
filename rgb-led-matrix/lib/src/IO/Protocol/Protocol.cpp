@@ -33,7 +33,7 @@ namespace rgb_matrix {
         if (size == 0)
             throw Illegal("Size");
 
-        if (get_protocol_status() == Status::NOT_FINISHED)
+        if (get_protocol_status(true) == Status::NOT_FINISHED)
             throw Illegal("Protocol still busy");
 
         buf_ = buf;
@@ -45,6 +45,10 @@ namespace rgb_matrix {
     }
 
     Protocol::Status Protocol::get_protocol_status() {
-        return internal_state_machine();
+        return get_protocol_status(false);
+    }
+
+    Protocol::Status Protocol::get_protocol_status(bool clear_errors) {
+        return internal_state_machine(clear_errors);
     }
 }

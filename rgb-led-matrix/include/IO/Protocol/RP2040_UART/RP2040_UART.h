@@ -12,7 +12,7 @@ namespace rgb_matrix {
         protected:
             RP2040_UART();
 
-            Status internal_state_machine();
+            Status internal_state_machine(bool clear_errors);
 
             Data *data_;
     };

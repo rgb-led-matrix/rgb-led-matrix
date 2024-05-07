@@ -37,6 +37,11 @@ namespace rgb_matrix {
         return runnable_->status;
     }
 
+    void Data::clear_errors() {
+        if (runnable_->status == Protocol::Status::ERROR)
+            runnable_->status = Protocol::Status::FINISHED;
+    }
+
     Data::Worker::Worker() {
         status_msg_ = new Status(node);
     }
