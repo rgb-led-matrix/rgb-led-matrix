@@ -13,7 +13,7 @@ namespace rgb_matrix {
             Data(Node *node);
             ~Data();
 
-            Protocol::Status send_data(uint8_t *buf, uint32_t len);
+            Protocol::Status send_data(uint8_t *buf, uint32_t len, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns);
         
         protected:
             Data();
@@ -27,6 +27,9 @@ namespace rgb_matrix {
 
                     uint8_t *buffer;
                     uint32_t length;
+                    uint8_t sizeof_t;
+                    uint8_t multiplex;
+                    uint8_t columns;
                     Node *node;
                     Protocol::Status status;
                 
