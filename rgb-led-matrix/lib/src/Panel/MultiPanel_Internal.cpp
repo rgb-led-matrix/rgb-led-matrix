@@ -96,7 +96,7 @@ namespace rgb_matrix {
             p->panel = (*it);
             p->result = false;
             results.push(p);
-            ThreadPool::get_threadpool()->submit(p);
+            ThreadPool::get_threadpool(ThreadPool::Pool_ID::Drawer)->submit(p);
         }
 
         while (!results.empty()) {
@@ -127,7 +127,7 @@ namespace rgb_matrix {
             p->brightness = brightness;
             p->result = false;
             results.push(p);
-            ThreadPool::get_threadpool()->submit(p);
+            ThreadPool::get_threadpool(ThreadPool::Pool_ID::Drawer)->submit(p);
         }
 
         while (!results.empty()) {
@@ -156,7 +156,7 @@ namespace rgb_matrix {
             p->value = value;
             p->result = false;
             results.push(p);
-            ThreadPool::get_threadpool()->submit(p);
+            ThreadPool::get_threadpool(ThreadPool::Pool_ID::Drawer)->submit(p);
         }
 
         while (!results.empty()) {

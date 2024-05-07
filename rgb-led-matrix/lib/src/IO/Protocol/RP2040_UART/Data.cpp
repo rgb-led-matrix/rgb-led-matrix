@@ -29,7 +29,7 @@ namespace rgb_matrix {
             runnable_->multiplex = multiplex;
             runnable_->columns = columns;
             runnable_->format = format;
-            ThreadPool::get_threadpool()->submit(runnable_);
+            ThreadPool::get_threadpool(ThreadPool::Pool_ID::IO)->submit(runnable_);
         }
 
         return runnable_->status;

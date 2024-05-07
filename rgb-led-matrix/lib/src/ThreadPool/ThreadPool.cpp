@@ -3,9 +3,10 @@
 #include <ThreadPool/ThreadPool.h>
 #include <Panel/MultiPanel_Internal.h>
 #include <Exception/Null_Pointer.h>
+#include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
-    ThreadPool *ThreadPool::pool_ = nullptr;
+    ThreadPool *ThreadPool::pool_[2] = { nullptr };
 
     ThreadPool::ThreadPool() {
         uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
@@ -36,10 +37,24 @@ namespace rgb_matrix {
         }
     }
 
-    ThreadPool *ThreadPool::get_threadpool() {
-        if (pool_ == nullptr)
-            pool_ = new ThreadPool();
+    ThreadPool *ThreadPool::get_threadpool(Pool_ID id) {
+        ThreadPool **result;
 
-        return pool_;
+        switch (id) {
+            case Pool_ID::Drawer:
+                result = &pool_[0];
+                break;
+            case Pool_ID::IO:
+                result = &pool_[1];
+                break;
+            default:
+                throw Unknown_Type("Pool_ID");
+                break;
+        }
+
+        if (*result == nullptr)
+            *result = new ThreadPool();
+
+        return *result;
     }
 }

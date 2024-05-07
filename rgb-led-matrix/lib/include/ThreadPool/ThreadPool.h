@@ -18,7 +18,12 @@ namespace rgb_matrix {
 
     class ThreadPool {
         public:
-            static ThreadPool *get_threadpool();
+            enum class Pool_ID {
+                Drawer,
+                IO
+            };
+
+            static ThreadPool *get_threadpool(Pool_ID id);
             void submit(Runnable *t);
 
         private:
@@ -30,7 +35,7 @@ namespace rgb_matrix {
             std::condition_variable conditional_;
             std::vector<std::thread> threads_;
             std::queue<Runnable *> work_queue_;
-            static ThreadPool *pool_;
+            static ThreadPool *pool_[2];
     };
 }
 #endif
