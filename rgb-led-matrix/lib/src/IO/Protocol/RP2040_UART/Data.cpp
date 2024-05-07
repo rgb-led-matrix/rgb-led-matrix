@@ -20,7 +20,7 @@ namespace rgb_matrix {
         delete runnable_;
     }
 
-    Protocol::Status Data::send_data(uint8_t *buf, uint32_t length, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns) {
+    Protocol::Status Data::send_data(uint8_t *buf, uint32_t length, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format) {
         if (runnable_->status == Protocol::Status::FINISHED) {
             runnable_->status = Protocol::Status::NOT_FINISHED;
             runnable_->buffer = buf;
@@ -28,6 +28,7 @@ namespace rgb_matrix {
             runnable_->sizeof_t = sizeof_t;
             runnable_->multiplex = multiplex;
             runnable_->columns = columns;
+            runnable_->format = format;
             ThreadPool::get_threadpool()->submit(runnable_);
         }
 
