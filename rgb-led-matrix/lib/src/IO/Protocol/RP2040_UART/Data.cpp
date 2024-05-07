@@ -21,6 +21,7 @@ namespace rgb_matrix {
     }
 
     Protocol::Status Data::send_data(uint8_t *buf, uint32_t length, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format) {
+        // Start if ready (No error handling required here)
         if (runnable_->status == Protocol::Status::FINISHED) {
             runnable_->status = Protocol::Status::NOT_FINISHED;
             runnable_->buffer = buf;
@@ -32,13 +33,12 @@ namespace rgb_matrix {
             ThreadPool::get_threadpool(ThreadPool::Pool_ID::IO)->submit(runnable_);
         }
 
+        // Always report status
         return runnable_->status;
     }
 
     Data::Worker::Worker() {
         status_msg_ = new Status(node);
-
-        throw String_Exception("Not finished");
     }
 
     Data::Worker::~Worker() {
@@ -52,6 +52,7 @@ namespace rgb_matrix {
                 status = Protocol::Status::ERROR;
 
             // TODO:
+            throw String_Exception("NOT FINISHED");
 
             status = Protocol::Status::FINISHED;
         }
