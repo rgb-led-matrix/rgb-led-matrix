@@ -5,8 +5,6 @@
 #include <IO/Protocol/Protocol.h>
 
 namespace rgb_matrix {
-    class Frame_Manager;
-
     class Frame : public Drawer {
         public:
             Frame(Panel *panel, Protocol *protocol, Control *control);

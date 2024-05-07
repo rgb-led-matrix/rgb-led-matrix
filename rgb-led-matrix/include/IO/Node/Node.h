@@ -11,6 +11,13 @@ namespace rgb_matrix {
             // For Protocol
             virtual void write(uint8_t *buf, uint32_t len) = 0;
             virtual void read(uint8_t *buf, uint32_t *len, uint32_t timeout_us) = 0;
+
+        protected:
+            // Should be thread-safe
+            virtual bool claim() = 0;
+            virtual void free() = 0;
+
+            friend class Protocol;
     };
 }
 #endif

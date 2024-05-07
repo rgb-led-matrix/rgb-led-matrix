@@ -16,7 +16,7 @@ namespace rgb_matrix {
     class Protocol {
         public:
             Protocol(Node *node);
-            virtual ~Protocol() {}
+            virtual ~Protocol();
 
             enum Status {
                 NOT_FINISHED,

@@ -13,7 +13,14 @@ namespace rgb_matrix {
         if (node == nullptr)
             throw Null_Pointer("Node");
         
+        if (!node->claim())
+            throw Illegal("Attempt to node in use");
+        
         node_ = node;
+    }
+
+    Protocol::~Protocol() {
+        node_->free();
     }
 
     void Protocol::send(uint8_t *buf, uint32_t size) {

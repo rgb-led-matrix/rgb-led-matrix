@@ -2,6 +2,7 @@
 #define FTDI_UART_H
 
 #include <string>
+#include <mutex>
 #include <IO/Node/Node.h>
 
 namespace rgb_matrix {
@@ -18,8 +19,13 @@ namespace rgb_matrix {
 
         protected:
             FTDI_UART();
+
+            bool claim();
+            void free();
             
             std::string serial_number_;
+            bool claim_;
+            std::mutex lock_;
     };
 }
 #endif

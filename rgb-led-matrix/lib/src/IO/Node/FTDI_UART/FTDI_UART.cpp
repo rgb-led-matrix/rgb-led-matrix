@@ -20,6 +20,7 @@ namespace rgb_matrix {
 
         snprintf(str, sizeof(str), "%s%u", serial_number, chan_num);
         serial_number_ = str;
+        claim_ = false;
 
         set_baud(4000000);
 
@@ -96,6 +97,26 @@ namespace rgb_matrix {
 
             FT_Close(handle);
         }
+    }
+
+    bool FTDI_UART::claim() {
+        bool result = false;
+
+        lock_.lock();
+
+        if (!claim_) {
+            result = true;
+            claim_ = true;
+        }
+
+        lock_.unlock();
+        return result;
+    }
+
+    void FTDI_UART::free() {
+        lock_.lock();
+        claim_ = false;
+        lock_.unlock();
     }
 
     void FTDI_UART::set_baud(uint32_t baud) {
