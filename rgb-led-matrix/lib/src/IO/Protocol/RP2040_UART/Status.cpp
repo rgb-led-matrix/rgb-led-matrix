@@ -14,7 +14,7 @@ namespace rgb_matrix {
         // Find way to avoid so many threads?
         node_ = node;
         shutdown_ = false;
-        status_ = STATUS::READY;
+        status_ = STATUS::IDLE_0;
         thread_ = new std::thread(Status::worker, this);
     }
 

@@ -26,7 +26,7 @@ namespace rgb_matrix {
     // TODO: Block multi-submit
     //  Calling send too fast can trigger multi-submit
     //      Double buffering, high processing speed, etc.
-    void Protocol::send(uint8_t *buf, uint32_t size) {
+    void Protocol::send(uint8_t *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns) {
         if (buf == nullptr)
             throw Null_Pointer("Buffer");
         
@@ -38,6 +38,9 @@ namespace rgb_matrix {
 
         buf_ = buf;
         size_ = size;
+        sizeof_t_ = sizeof_t;
+        multiplex_ = multiplex_;
+        columns_ = columns;
     }
 
     Protocol::Status Protocol::get_protocol_status() {
