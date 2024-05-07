@@ -8,6 +8,7 @@ namespace rgb_matrix {
     class RP2040_UART : public Protocol {
         public:
             RP2040_UART(Node *node);
+            ~RP2040_UART();
         
         protected:
             RP2040_UART();

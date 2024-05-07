@@ -11,10 +11,14 @@ namespace rgb_matrix {
         data_ = new Data(node);
     }
 
+    RP2040_UART::~RP2040_UART() {
+        delete data_;
+    }
+
     Protocol::Status RP2040_UART::internal_state_machine(bool clear_errors) {
         if (clear_errors)
             data_->clear_errors();
-            
+
         return data_->send_data(buf_, size_, sizeof_t_, multiplex_, columns_, format_);
     }
 }
