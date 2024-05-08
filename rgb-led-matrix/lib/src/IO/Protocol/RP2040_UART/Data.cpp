@@ -22,7 +22,7 @@ namespace rgb_matrix {
 
     Protocol::Status Data::send_data(uint8_t *buf, uint32_t length, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format) {
         // Start if ready (No error handling required here)
-        if (runnable_->status == Protocol::Status::FINISHED) {
+        if (runnable_->status == Protocol::Status::FINISHED && buf != nullptr) {
             runnable_->status = Protocol::Status::NOT_FINISHED;
             runnable_->buffer = buf;
             runnable_->length = length;

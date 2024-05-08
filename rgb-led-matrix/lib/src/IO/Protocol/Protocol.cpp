@@ -17,15 +17,13 @@ namespace rgb_matrix {
             throw Illegal("Attempt to node in use");
         
         node_ = node;
+        buf_ = nullptr;
     }
 
     Protocol::~Protocol() {
         node_->free();
     }
 
-    // TODO: Block multi-submit
-    //  Calling send too fast can trigger multi-submit
-    //      Double buffering, high processing speed, etc.
     void Protocol::send(uint8_t *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format) {
         if (buf == nullptr)
             throw Null_Pointer("Buffer");
@@ -33,15 +31,25 @@ namespace rgb_matrix {
         if (size == 0)
             throw Illegal("Size");
 
-        if (get_protocol_status(true) == Status::NOT_FINISHED)
-            throw Illegal("Protocol still busy");
+        lock_.lock();
 
+        // Clear errors and update state of buf_
+        get_protocol_status(true);
+
+        // Check status of protocol state
+        if (buf_ != nullptr) {
+            lock_.unlock();
+            throw Illegal("Protocol still busy");
+        }
+
+        // Setup protocol for another run
         buf_ = buf;
         size_ = size;
         sizeof_t_ = sizeof_t;
         multiplex_ = multiplex_;
         columns_ = columns;
         format_ = format;
+        lock_.unlock();
     }
 
     Protocol::Status Protocol::get_protocol_status() {
@@ -49,6 +57,15 @@ namespace rgb_matrix {
     }
 
     Protocol::Status Protocol::get_protocol_status(bool clear_errors) {
-        return internal_state_machine(clear_errors);
+        Protocol::Status result = internal_state_machine(clear_errors);
+
+        // It has finished in some way, so allow new submission
+        if (result != Protocol::Status::NOT_FINISHED) {
+            lock_.lock();
+            buf_ = nullptr;
+            lock_.unlock();
+        }
+
+        return result;
     }
 }

@@ -1,6 +1,8 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
+#include <mutex>
+#include <list>
 #include <IO/Node/Node.h>
 
 namespace rgb_matrix {
@@ -43,6 +45,8 @@ namespace rgb_matrix {
             uint8_t multiplex_;
             uint8_t columns_;
             uint8_t format_;
+            std::mutex lock_;
+            std::list<Node *> list_;
     };
 }
 #endif
