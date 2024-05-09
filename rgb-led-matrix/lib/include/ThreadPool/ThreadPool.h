@@ -6,27 +6,36 @@
 #include <queue>
 #include <mutex>
 #include <condition_variable>
-#include <functional>
 
 namespace rgb_matrix {
-    template <typename R, typename F> class ThreadPool {
+    class Runnable {
         public:
-            void start(uint8_t count = 1);
-            void submit(const std::function<void(R, F)>& job, R return_args, F args);
+            Runnable() {}
+            virtual ~Runnable() {}
+
+            virtual void run() = 0;
+    };
+
+    class ThreadPool {
+        public:
+            enum class Pool_ID {
+                Drawer,
+                IO
+            };
+
+            static ThreadPool *get_threadpool(Pool_ID id);
+            void submit(Runnable *t);
 
         private:
-            static void ThreadLoop(ThreadPool *object);
+            ThreadPool();
 
-            struct payload {
-                std::function<void(R, F)> function;
-                R return_args;
-                F args;
-            };
+            static void ThreadLoop(ThreadPool *object);
 
             std::mutex lock_;
             std::condition_variable conditional_;
             std::vector<std::thread> threads_;
-            std::queue<payload *> work_queue_;
+            std::queue<Runnable *> work_queue_;
+            static ThreadPool *pool_[2];
     };
 }
 #endif

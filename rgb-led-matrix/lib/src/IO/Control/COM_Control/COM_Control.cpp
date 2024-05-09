@@ -26,7 +26,7 @@ namespace rgb_matrix {
     }
 
     void COM_Control::write(uint32_t val, uint8_t bytes) {
-        char buf[4];
+        uint8_t buf[4];
 
         if (bytes == 0 || bytes > 4)
             throw Illegal("bytes");

@@ -13,55 +13,59 @@ namespace rgb_matrix {
         if (node == nullptr)
             throw Null_Pointer("Node");
         
+        if (!node->claim())
+            throw Illegal("Attempt to node in use");
+        
         node_ = node;
+        buf_ = nullptr;
     }
 
-    void Protocol::send(uint8_t *buf, uint32_t size, uint8_t scan) {
+    Protocol::~Protocol() {
+        node_->free();
+    }
+
+    void Protocol::send(uint8_t *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format) {
         if (buf == nullptr)
             throw Null_Pointer("Buffer");
         
         if (size == 0)
             throw Illegal("Size");
 
+        lock_.lock();
+
+        // Clear errors and update state of buf_
+        get_protocol_status(true);
+
+        // Check status of protocol state
+        if (buf_ != nullptr) {
+            lock_.unlock();
+            throw Illegal("Protocol still busy");
+        }
+
+        // Setup protocol for another run
         buf_ = buf;
         size_ = size;
-        scan_ = scan;
-        state_ = 0;
-        counter_ = 0;
-        status_ = Status::NOT_FINISHED;
+        sizeof_t_ = sizeof_t;
+        multiplex_ = multiplex_;
+        columns_ = columns;
+        format_ = format;
+        lock_.unlock();
     }
 
     Protocol::Status Protocol::get_protocol_status() {
-        return status_;
+        return get_protocol_status(false);
     }
 
+    Protocol::Status Protocol::get_protocol_status(bool clear_errors) {
+        Protocol::Status result = internal_state_machine(clear_errors);
 
-    // Required transitions:
-    //  NOT_FINISHED -> NOT_FINISHED
-    //  NOT_FINISHED -> NEXT
-    //  NEXT -> NOT_FINISHED
-    //  NOT_FINISHED -> FINISHED
-    //  FINISHED -> FINISHED (hold till reset)
-    // Illegal transisitions:
-    //  NEXT -> FINISHED
-    //  NEXT -> NEXT
-    //  FINISHED -> NOT_FINISHED
-    //  FINISHED -> NEXT
-    void Protocol::acknowledge() {
-        switch (status_) {
-            case Status::NOT_FINISHED:
-                status_ = internal_state_machine();
-                break;
-            case Status::NEXT:
-                status_ = internal_state_machine();
-                if (status_ != Status::NOT_FINISHED)
-                    throw Illegal("State Machine");
-                break;
-            case Status::FINISHED:
-                break;
-            default:
-                throw Unknown_Type("Status");
-                break;
+        // It has finished in some way, so allow new submission
+        if (result != Protocol::Status::NOT_FINISHED) {
+            lock_.lock();
+            buf_ = nullptr;
+            lock_.unlock();
         }
+
+        return result;
     }
 }
