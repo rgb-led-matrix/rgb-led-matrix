@@ -1,6 +1,8 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
+#include <mutex>
+#include <list>
 #include <IO/Node/Node.h>
 
 namespace rgb_matrix {
@@ -16,33 +18,35 @@ namespace rgb_matrix {
     class Protocol {
         public:
             Protocol(Node *node);
-            virtual ~Protocol() {}
+            virtual ~Protocol();
 
             enum Status {
                 NOT_FINISHED,
-                NEXT,
+                ERROR,
                 FINISHED
             };
 
             // For Panel
-            void send(uint8_t *buf, uint32_t size, uint8_t scan);
+            void send(uint8_t *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format);
 
             // For Scheduler
             Status get_protocol_status();
-            void acknowledge();
 
         protected:
             Protocol();
 
-            virtual Status internal_state_machine() = 0;
+            Status get_protocol_status(bool clear_errors);
+            virtual Status internal_state_machine(bool clear_errors) = 0;
 
             Node *node_;
             uint8_t *buf_;
             uint32_t size_;
-            volatile Status status_;
-            uint8_t scan_;
-            uint32_t counter_;
-            uint8_t state_;
+            uint8_t sizeof_t_;
+            uint8_t multiplex_;
+            uint8_t columns_;
+            uint8_t format_;
+            std::mutex lock_;
+            std::list<Node *> list_;
     };
 }
 #endif

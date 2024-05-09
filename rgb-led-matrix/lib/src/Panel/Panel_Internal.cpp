@@ -9,6 +9,7 @@
 #include <Panel/RGB/RGB48.h>
 #include <Panel/RGB/RGB_555.h>
 #include <Panel/RGB/RGB_222.h>
+#include <Panel/RGB/RGB.h>
 #include <IO/Scheduler/Scheduler.h>
 
 namespace rgb_matrix {
@@ -179,18 +180,11 @@ namespace rgb_matrix {
 
         lock_.lock();
         if (!schedule)
-            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, scan_);
+            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, sizeof(T), scan_, width_, RGB::translate_id(cfg_->get_data_format()));
         else {
             Scheduler *scheduler = new Scheduler();
             scheduler->add_protocol(protocol);
-
-            // TODO:
-            //  Add checksum (Is this really needed/recommended?)
-            //  Add header (size of T, size of buffer, rows, columns)
-            //      This is basically for verfication of data format (protobuf would work)
-            //      Note: Use of recovery protocol is highly recommended
-
-            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, scan_);
+            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, sizeof(T), scan_, width_, RGB::translate_id(cfg_->get_data_format()));
             scheduler->start(control);
             delete scheduler;
         }

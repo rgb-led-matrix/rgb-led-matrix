@@ -5,8 +5,6 @@
 #include <IO/Protocol/Protocol.h>
 
 namespace rgb_matrix {
-    class Frame_Manager;
-
     class Frame : public Drawer {
         public:
             Frame(Panel *panel, Protocol *protocol, Control *control);
@@ -27,7 +25,7 @@ namespace rgb_matrix {
             Protocol *protocol_;
             Control *control_;
             bool isMulti_;
-            volatile bool isFree_;
+            bool isFree_;
 
             friend class Frame_Manager;
     };

@@ -1,42 +1,60 @@
+#include <thread>
+#include <algorithm>
 #include <ThreadPool/ThreadPool.h>
 #include <Panel/MultiPanel_Internal.h>
+#include <Exception/Null_Pointer.h>
+#include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
+    ThreadPool *ThreadPool::pool_[2] = { nullptr };
 
-    template <typename R, typename F> void ThreadPool<R, F>::start(uint8_t count) {
+    ThreadPool::ThreadPool() {
+        uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
+
         for (uint8_t i = 0; i < count; i++)
             threads_.emplace_back(std::thread(&ThreadPool::ThreadLoop, this));
     }
 
-    template <typename R, typename F> void ThreadPool<R, F>::submit(const std::function<void(R, F)>& job, R return_args, F args) {
-        payload *p = new payload();
-
-        p->function = job;
-        p->return_args = return_args;
-        p->args = args;
+    void ThreadPool::submit(Runnable *t) {
+        if (t == nullptr)
+            throw Null_Pointer("Runnable");
 
         lock_.lock();
-        work_queue_.push(p);
+        work_queue_.push(t);
         conditional_.notify_one();
         lock_.unlock();
     }
 
-    template <typename R, typename F> void ThreadPool<R, F>::ThreadLoop(ThreadPool<R, F> *object) {
-        payload *p;
-
+    void ThreadPool::ThreadLoop(ThreadPool *object) {
         while(true) {
             std::unique_lock<std::mutex> lk(object->lock_);
             object->conditional_.wait(lk, [object]{ return !object->work_queue_.empty(); });
-            p = object->work_queue_.front();
+            Runnable *t = object->work_queue_.front();
             object->work_queue_.pop();
             lk.unlock();
 
-            p->function(p->return_args, p->args);
-            delete p;
+            t->run();
         }
     }
 
-    template class ThreadPool<volatile bool *, MultiPanel_Internal::show_packet>;
-    template class ThreadPool<volatile bool *, MultiPanel_Internal::set_brightness_packet>;
-    template class ThreadPool<volatile bool *, MultiPanel_Internal::map_wavelength_packet>;
+    ThreadPool *ThreadPool::get_threadpool(Pool_ID id) {
+        ThreadPool **result;
+
+        switch (id) {
+            case Pool_ID::Drawer:
+                result = &pool_[0];
+                break;
+            case Pool_ID::IO:
+                result = &pool_[1];
+                break;
+            default:
+                throw Unknown_Type("Pool_ID");
+                break;
+        }
+
+        if (*result == nullptr)
+            *result = new ThreadPool();
+
+        return *result;
+    }
 }
