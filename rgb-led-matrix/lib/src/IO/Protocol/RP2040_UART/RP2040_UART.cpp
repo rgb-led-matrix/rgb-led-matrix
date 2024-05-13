@@ -1,4 +1,6 @@
 #include <IO/Protocol/RP2040_UART/RP2040_UART.h>
+#include <IO/Protocol/RP2040_UART/Data.h>
+#include <IO/Protocol/RP2040_UART/Query.h>
 #include <Exception/Illegal.h>
 
 namespace rgb_matrix {
