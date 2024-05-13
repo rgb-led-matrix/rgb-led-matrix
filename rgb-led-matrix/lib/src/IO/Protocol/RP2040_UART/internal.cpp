@@ -2,12 +2,16 @@
 
 namespace rgb_matrix {
     uint32_t internal::generate_header(uint8_t magic) {
-        // TODO:
-        return 0xAAEEAEE;
+        uint32_t upper = magic >> 4;
+        uint32_t lower = magic & 0xF;
+        uint32_t result = upper << 12 | upper << 8 | lower << 4 | lower;
+        return result << 16 | result;
     }
 
     uint32_t internal::generate_delimiter(uint8_t magic) {
-        // TODO:
-        return 0xAEAEAEAE;
+        uint32_t upper = magic >> 4;
+        uint32_t lower = magic & 0xF;
+        uint32_t result = upper << 4 | lower;
+        return result << 24 | result << 16 | result << 8 | result;
     }
 }
