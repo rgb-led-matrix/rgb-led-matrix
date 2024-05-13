@@ -9,10 +9,12 @@ namespace rgb_matrix {
 
     RP2040_UART::RP2040_UART(Node *node, uint8_t magic) : Protocol(node) {
         data_ = new Data(node, magic);
+        query_ = new Query(node, magic);
     }
 
     RP2040_UART::~RP2040_UART() {
         delete data_;
+        delete query_;
     }
 
     Protocol::Status RP2040_UART::internal_state_machine(bool clear_errors) {

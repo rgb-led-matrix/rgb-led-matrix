@@ -2,6 +2,7 @@
 #define RP2040_UART_H
 
 #include <IO/Protocol/RP2040_UART/Data.h>
+#include <IO/Protocol/RP2040_UART/Query.h>
 #include <mutex>
 
 namespace rgb_matrix {
@@ -16,6 +17,7 @@ namespace rgb_matrix {
             Status internal_state_machine(bool clear_errors);
 
             Data *data_;
+            Query *query_;
     };
 }
 #endif
