@@ -17,6 +17,7 @@ namespace rgb_matrix {
             throw Illegal("Attempt to node in use");
         
         node_ = node;
+        buf_ = nullptr;
         claim_ = false;
     }
 
@@ -31,7 +32,7 @@ namespace rgb_matrix {
         if (size == 0)
             throw Illegal("Size");
 
-        // Clear errors and update state of buf_
+        // Clear errors and submit another run
         claim();
         get_protocol_status(true);
 
