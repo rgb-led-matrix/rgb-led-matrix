@@ -37,6 +37,8 @@ namespace rgb_matrix {
 
             Status get_protocol_status(bool clear_errors);
             virtual Status internal_state_machine(bool clear_errors) = 0;
+            void claim();
+            void release();
 
             Node *node_;
             uint8_t *buf_;
@@ -47,6 +49,7 @@ namespace rgb_matrix {
             uint8_t format_;
             std::mutex lock_;
             std::list<Node *> list_;
+            bool claim_;
     };
 }
 #endif

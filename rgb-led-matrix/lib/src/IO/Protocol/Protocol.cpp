@@ -17,7 +17,7 @@ namespace rgb_matrix {
             throw Illegal("Attempt to node in use");
         
         node_ = node;
-        buf_ = nullptr;
+        claim_ = false;
     }
 
     Protocol::~Protocol() {
@@ -31,16 +31,9 @@ namespace rgb_matrix {
         if (size == 0)
             throw Illegal("Size");
 
-        lock_.lock();
-
         // Clear errors and update state of buf_
+        claim();
         get_protocol_status(true);
-
-        // Check status of protocol state
-        if (buf_ != nullptr) {
-            lock_.unlock();
-            throw Illegal("Protocol still busy");
-        }
 
         // Setup protocol for another run
         buf_ = buf;
@@ -49,7 +42,6 @@ namespace rgb_matrix {
         multiplex_ = multiplex_;
         columns_ = columns;
         format_ = format;
-        lock_.unlock();
     }
 
     Protocol::Status Protocol::get_protocol_status() {
@@ -60,12 +52,21 @@ namespace rgb_matrix {
         Protocol::Status result = internal_state_machine(clear_errors);
 
         // It has finished in some way, so allow new submission
-        if (result != Protocol::Status::NOT_FINISHED) {
-            lock_.lock();
-            buf_ = nullptr;
-            lock_.unlock();
-        }
+        if (result != Protocol::Status::NOT_FINISHED && !clear_errors)
+            release();
 
         return result;
+    }
+
+    void Protocol::claim() {
+        lock_.lock();
+        claim_ = true;
+        lock_.unlock();
+    }
+
+    void Protocol::release() {
+        lock_.lock();
+        claim_ = false;
+        lock_.unlock();
     }
 }

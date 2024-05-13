@@ -52,12 +52,15 @@ namespace rgb_matrix {
 
     void Data::Worker::run() {
         Status::STATUS current = status_msg_->get_status();
-        if (current != Status::STATUS::IDLE_0 && current != Status::STATUS::IDLE_1)
+        if (current != Status::STATUS::IDLE_0 && current != Status::STATUS::IDLE_1) {
             status = Protocol::Status::ERROR;
+            buffer = nullptr;
+        }
 
         // TODO:
         throw String_Exception("NOT FINISHED");
 
         status = Protocol::Status::FINISHED;
+        buffer = nullptr;
     }
 }
