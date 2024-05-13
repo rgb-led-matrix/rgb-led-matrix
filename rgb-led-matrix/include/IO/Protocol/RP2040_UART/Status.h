@@ -8,7 +8,7 @@
 namespace rgb_matrix {
     class Status {
         public:
-            Status(Node *node);
+            Status(Node *node, uint8_t magic);
             ~Status();
 
             enum class STATUS {
@@ -33,7 +33,7 @@ namespace rgb_matrix {
                 uint32_t checksum;
                 uint32_t delimiter;
 
-                bool valid();
+                bool valid(uint8_t magic);
                 uint32_t compute_checksum();
             };
 
@@ -44,6 +44,7 @@ namespace rgb_matrix {
             std::thread *thread_;
             Node *node_;
             bool shutdown_;
+            uint8_t magic_;
     };
 }
 #endif

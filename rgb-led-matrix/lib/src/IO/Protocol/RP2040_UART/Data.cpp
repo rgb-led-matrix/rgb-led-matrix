@@ -8,10 +8,11 @@ namespace rgb_matrix {
         throw Illegal("Status");
     }
 
-    Data::Data(Node *node) {
-        runnable_ = new Worker();
+    Data::Data(Node *node, uint8_t magic) {
+        runnable_ = new Worker(magic);
         runnable_->status = Protocol::Status::FINISHED;
         runnable_->node = node;
+        runnable_->magic = magic;
     }
 
     Data::~Data() {
@@ -42,8 +43,8 @@ namespace rgb_matrix {
             runnable_->status = Protocol::Status::FINISHED;
     }
 
-    Data::Worker::Worker() {
-        status_msg_ = new Status(node);
+    Data::Worker::Worker(uint8_t magic) {
+        status_msg_ = new Status(node, magic);
     }
 
     Data::Worker::~Worker() {

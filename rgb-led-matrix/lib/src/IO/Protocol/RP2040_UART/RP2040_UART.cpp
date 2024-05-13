@@ -7,8 +7,8 @@ namespace rgb_matrix {
         throw Illegal("RP2040_UART");
     }
 
-    RP2040_UART::RP2040_UART(Node *node) : Protocol(node) {
-        data_ = new Data(node);
+    RP2040_UART::RP2040_UART(Node *node, uint8_t magic) : Protocol(node) {
+        data_ = new Data(node, magic);
     }
 
     RP2040_UART::~RP2040_UART() {
@@ -26,7 +26,7 @@ namespace rgb_matrix {
             data_->clear_errors();
             result = data_->send_data(buf_, size_, sizeof_t_, multiplex_, columns_, format_);
         }
-        
+
         return result;
     }
 }

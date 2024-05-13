@@ -1,5 +1,6 @@
 #include <cstring>
 #include <IO/Protocol/RP2040_UART/Status.h>
+#include <IO/Protocol/RP2040_UART/internal.h>
 #include <IO/machine.h>
 #include <IO/CRC/CRC.h>
 #include <Exception/Illegal.h>
@@ -10,11 +11,12 @@ namespace rgb_matrix {
         throw Illegal("Status");
     }
 
-    Status::Status(Node *node) {
+    Status::Status(Node *node, uint8_t magic) {
         // Find way to avoid so many threads?
         node_ = node;
         shutdown_ = false;
         status_ = STATUS::IDLE_0;
+        magic_ = magic;
         thread_ = new std::thread(Status::worker, this);
     }
 
@@ -58,7 +60,7 @@ namespace rgb_matrix {
             // Note this will block up in complexity if add more message types
             memcpy(&m, &buffer[count], sizeof(msg));
 
-            if (!m.valid())
+            if (!m.valid(obj->magic_))
                 ++count;
             else {
                 count += sizeof(msg);
@@ -117,8 +119,8 @@ namespace rgb_matrix {
         return ~checksum;
     }
 
-    bool Status::msg::valid() {
-        if (ntohl(header) != 0xAAEEAAEE)
+    bool Status::msg::valid(uint8_t magic) {
+        if (ntohl(header) != internal::generate_header(magic))
             return false;
 
         if (cmd != 's')
@@ -127,7 +129,7 @@ namespace rgb_matrix {
         if (ntohs(len) != 4)
             return false;
 
-        if (ntohl(delimiter) != 0xAEAEAEAE)
+        if (ntohl(delimiter) != internal::generate_delimiter(magic))
             return false;
 
         if (ntohl(checksum) != compute_checksum())

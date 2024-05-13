@@ -1,4 +1,5 @@
 #include <IO/Control/COM_Control/COM_Control.h>
+#include <IO/Protocol/RP2040_UART/internal.h>
 #include <IO/CRC/CRC.h>
 #include <IO/machine.h>
 #include <Exception/Illegal.h>
@@ -10,12 +11,12 @@ namespace rgb_matrix {
         throw Illegal("COM_Control");
     }
 
-    COM_Control::COM_Control(Node *node) : Control(node) {
-        // Do nothing
+    COM_Control::COM_Control(Node *node, uint8_t magic) : Control(node) {
+        magic_ = magic;
     }
 
     void COM_Control::signal(Commands command) {
-        Control_Message msg(command);
+        Control_Message msg(command, magic_);
 
         write(msg.header, sizeof(msg.header));
         write(msg.cmd, sizeof(msg.cmd));
@@ -37,11 +38,11 @@ namespace rgb_matrix {
         node_->write(buf, bytes);
     }
 
-    COM_Control::Control_Message::Control_Message(Commands command) {
-        header = htonl(0xAAEEAAEE);
+    COM_Control::Control_Message::Control_Message(Commands command, uint8_t magic) {
+        header = htonl(internal::generate_header(magic));
         len = 1;
         id = 0;
-        delimiter = htonl(0xAEAEAEAE);
+        delimiter = htonl(internal::generate_delimiter(magic));
 
         switch (command) {
             case Commands::Trigger:
@@ -49,6 +50,9 @@ namespace rgb_matrix {
                 break;
             case Commands::Reset:
                 cmd = 1;
+                break;
+            case Commands::Acknowledge:
+                cmd = 2;
                 break;
             default:
                 throw Unknown_Type("Commands");

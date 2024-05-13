@@ -11,7 +11,8 @@ namespace rgb_matrix {
         
             enum class Commands {
                 Trigger,
-                Reset
+                Reset,
+                Acknowledge
             };
 
             // For Scheduler

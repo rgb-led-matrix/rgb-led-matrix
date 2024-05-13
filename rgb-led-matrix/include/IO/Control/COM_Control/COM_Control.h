@@ -6,7 +6,7 @@
 namespace rgb_matrix {
     class COM_Control : public Control {
         public:
-            COM_Control(Node *node);
+            COM_Control(Node *node, uint8_t magic = 0xAE);
 
             void signal(Commands command);
 
@@ -15,7 +15,7 @@ namespace rgb_matrix {
 
             struct Control_Message {
                 public:
-                    Control_Message(Commands command);
+                    Control_Message(Commands command, uint8_t magic);
 
                     uint32_t header;
                     uint8_t cmd;
@@ -29,6 +29,8 @@ namespace rgb_matrix {
             };
 
             void write(uint32_t val, uint8_t bits);
+
+            uint8_t magic_;
     };
 }
 #endif

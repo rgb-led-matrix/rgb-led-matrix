@@ -10,7 +10,7 @@
 namespace rgb_matrix {
     class Data {
         public:
-            Data(Node *node);
+            Data(Node *node, uint8_t magic);
             ~Data();
 
             Protocol::Status send_data(uint8_t *buf, uint32_t len, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format);
@@ -21,7 +21,7 @@ namespace rgb_matrix {
 
             class Worker : public Runnable {
                 public:
-                    Worker();
+                    Worker(uint8_t magic);
                     ~Worker();
 
                     void run();
@@ -34,6 +34,7 @@ namespace rgb_matrix {
                     uint8_t format;
                     Node *node;
                     Protocol::Status status;
+                    uint8_t magic;
                 
                 private:
                     Status *status_msg_;
