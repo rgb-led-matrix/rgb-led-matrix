@@ -23,6 +23,10 @@ namespace rgb_matrix {
             result = Protocol::Status::FINISHED;
         }
 
+        // Block automatic restart!
+        if (result == Protocol::Status::NOT_FINISHED)
+            buf_ = nullptr;
+
         return result;
     }
 }
