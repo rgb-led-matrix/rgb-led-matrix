@@ -1,4 +1,4 @@
-#include <IO/Control/COM_Control/COM_Control.h>
+#include <IO/Protocol/RP2040_UART/Control.h>
 #include <IO/Protocol/RP2040_UART/internal.h>
 #include <IO/CRC/CRC.h>
 #include <IO/machine.h>
@@ -7,15 +7,16 @@
 
 namespace rgb_matrix {
     // Do not use this!
-    COM_Control::COM_Control() {
-        throw Illegal("COM_Control");
+    Control::Control() {
+        throw Illegal("Control");
     }
 
-    COM_Control::COM_Control(Node *node, uint8_t magic) : Control(node) {
+    Control::Control(Node *node, uint8_t magic) {
         magic_ = magic;
+        node_ = node;
     }
 
-    void COM_Control::signal(Commands command) {
+    void Control::signal(Protocol::Commands command) {
         Control_Message msg(command, magic_);
 
         write(msg.header, sizeof(msg.header));
@@ -26,7 +27,7 @@ namespace rgb_matrix {
         write(msg.delimiter, sizeof(msg.delimiter));
     }
 
-    void COM_Control::write(uint32_t val, uint8_t bytes) {
+    void Control::write(uint32_t val, uint8_t bytes) {
         uint8_t buf[4];
 
         if (bytes == 0 || bytes > 4)
@@ -38,20 +39,20 @@ namespace rgb_matrix {
         node_->write(buf, bytes);
     }
 
-    COM_Control::Control_Message::Control_Message(Commands command, uint8_t magic) {
+    Control::Control_Message::Control_Message(Protocol::Commands command, uint8_t magic) {
         header = htonl(internal::generate_header(magic));
         len = 1;
         id = 0;
         delimiter = htonl(internal::generate_delimiter(magic));
 
         switch (command) {
-            case Commands::Trigger:
+            case Protocol::Commands::Trigger:
                 cmd = 0;
                 break;
-            case Commands::Reset:
+            case Protocol::Commands::Reset:
                 cmd = 1;
                 break;
-            case Commands::Acknowledge:
+            case Protocol::Commands::Acknowledge:
                 cmd = 2;
                 break;
             default:
@@ -69,7 +70,7 @@ namespace rgb_matrix {
         return checksum;
     }
 
-    inline uint32_t COM_Control::Control_Message::compute_checksum() {
+    inline uint32_t Control::Control_Message::compute_checksum() {
         uint32_t checksum = 0xFFFFFFFF;
 
         checksum = checksum_chunk(checksum, header, 32);

@@ -85,7 +85,7 @@ namespace rgb_matrix {
         return result;
     }
 
-    void MultiPanel_Internal::show(Control *control) {
+    void MultiPanel_Internal::show(Protocol *control) {
         lock_.lock();
         std::queue<show_packet *> results;
         
@@ -110,7 +110,7 @@ namespace rgb_matrix {
         }
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
-            (*it)->panel->show((*it)->protocol, control, false);
+            (*it)->panel->show((*it)->protocol, false);
 
         scheduler_->start(control);
         lock_.unlock();

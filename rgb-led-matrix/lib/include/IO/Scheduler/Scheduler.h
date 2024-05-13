@@ -4,13 +4,12 @@
 #include <list>
 #include <mutex>
 #include <IO/Protocol/Protocol.h>
-#include <IO/Control/Control.h>
 
 namespace rgb_matrix {
     // Uses Mediator Pattern to synchronize panels in MultiPanel::show
     class Scheduler {
         public:
-            void start(Control *control);
+            void start(Protocol *control);
             bool add_protocol(Protocol *protocol);
 
         protected:

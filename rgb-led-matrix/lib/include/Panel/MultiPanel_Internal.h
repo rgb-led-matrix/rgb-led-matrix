@@ -19,7 +19,7 @@ namespace rgb_matrix {
             void map_wavelength(uint8_t color, Color index, uint16_t value);
 
             bool map_panel(uint16_t x, uint16_t y, Direction direction, Panel *panel, Protocol *protocol);
-            void show(Control *control);
+            void show(Protocol *control);
 
         protected:
             MultiPanel_Internal();

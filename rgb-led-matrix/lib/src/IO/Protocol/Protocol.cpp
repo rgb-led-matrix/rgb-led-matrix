@@ -9,20 +9,21 @@ namespace rgb_matrix {
         Illegal("Protocol");
     }
 
-    Protocol::Protocol(Node *node) {
-        if (node == nullptr)
+    Protocol::Protocol(Node *data, Node *control) {
+        if (data == nullptr || control == nullptr)
             throw Null_Pointer("Node");
         
-        if (!node->claim())
+        if (!data_->claim())
             throw Illegal("Attempt to node in use");
         
-        node_ = node;
+        data_ = data;
+        control_ = control;
         buf_ = nullptr;
         claim_ = false;
     }
 
     Protocol::~Protocol() {
-        node_->free();
+        data_->free();
     }
 
     void Protocol::send(uint8_t *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format) {

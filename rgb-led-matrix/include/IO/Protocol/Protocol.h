@@ -17,7 +17,7 @@ namespace rgb_matrix {
     //  is enough to hide from them.)
     class Protocol {
         public:
-            Protocol(Node *node);
+            Protocol(Node *data, Node *control);
             virtual ~Protocol();
 
             enum Status {
@@ -26,11 +26,18 @@ namespace rgb_matrix {
                 FINISHED
             };
 
+            enum class Commands {
+                Trigger,
+                Reset,
+                Acknowledge
+            };
+
             // For Panel
             void send(uint8_t *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format);
 
             // For Scheduler
             Status get_protocol_status();
+            virtual void signal(Commands command) = 0;
 
         protected:
             Protocol();
@@ -40,7 +47,8 @@ namespace rgb_matrix {
             void claim();
             void release();
 
-            Node *node_;
+            Node *data_;
+            Node *control_;
             uint8_t *buf_;
             uint32_t size_;
             uint8_t sizeof_t_;

@@ -1,21 +1,21 @@
-#ifndef COM_CONTROL_H
-#define COM_CONTROL_H
+#ifndef RP2040_UART_CONTROL_H
+#define RP2040_UART_CONTROL_H
 
-#include <IO/Control/Control.h>
+#include <IO/Protocol/Protocol.h>
 
 namespace rgb_matrix {
-    class COM_Control : public Control {
+    class Control {
         public:
-            COM_Control(Node *node, uint8_t magic = 0xAE);
+            Control(Node *node, uint8_t magic = 0xAE);
 
-            void signal(Commands command);
+            void signal(Protocol::Commands command);
 
         protected:
-            COM_Control();
+            Control();
 
             struct Control_Message {
                 public:
-                    Control_Message(Commands command, uint8_t magic);
+                    Control_Message(Protocol::Commands command, uint8_t magic);
 
                     uint32_t header;
                     uint8_t cmd;
@@ -30,6 +30,7 @@ namespace rgb_matrix {
 
             void write(uint32_t val, uint8_t bits);
 
+            Node *node_;
             uint8_t magic_;
     };
 }

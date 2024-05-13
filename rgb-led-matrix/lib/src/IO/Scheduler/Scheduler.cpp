@@ -5,7 +5,7 @@
 #include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
-    void Scheduler::start(Control *control) {
+    void Scheduler::start(Protocol *control) {
         bool isFinished = false;
 
         lock_.lock();
@@ -33,7 +33,7 @@ namespace rgb_matrix {
                 }
             }
         }
-        control->signal(Control::Commands::Trigger);
+        control->signal(Protocol::Commands::Trigger);
         lock_.unlock();
     }
 

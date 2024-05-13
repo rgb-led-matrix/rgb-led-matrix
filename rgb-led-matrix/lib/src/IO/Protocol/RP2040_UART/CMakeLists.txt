@@ -6,4 +6,5 @@ target_sources(RP2040_UART INTERFACE
     Data.cpp
     Query.cpp
     internal.cpp
+    Control.cpp
     ../Protocol.cpp)
