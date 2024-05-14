@@ -12,6 +12,8 @@ namespace rgb_matrix {
         public:
             RP2040_UART(Node *node, Protocol_Role role, uint8_t magic = 0xAE);
             ~RP2040_UART();
+
+            float get_temperature();
         
         protected:
             RP2040_UART();

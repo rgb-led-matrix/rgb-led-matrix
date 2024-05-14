@@ -46,4 +46,8 @@ namespace rgb_matrix {
     void RP2040_UART::internal_signal(Commands command) {
         control_->signal(command);
     }
+
+    float RP2040_UART::get_temperature() {
+        // TODO: Query temperature
+    }
 }
