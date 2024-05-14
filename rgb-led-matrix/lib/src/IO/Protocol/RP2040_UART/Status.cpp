@@ -2,7 +2,6 @@
 #include <IO/Protocol/RP2040_UART/Status.h>
 #include <IO/Protocol/RP2040_UART/internal.h>
 #include <IO/machine.h>
-#include <IO/CRC/CRC.h>
 #include <Exception/Illegal.h>
 
 namespace rgb_matrix {
@@ -101,20 +100,13 @@ namespace rgb_matrix {
         return result;
     }
 
-    static inline uint32_t checksum_chunk(uint32_t checksum, uint32_t v, uint8_t bits) {
-        for (int i = 0; i < bits; i += 8)
-            checksum = CRC::crc32(checksum, (v >> i) & 0xFF);
-        
-        return checksum;
-    }
-
     inline uint32_t Status::msg::compute_checksum() {
         uint32_t checksum = 0xFFFFFFFF;
 
-        checksum = checksum_chunk(checksum, header, 32);
-        checksum = checksum_chunk(checksum, cmd, 8);
-        checksum = checksum_chunk(checksum, len, 16);
-        checksum = checksum_chunk(checksum, status, 32);
+        checksum = internal::checksum_chunk(checksum, header, 32);
+        checksum = internal::checksum_chunk(checksum, cmd, 8);
+        checksum = internal::checksum_chunk(checksum, len, 16);
+        checksum = internal::checksum_chunk(checksum, status, 32);
 
         return ~checksum;
     }
