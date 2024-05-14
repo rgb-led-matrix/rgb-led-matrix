@@ -6,7 +6,6 @@
 #include <IO/Node/Node.h>
 
 namespace rgb_matrix {
-    // This is a hack
     enum class Protocol_Role {
         Data,
         Control
