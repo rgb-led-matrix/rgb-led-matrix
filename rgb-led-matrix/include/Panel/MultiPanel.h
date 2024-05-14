@@ -16,8 +16,8 @@ namespace rgb_matrix {
             };
 
             // TODO: All Protocols must share the same Control Node!
-            virtual bool map_panel(uint16_t x, uint16_t y, Direction direction, Panel *panel, Protocol *protocol) = 0;
-            virtual void show(Protocol *control) = 0;
+            virtual bool map_panel(uint16_t x, uint16_t y, Direction direction, Panel *panel, Data_Protocol *protocol) = 0;
+            virtual void show(Control_Protocol *control) = 0;
     };
 }
 #endif

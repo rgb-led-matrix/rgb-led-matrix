@@ -16,7 +16,7 @@ namespace rgb_matrix {
         protected:
             RP2040_UART();
 
-            Status internal_state_machine(bool clear_errors);
+            Data_Protocol::Status internal_state_machine(bool clear_errors);
             void internal_signal(Commands command);
 
             Data *data_;

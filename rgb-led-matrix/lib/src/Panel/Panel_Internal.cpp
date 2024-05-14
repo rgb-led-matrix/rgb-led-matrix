@@ -174,7 +174,7 @@ namespace rgb_matrix {
         return size_;
     }
 
-    template<typename T> void Panel_Internal<T>::show(Protocol *protocol, Protocol *control, bool schedule) {
+    template<typename T> void Panel_Internal<T>::show(Data_Protocol *protocol, Control_Protocol *control, bool schedule) {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
 

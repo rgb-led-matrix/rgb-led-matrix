@@ -10,14 +10,14 @@ namespace rgb_matrix {
 
     Query::Query(Node *node, uint8_t magic) {
         runnable_ = new Worker(magic);
-        runnable_->status = Protocol::Status::FINISHED;
+        runnable_->status = Data_Protocol::Status::FINISHED;
         runnable_->node = node;
         runnable_->magic = magic;
     }
 
     Query::~Query() {
         // Figure out better solution?
-        while (runnable_->status == Protocol::Status::NOT_FINISHED);
+        while (runnable_->status == Data_Protocol::Status::NOT_FINISHED);
         delete runnable_;
     }
 
@@ -32,11 +32,11 @@ namespace rgb_matrix {
     void Query::Worker::run() {
         Status::STATUS current = status_msg_->get_status();
         if (current != Status::STATUS::IDLE_0 && current != Status::STATUS::IDLE_1)
-            status = Protocol::Status::ERROR;
+            status = Data_Protocol::Status::ERROR;
 
         // TODO:
         throw String_Exception("NOT FINISHED");
 
-        status = Protocol::Status::FINISHED;
+        status = Data_Protocol::Status::FINISHED;
     }
 }

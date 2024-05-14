@@ -8,14 +8,14 @@ namespace rgb_matrix {
         public:
             Control(Node *node, uint8_t magic = 0xAE);
 
-            void signal(Protocol::Commands command);
+            void signal(Control_Protocol::Commands command);
 
         protected:
             Control();
 
             struct Control_Message {
                 public:
-                    Control_Message(Protocol::Commands command, uint8_t magic);
+                    Control_Message(Control_Protocol::Commands command, uint8_t magic);
 
                     uint32_t header;
                     uint8_t cmd;

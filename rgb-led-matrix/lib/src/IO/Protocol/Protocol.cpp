@@ -49,11 +49,11 @@ namespace rgb_matrix {
         format_ = format;
     }
 
-    Protocol::Status Protocol::get_protocol_status() {
+    Data_Protocol::Status Protocol::get_protocol_status() {
         return get_protocol_status(false);
     }
 
-    Protocol::Status Protocol::get_protocol_status(bool clear_errors) {
+    Data_Protocol::Status Protocol::get_protocol_status(bool clear_errors) {
         if (role_ != Protocol_Role::Data)
             throw Illegal("Wrong Protocol Role");
 

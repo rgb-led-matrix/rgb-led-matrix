@@ -29,13 +29,13 @@ namespace rgb_matrix {
     }
 
     Protocol::Status RP2040_UART::internal_state_machine(bool clear_errors) {
-        Protocol::Status result = data_->send_data(buf_, size_, sizeof_t_, multiplex_, columns_, format_);
+        Data_Protocol::Status result = data_->send_data(buf_, size_, sizeof_t_, multiplex_, columns_, format_);
 
         // Block automatic restart!
         if (result == Protocol::Status::NOT_FINISHED)
             buf_ = nullptr;
 
-        if (clear_errors && result == Protocol::Status::ERROR) {
+        if (clear_errors && result == Data_Protocol::Status::ERROR) {
             data_->clear_errors();
             result = data_->send_data(buf_, size_, sizeof_t_, multiplex_, columns_, format_);
         }

@@ -16,7 +16,7 @@ namespace rgb_matrix {
             void set_brightness(uint8_t brightness);
             void map_wavelength(uint8_t color, Color index, uint16_t value);
 
-            void show(Protocol *protocol, Protocol *control, bool schedule = true);
+            void show(Data_Protocol *protocol, Control_Protocol *control, bool schedule = true);
 
         protected:
             Panel_Internal();

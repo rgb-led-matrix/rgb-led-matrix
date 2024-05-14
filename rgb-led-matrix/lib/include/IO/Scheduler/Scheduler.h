@@ -9,11 +9,11 @@ namespace rgb_matrix {
     // Uses Mediator Pattern to synchronize panels in MultiPanel::show
     class Scheduler {
         public:
-            void start(Protocol *control);
-            bool add_protocol(Protocol *protocol);
+            void start(Control_Protocol *control);
+            bool add_protocol(Data_Protocol *protocol);
 
         protected:
-            std::list<Protocol *> protocols_;
+            std::list<Data_Protocol *> protocols_;
             std::mutex lock_;
     };
 }

@@ -15,7 +15,7 @@ namespace rgb_matrix {
         node_ = node;
     }
 
-    void Control::signal(Protocol::Commands command) {
+    void Control::signal(Control_Protocol::Commands command) {
         Control_Message msg(command, magic_);
 
         write(msg.header, sizeof(msg.header));
@@ -38,20 +38,20 @@ namespace rgb_matrix {
         node_->write(buf, bytes);
     }
 
-    Control::Control_Message::Control_Message(Protocol::Commands command, uint8_t magic) {
+    Control::Control_Message::Control_Message(Control_Protocol::Commands command, uint8_t magic) {
         header = htonl(internal::generate_header(magic));
         len = 1;
         id = 0;
         delimiter = htonl(internal::generate_delimiter(magic));
 
         switch (command) {
-            case Protocol::Commands::Trigger:
+            case Control_Protocol::Commands::Trigger:
                 cmd = 0;
                 break;
-            case Protocol::Commands::Reset:
+            case Control_Protocol::Commands::Reset:
                 cmd = 1;
                 break;
-            case Protocol::Commands::Acknowledge:
+            case Control_Protocol::Commands::Acknowledge:
                 cmd = 2;
                 break;
             default:
