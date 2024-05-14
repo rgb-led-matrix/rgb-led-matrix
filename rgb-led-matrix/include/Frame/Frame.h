@@ -7,8 +7,8 @@
 namespace rgb_matrix {
     class Frame : public Drawer {
         public:
-            Frame(Panel *panel, Protocol *protocol);
-            Frame(MultiPanel *panel, Protocol *control);
+            Frame(Panel *panel, Data_Protocol *protocol, Control_Protocol *control);
+            Frame(MultiPanel *panel, Control_Protocol *control);
 
             bool isFree();
 
@@ -22,8 +22,8 @@ namespace rgb_matrix {
 
             Panel *single_;
             MultiPanel *multi_;
-            Protocol *protocol_;
-            Protocol *control_;
+            Data_Protocol *protocol_;
+            Control_Protocol *control_;
             bool isMulti_;
             bool isFree_;
 

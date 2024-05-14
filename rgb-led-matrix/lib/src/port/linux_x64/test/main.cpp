@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
         Node *data_node = new FTDI_UART("000", 0);
         Node *control_node = new FTDI_UART("001", 0);
         RP2040_UART *data_protocol = new RP2040_UART(data_node, Protocol_Role::Data);
-        RP2040_UART *control_protocol = new RP2040_UART(control_node, Protocol_Role::Control);
+        Protocol *control_protocol = new RP2040_UART(control_node, Protocol_Role::Control);
 
         // Setup config
         GAMMA gamma(2.2, 2.2, 2.2);
