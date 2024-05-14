@@ -20,9 +20,12 @@ namespace rgb_matrix {
     }
 
     RP2040_UART::~RP2040_UART() {
-        delete data_;
-        delete query_;
-        delete control_;
+        if (role_ == Protocol_Role::Data) {
+            delete data_;
+            delete query_;
+        }
+        else
+            delete control_;
     }
 
     Protocol::Status RP2040_UART::internal_state_machine(bool clear_errors) {

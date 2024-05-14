@@ -37,8 +37,6 @@ namespace rgb_matrix {
                 Acknowledge
             };
 
-            Protocol_Role get_role();
-
             // For Panel
             void send(uint8_t *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format);
 

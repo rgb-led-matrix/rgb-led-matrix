@@ -73,10 +73,6 @@ namespace rgb_matrix {
         internal_signal(command);
     }
 
-    Protocol_Role Protocol::get_role() {
-        return role_;
-    }
-
     void Protocol::claim() {
         lock_.lock();
         claim_ = true;

@@ -32,7 +32,7 @@ namespace rgb_matrix {
         if (panel == nullptr)
             throw Null_Pointer("Panel");
 
-        if (protocol == nullptr || protocol->get_role() != Protocol_Role::Data)
+        if (protocol == nullptr)
             throw Null_Pointer("Protocol");
 
         if (x >= width_ || y >= height_)

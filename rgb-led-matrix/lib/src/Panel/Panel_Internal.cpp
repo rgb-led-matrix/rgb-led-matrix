@@ -175,7 +175,7 @@ namespace rgb_matrix {
     }
 
     template<typename T> void Panel_Internal<T>::show(Protocol *protocol, Protocol *control, bool schedule) {
-        if (protocol == nullptr || protocol->get_role() != Protocol_Role::Data)
+        if (protocol == nullptr)
             throw Null_Pointer("Protocol");
 
         lock_.lock();
