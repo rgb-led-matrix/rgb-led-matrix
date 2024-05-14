@@ -9,21 +9,21 @@ namespace rgb_matrix {
         Illegal("Protocol");
     }
 
-    Protocol::Protocol(Node *data, Node *control) {
-        if (data == nullptr || control == nullptr)
+    Protocol::Protocol(Node *node, Protocol_Role role) {
+        if (node == nullptr)
             throw Null_Pointer("Node");
         
-        if (!data_->claim())
+        if (!node->claim())
             throw Illegal("Attempt to node in use");
         
-        data_ = data;
-        control_ = control;
+        node_ = node;
+        role_ = role;
         buf_ = nullptr;
         claim_ = false;
     }
 
     Protocol::~Protocol() {
-        data_->free();
+        node_->free();
     }
 
     void Protocol::send(uint8_t *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format) {
@@ -32,6 +32,9 @@ namespace rgb_matrix {
         
         if (size == 0)
             throw Illegal("Size");
+
+        if (role_ != Protocol_Role::Data)
+            throw Illegal("Wrong Protocol Role");
 
         // Clear errors and submit another run
         claim();
@@ -51,6 +54,9 @@ namespace rgb_matrix {
     }
 
     Protocol::Status Protocol::get_protocol_status(bool clear_errors) {
+        if (role_ != Protocol_Role::Data)
+            throw Illegal("Wrong Protocol Role");
+
         Protocol::Status result = internal_state_machine(clear_errors);
 
         // It has finished in some way, so allow new submission
@@ -58,6 +64,17 @@ namespace rgb_matrix {
             release();
 
         return result;
+    }
+
+    void Protocol::signal(Commands command) {
+        if (role_ != Protocol_Role::Control)
+            throw Illegal("Wrong Protocol Role");
+
+        internal_signal(command);
+    }
+
+    Protocol_Role Protocol::get_role() {
+        return role_;
     }
 
     void Protocol::claim() {

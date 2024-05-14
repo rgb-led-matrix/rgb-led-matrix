@@ -10,14 +10,14 @@ namespace rgb_matrix {
     
     class RP2040_UART : public Protocol {
         public:
-            RP2040_UART(Node *data, Node *control, uint8_t magic = 0xAE);
+            RP2040_UART(Node *node, Protocol_Role role, uint8_t magic = 0xAE);
             ~RP2040_UART();
         
         protected:
             RP2040_UART();
 
             Status internal_state_machine(bool clear_errors);
-            void signal(Commands command);
+            void internal_signal(Commands command);
 
             Data *data_;
             Query *query_;

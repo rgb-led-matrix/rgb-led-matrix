@@ -8,6 +8,9 @@ namespace rgb_matrix {
     void Scheduler::start(Protocol *control) {
         bool isFinished = false;
 
+        if (control == nullptr || control->get_role() != Protocol_Role::Control)
+            throw Null_Pointer("Protocol");
+
         lock_.lock();
         while (!isFinished) {
             isFinished = true;

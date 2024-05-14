@@ -174,8 +174,8 @@ namespace rgb_matrix {
         return size_;
     }
 
-    template<typename T> void Panel_Internal<T>::show(Protocol *protocol, bool schedule) {
-        if (protocol == nullptr)
+    template<typename T> void Panel_Internal<T>::show(Protocol *protocol, Protocol *control, bool schedule) {
+        if (protocol == nullptr || protocol->get_role() != Protocol_Role::Data)
             throw Null_Pointer("Protocol");
 
         lock_.lock();
@@ -185,7 +185,7 @@ namespace rgb_matrix {
             Scheduler *scheduler = new Scheduler();
             scheduler->add_protocol(protocol);
             protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, sizeof(T), scan_, width_, RGB::translate_id(cfg_->get_data_format()));
-            scheduler->start(protocol);
+            scheduler->start(control);
             delete scheduler;
         }
         lock_.unlock();

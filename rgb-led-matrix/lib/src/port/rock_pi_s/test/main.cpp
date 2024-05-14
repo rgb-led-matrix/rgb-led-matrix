@@ -14,7 +14,8 @@ int main(int argc, char **argv) {
         // Setup IO
         Node *data_node = new FTDI_UART("000", 0);
         Node *control_node = new FTDI_UART("001", 0);
-        RP2040_UART *protocol = new RP2040_UART(data_node, control_node);
+        RP2040_UART *data_protocol = new RP2040_UART(data_node, Protocol_Role::Data);
+        RP2040_UART *control_protocol = new RP2040_UART(control_node, Protocol_Role::Control);
 
         // Setup config
         GAMMA gamma(2.2, 2.2, 2.2);
@@ -24,11 +25,11 @@ int main(int argc, char **argv) {
         // Create panels (Double Buffered)
         Panel *panel[2] = { RGBMatrix::Create_Panel(cfg), RGBMatrix::Create_Panel(cfg) };
         MultiPanel *frame[2] = { RGBMatrix::Create_MultiPanel(32, 16), RGBMatrix::Create_MultiPanel(32, 16) };
-        frame[0]->map_panel(0, 0, MultiPanel::Direction::Right, panel[0], protocol);
-        frame[1]->map_panel(0, 0, MultiPanel::Direction::Right, panel[1], protocol);
+        frame[0]->map_panel(0, 0, MultiPanel::Direction::Right, panel[0], data_protocol);
+        frame[1]->map_panel(0, 0, MultiPanel::Direction::Right, panel[1], data_protocol);
 
         // Create frame (Double Buffered)
-        Frame *f[2] = { new Frame(frame[0], protocol), new Frame(frame[1], protocol) };
+        Frame *f[2] = { new Frame(frame[0], control_protocol), new Frame(frame[1], control_protocol) };
         Frame_Manager *manager = new Frame_Manager();
 
         // Draw (Double Buffered)

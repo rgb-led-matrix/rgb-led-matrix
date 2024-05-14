@@ -32,7 +32,7 @@ namespace rgb_matrix {
         if (panel == nullptr)
             throw Null_Pointer("Panel");
 
-        if (protocol == nullptr)
+        if (protocol == nullptr || protocol->get_role() != Protocol_Role::Data)
             throw Null_Pointer("Protocol");
 
         if (x >= width_ || y >= height_)
@@ -110,7 +110,7 @@ namespace rgb_matrix {
         }
 
         for (std::list<Panel_t *>::iterator it = panel_->begin(); it != panel_->end(); ++it)
-            (*it)->panel->show((*it)->protocol, false);
+            (*it)->panel->show((*it)->protocol, nullptr, false);
 
         scheduler_->start(control);
         lock_.unlock();

@@ -9,7 +9,7 @@ namespace rgb_matrix {
     class Panel : public Drawer {
         public:
             // Using Panel directly should always schedule (we may delete this option)
-            virtual void show(Protocol *protocol, bool schedule = true) = 0;
+            virtual void show(Protocol *protocol, Protocol *control, bool schedule = true) = 0;
     };
 }
 #endif

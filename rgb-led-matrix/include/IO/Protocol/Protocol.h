@@ -6,6 +6,11 @@
 #include <IO/Node/Node.h>
 
 namespace rgb_matrix {
+    enum class Protocol_Role {
+        Data,
+        Control
+    };
+
     // Required construct for OSI Layer 2 and above
     //  Note these are client implementations for an internal Mediator Pattern
     // 
@@ -17,7 +22,7 @@ namespace rgb_matrix {
     //  is enough to hide from them.)
     class Protocol {
         public:
-            Protocol(Node *data, Node *control);
+            Protocol(Node *node, Protocol_Role role);
             virtual ~Protocol();
 
             enum Status {
@@ -32,23 +37,26 @@ namespace rgb_matrix {
                 Acknowledge
             };
 
+            Protocol_Role get_role();
+
             // For Panel
             void send(uint8_t *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format);
 
             // For Scheduler
             Status get_protocol_status();
-            virtual void signal(Commands command) = 0;
+            void signal(Commands command);
 
         protected:
             Protocol();
 
             Status get_protocol_status(bool clear_errors);
             virtual Status internal_state_machine(bool clear_errors) = 0;
+            virtual void internal_signal(Commands command) = 0;
             void claim();
             void release();
 
-            Node *data_;
-            Node *control_;
+            Node *node_;
+            Protocol_Role role_;
             uint8_t *buf_;
             uint32_t size_;
             uint8_t sizeof_t_;

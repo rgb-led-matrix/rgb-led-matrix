@@ -10,10 +10,13 @@ namespace rgb_matrix {
         throw Illegal("RP2040_UART");
     }
 
-    RP2040_UART::RP2040_UART(Node *data, Node *control, uint8_t magic) : Protocol(data, control) {
-        data_ = new Data(data, magic);
-        query_ = new Query(data, magic);
-        control_ = new Control(control, magic);
+    RP2040_UART::RP2040_UART(Node *node, Protocol_Role role, uint8_t magic) : Protocol(node, role) {
+        if (role == Protocol_Role::Data) {
+            data_ = new Data(node, magic);
+            query_ = new Query(node, magic);
+        }
+        else
+            control_ = new Control(node, magic);
     }
 
     RP2040_UART::~RP2040_UART() {
@@ -37,7 +40,7 @@ namespace rgb_matrix {
         return result;
     }
 
-    void RP2040_UART::signal(Commands command) {
+    void RP2040_UART::internal_signal(Commands command) {
         control_->signal(command);
     }
 }
