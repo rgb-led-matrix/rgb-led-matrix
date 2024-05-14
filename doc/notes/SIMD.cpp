@@ -208,6 +208,8 @@ extern masks_t masks;
 const int num_rows = 16;
 const int num_colums = 32;
 
+// Note: These data structures may not be the most ideal to use
+
 struct entry_t {
     entry_t() {
         owned = false;
@@ -263,6 +265,8 @@ void worker_thread(void *arg) {
 }
 
 extern masks_first_gen_t mask;
+
+// Note: These data structures may not be the most ideal to use
 
 struct entry_first_gen_t {
     entry_first_gen_t() {
