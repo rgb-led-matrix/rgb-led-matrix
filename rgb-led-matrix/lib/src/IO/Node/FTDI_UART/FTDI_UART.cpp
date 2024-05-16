@@ -5,7 +5,7 @@
 #include <Exception/Illegal.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::FTDI {
     // Do not use this!
     FTDI_UART::FTDI_UART() {
         throw Illegal("FTDI_UART");

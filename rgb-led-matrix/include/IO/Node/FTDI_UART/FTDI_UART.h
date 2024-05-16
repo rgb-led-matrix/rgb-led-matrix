@@ -5,7 +5,7 @@
 #include <mutex>
 #include <IO/Node/Node.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::FTDI {
     class FTDI_UART : public Node {
         public:
             FTDI_UART(const char *serial_number, uint8_t chan_num);
