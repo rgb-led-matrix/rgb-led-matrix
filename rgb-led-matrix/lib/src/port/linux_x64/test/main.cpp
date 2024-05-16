@@ -11,6 +11,7 @@
 #include <CFG/HUB75.h>
 using namespace rgb_matrix;
 using namespace rgb_matrix::FTDI;
+using namespace rgb_matrix::Mappers;
 using namespace rgb_matrix::Protocol::RP2040_UART;
 
 int main(int argc, char **argv) {

@@ -3,6 +3,7 @@
 #include <IO/Protocol/RP2040_UART/Data_Protocol/RP2040_UART_Data.h>
 #include <IO/Protocol/RP2040_UART/Control_Protocol/RP2040_UART_Control.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
+#include <Mapper/Outdoor/Outdoor.h>
 #include <Frame/Frame_Manager/Frame_Manager.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Illegal.h>
@@ -10,6 +11,7 @@
 #include <CFG/HUB75.h>
 using namespace rgb_matrix;
 using namespace rgb_matrix::FTDI;
+using namespace rgb_matrix::Mappers;
 using namespace rgb_matrix::Protocol::RP2040_UART;
 
 int main(int argc, char **argv) {
@@ -22,7 +24,8 @@ int main(int argc, char **argv) {
 
         // Setup config
         GAMMA gamma(2.2, 2.2, 2.2);
-        CFG *cfg = new HUB75(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, 8, gamma);
+        Outdoor *od = new Outdoor();
+        CFG *cfg = new HUB75(16, 32, rgb_matrix::Data_Format_ID::RGB48_ID, 8, gamma, od);
         cfg->get_dot().set(0, 10, 255, 128, 0, 0.5, 1.0, 0.9);
 
         // Create panels (Double Buffered)
