@@ -5,6 +5,14 @@
 #include <list>
 #include <IO/Node/Node.h>
 
+// Required construct for OSI Layer 2 and above
+// 
+//      It is recommended to keep the performance of the L1/L2 around 150uS
+//  regardless of framerate. L7 is more relaxed with something like 15mS
+//  requirements (assuming 30FPS). L1/L2 needs to make sure than all protocols/pipes
+//  (assuming MultiPanel) finish with a max delta of 150uS between fastest and slowest
+//  pipe. Otherwise frame switches may become noticable to cameras. (Assuming 3kHz
+//  is enough to hide from them.)
 namespace rgb_matrix {
     enum class Protocol_Role {
         Data,
@@ -23,6 +31,7 @@ namespace rgb_matrix {
             virtual void signal(Commands commd) = 0;
     };
 
+    // Note these are client implementations for an internal Mediator Pattern
     class Data_Protocol {
         public:
             enum Status {
@@ -38,15 +47,7 @@ namespace rgb_matrix {
             virtual Status get_protocol_status() = 0;
     };
 
-    // Required construct for OSI Layer 2 and above
-    //  Note these are client implementations for an internal Mediator Pattern
-    // 
-    //      It is recommended to keep the performance of the L1/L2 around 150uS
-    //  regardless of framerate. L7 is more relaxed with something like 15mS
-    //  requirements (assuming 30FPS). L1/L2 needs to make sure than all protocols/pipes
-    //  (assuming MultiPanel) finish with a max delta of 150uS between fastest and slowest
-    //  pipe. Otherwise frame switches may become noticable to cameras. (Assuming 3kHz
-    //  is enough to hide from them.)
+    // For implementations which are synchronous (Recommended!)
     class Protocol : public Data_Protocol, public Control_Protocol {
         public:
             Protocol(Node *node, Protocol_Role role);
