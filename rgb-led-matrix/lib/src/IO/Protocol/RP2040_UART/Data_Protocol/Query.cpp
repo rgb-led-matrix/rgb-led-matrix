@@ -1,8 +1,7 @@
-#include <IO/Protocol/RP2040_UART/Query.h>
-#include <IO/Protocol/Protocol.h>
+#include <IO/Protocol/RP2040_UART/Data_Protocol/Query.h>
 #include <Exception/Illegal.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::Protocol::RP2040_UART {
     // Do not use this!
     Query::Query() {
         throw Illegal("Status");

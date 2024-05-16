@@ -2,7 +2,8 @@
 #define FRAME_H
 
 #include <Panel/MultiPanel.h>
-#include <IO/Protocol/Protocol.h>
+#include <IO/Protocol/Control_Protocol.h>
+#include <IO/Protocol/Data_Protocol.h>
 
 namespace rgb_matrix {
     class Frame : public Drawer {

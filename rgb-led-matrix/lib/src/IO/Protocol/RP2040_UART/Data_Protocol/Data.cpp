@@ -1,8 +1,7 @@
-#include <IO/Protocol/RP2040_UART/Data.h>
-#include <IO/Protocol/Protocol.h>
+#include <IO/Protocol/RP2040_UART/Data_Protocol/Data.h>
 #include <Exception/Illegal.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::Protocol::RP2040_UART {
     // Do not use this!
     Data::Data() {
         throw Illegal("Status");
@@ -21,7 +20,7 @@ namespace rgb_matrix {
         delete runnable_;
     }
 
-    Protocol::Status Data::send_data(uint8_t *buf, uint32_t length, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format) {
+    Data_Protocol::Status Data::send_data(uint8_t *buf, uint32_t length, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format) {
         // Start if ready (No error handling required here)
         if (runnable_->status == Data_Protocol::Status::FINISHED && buf != nullptr) {
             runnable_->status = Data_Protocol::Status::NOT_FINISHED;

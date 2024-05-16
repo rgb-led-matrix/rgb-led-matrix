@@ -1,7 +1,7 @@
 #include <IO/Protocol/RP2040_UART/internal.h>
 #include <IO/CRC/CRC.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::Protocol::RP2040_UART {
     uint32_t internal::generate_header(uint8_t magic) {
         uint32_t upper = magic >> 4;
         uint32_t lower = magic & 0xF;

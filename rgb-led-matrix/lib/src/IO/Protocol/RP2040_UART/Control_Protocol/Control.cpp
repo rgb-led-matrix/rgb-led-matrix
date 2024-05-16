@@ -4,7 +4,7 @@
 #include <Exception/Illegal.h>
 #include <Exception/Unknown_Type.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::Protocol::RP2040_UART {
     // Do not use this!
     Control::Control() {
         throw Illegal("Control");

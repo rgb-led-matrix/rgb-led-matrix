@@ -19,7 +19,8 @@ namespace rgb_matrix {
             virtual bool claim() = 0;
             virtual void free() = 0;
 
-            friend class Protocol;
+            friend class Data_Protocol;
+            friend class Control_Protocol;
     };
 }
 #endif

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <RGBMatrix.h>
-#include <IO/Protocol/RP2040_UART/RP2040_UART.h>
+#include <IO/Protocol/RP2040_UART/Data_Protocol/RP2040_UART_Data.h>
+#include <IO/Protocol/RP2040_UART/Control_Protocol/RP2040_UART_Control.h>
 #include <IO/Node/FTDI_UART/FTDI_UART.h>
 #include <Frame/Frame_Manager/Frame_Manager.h>
 #include <Exception/Null_Pointer.h>
@@ -8,14 +9,15 @@
 #include <Exception/Unknown_Type.h>
 #include <CFG/HUB75.h>
 using namespace rgb_matrix;
+using namespace rgb_matrix::Protocol::RP2040_UART;
 
 int main(int argc, char **argv) {
     try {
         // Setup IO
         Node *data_node = new FTDI_UART("000", 0);
         Node *control_node = new FTDI_UART("001", 0);
-        RP2040_UART *data_protocol = new RP2040_UART(data_node, Protocol_Role::Data);
-        RP2040_UART *control_protocol = new RP2040_UART(control_node, Protocol_Role::Control);
+        RP2040_UART_Data *data_protocol = new RP2040_UART_Data(data_node);
+        Control_Protocol *control_protocol = new RP2040_UART_Control(control_node);
 
         // Setup config
         GAMMA gamma(2.2, 2.2, 2.2);

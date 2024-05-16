@@ -1,13 +1,13 @@
-#ifndef RP2040_UART_DATA_H
-#define RP2040_UART_DATA_H
+#ifndef RP2040_UART_DATA_PROTOCOL_DATA_H
+#define RP2040_UART_DATA_PROTOCOL_DATA_H
 
 #include <stdint.h>
 #include <IO/Node/Node.h>
-#include <IO/Protocol/Protocol.h>
 #include <ThreadPool/ThreadPool.h>
-#include <IO/Protocol/RP2040_UART/Status.h>
+#include <IO/Protocol/Data_Protocol.h>
+#include <IO/Protocol/RP2040_UART/Data_Protocol/Status.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::Protocol::RP2040_UART {
     class Data {
         public:
             Data(Node *node, uint8_t magic);
@@ -32,8 +32,8 @@ namespace rgb_matrix {
                     uint8_t multiplex;
                     uint8_t columns;
                     uint8_t format;
-                    Node *node;
-                    Protocol::Status status;
+                    rgb_matrix::Node *node;
+                    rgb_matrix::Data_Protocol::Status status;
                     uint8_t magic;
                 
                 private:

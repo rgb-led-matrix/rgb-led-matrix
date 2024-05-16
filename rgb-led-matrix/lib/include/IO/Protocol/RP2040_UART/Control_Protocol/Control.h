@@ -1,9 +1,9 @@
-#ifndef RP2040_UART_CONTROL_H
-#define RP2040_UART_CONTROL_H
+#ifndef RP2040_UART_CONTROL_PROTOCOL_CONTROL_H
+#define RP2040_UART_CONTROL_PROTOCOL_CONTROL_H
 
 #include <IO/Protocol/Control_Protocol.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::Protocol::RP2040_UART {
     class Control {
         public:
             Control(Node *node, uint8_t magic = 0xAE);
@@ -30,7 +30,7 @@ namespace rgb_matrix {
 
             void write(uint32_t val, uint8_t bits);
 
-            Node *node_;
+            rgb_matrix::Node *node_;
             uint8_t magic_;
     };
 }

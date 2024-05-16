@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::Protocol::RP2040_UART {
     class internal {
         public:
             static uint32_t generate_header(uint8_t magic);

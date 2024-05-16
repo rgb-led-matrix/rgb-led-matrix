@@ -1,11 +1,11 @@
-#ifndef RP2040_UART_STATUS_H
-#define RP2040_UART_STATUS_H
+#ifndef RP2040_UART_DATA_PROTOCOL_STATUS_H
+#define RP2040_UART_DATA_PROTOCOL_STATUS_H
 
 #include <stdint.h>
 #include <thread>
 #include <IO/Node/Node.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::Protocol::RP2040_UART {
     class Status {
         public:
             Status(Node *node, uint8_t magic);
@@ -42,7 +42,7 @@ namespace rgb_matrix {
 
             STATUS status_;
             std::thread *thread_;
-            Node *node_;
+            rgb_matrix::Node *node_;
             bool shutdown_;
             uint8_t magic_;
     };

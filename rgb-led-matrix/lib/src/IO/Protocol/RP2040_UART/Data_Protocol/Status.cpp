@@ -1,10 +1,10 @@
 #include <cstring>
-#include <IO/Protocol/RP2040_UART/Status.h>
+#include <IO/Protocol/RP2040_UART/Data_Protocol/Status.h>
 #include <IO/Protocol/RP2040_UART/internal.h>
 #include <IO/machine.h>
 #include <Exception/Illegal.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::Protocol::RP2040_UART {
     // Do not use this!
     Status::Status() {
         throw Illegal("Status");
