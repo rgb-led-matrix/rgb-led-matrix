@@ -2,7 +2,6 @@
 #define CONTROL_PROTOCOL_H
 
 #include <mutex>
-#include <list>
 #include <IO/Node/Node.h>
 
 // Required construct for OSI Layer 2 and above

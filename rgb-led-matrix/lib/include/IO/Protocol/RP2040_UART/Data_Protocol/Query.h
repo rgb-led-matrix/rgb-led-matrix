@@ -2,7 +2,6 @@
 #define RP2040_UART_DATA_PROTOCOL_QUERY_H
 
 #include <stdint.h>
-#include <IO/Node/Node.h>
 #include <ThreadPool/ThreadPool.h>
 #include <IO/Protocol/Data_Protocol.h>
 #include <IO/Protocol/RP2040_UART/Data_Protocol/Status.h>
