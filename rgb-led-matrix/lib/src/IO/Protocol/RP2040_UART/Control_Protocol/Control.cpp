@@ -1,4 +1,4 @@
-#include <IO/Protocol/RP2040_UART/Control.h>
+#include <IO/Protocol/RP2040_UART/Control_Protocol/Control.h>
 #include <IO/Protocol/RP2040_UART/internal.h>
 #include <IO/machine.h>
 #include <Exception/Illegal.h>

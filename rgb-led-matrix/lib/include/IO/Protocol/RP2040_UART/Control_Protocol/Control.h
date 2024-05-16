@@ -1,7 +1,7 @@
 #ifndef RP2040_UART_CONTROL_H
 #define RP2040_UART_CONTROL_H
 
-#include <IO/Protocol/Protocol.h>
+#include <IO/Protocol/Control_Protocol.h>
 
 namespace rgb_matrix {
     class Control {

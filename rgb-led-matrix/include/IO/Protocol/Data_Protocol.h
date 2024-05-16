@@ -1,5 +1,5 @@
-#ifndef PROTOCOL_H
-#define PROTOCOL_H
+#ifndef DATA_PROTOCOL_H
+#define DATA_PROTOCOL_H
 
 #include <mutex>
 #include <list>
