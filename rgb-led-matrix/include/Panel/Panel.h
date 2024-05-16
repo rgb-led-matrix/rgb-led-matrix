@@ -2,15 +2,15 @@
 #define PANEL_H
 
 #include <Drawer/Drawer.h>
-#include <IO/Protocol/Protocol.h>
-#include <IO/Control/Control.h>
+#include <IO/Protocol/Data_Protocol.h>
+#include <IO/Protocol/Control_Protocol.h>
 
 namespace rgb_matrix {
     // Pure interface for Panel
     class Panel : public Drawer {
         public:
             // Using Panel directly should always schedule (we may delete this option)
-            virtual void show(Protocol *protocol, Control *control, bool schedule = true) = 0;
+            virtual void show(Data_Protocol *protocol, Control_Protocol *control, bool schedule = true) = 0;
     };
 }
 #endif
