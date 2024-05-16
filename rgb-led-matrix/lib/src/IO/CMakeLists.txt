@@ -1,7 +1,6 @@
 add_subdirectory(Node)
 add_subdirectory(Scheduler)
 add_subdirectory(Protocol)
-add_subdirectory(Control)
 
 add_library(FTDI INTERFACE)
 
@@ -13,5 +12,4 @@ add_library(IO INTERFACE)
 
 target_link_libraries(IO INTERFACE
     FTDI
-    Scheduler
-    Control)
+    Scheduler)

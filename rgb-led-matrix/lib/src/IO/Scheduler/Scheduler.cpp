@@ -1,26 +1,28 @@
-#include <chrono>
 #include <thread>
 #include <IO/Scheduler/Scheduler.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
-    void Scheduler::start(Control *control) {
+    void Scheduler::start(Control_Protocol *control) {
         bool isFinished = false;
+
+        if (control == nullptr)
+            throw Null_Pointer("Protocol");
 
         lock_.lock();
         while (!isFinished) {
             isFinished = true;
 
-            for (std::list<Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
+            for (std::list<Data_Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
                 switch ((*it)->get_protocol_status()) {
-                    case Protocol::Status::FINISHED:
+                    case Data_Protocol::Status::FINISHED:
                         isFinished &= true;
                         break;
-                    case Protocol::Status::NOT_FINISHED:
+                    case Data_Protocol::Status::NOT_FINISHED:
                         isFinished = false;
                         break;
-                    case Protocol::Status::ERROR:
+                    case Data_Protocol::Status::ERROR:
                         isFinished = false;
                         // TODO: Error handle as required
                         lock_.unlock();
@@ -33,16 +35,16 @@ namespace rgb_matrix {
                 }
             }
         }
-        control->signal(Control::Commands::Trigger);
+        control->signal(Control_Protocol::Commands::Trigger);
         lock_.unlock();
     }
 
-    bool Scheduler::add_protocol(Protocol *protocol) {
+    bool Scheduler::add_protocol(Data_Protocol *protocol) {
         if (protocol == nullptr)
             throw Null_Pointer("Protocol");
 
         lock_.lock();
-        for (std::list<Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
+        for (std::list<Data_Protocol *>::iterator it = protocols_.begin(); it != protocols_.end(); ++it) {
             if ((*it) == protocol) {
                 lock_.unlock();
                 return false;

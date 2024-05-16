@@ -2,13 +2,14 @@
 #define FRAME_H
 
 #include <Panel/MultiPanel.h>
-#include <IO/Protocol/Protocol.h>
+#include <IO/Protocol/Control_Protocol.h>
+#include <IO/Protocol/Data_Protocol.h>
 
 namespace rgb_matrix {
     class Frame : public Drawer {
         public:
-            Frame(Panel *panel, Protocol *protocol, Control *control);
-            Frame(MultiPanel *panel, Control *control);
+            Frame(Panel *panel, Data_Protocol *protocol, Control_Protocol *control);
+            Frame(MultiPanel *panel, Control_Protocol *control);
 
             bool isFree();
 
@@ -22,8 +23,8 @@ namespace rgb_matrix {
 
             Panel *single_;
             MultiPanel *multi_;
-            Protocol *protocol_;
-            Control *control_;
+            Data_Protocol *protocol_;
+            Control_Protocol *control_;
             bool isMulti_;
             bool isFree_;
 

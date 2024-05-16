@@ -3,7 +3,7 @@
 
 #include <Mapper/Mapper.h>
 
-namespace rgb_matrix {
+namespace rgb_matrix::Mappers {
     class Outdoor : public Mapper {
         public:
             Color_Order map_color(uint16_t x, uint16_t y);
