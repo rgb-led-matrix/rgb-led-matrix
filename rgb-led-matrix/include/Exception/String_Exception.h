@@ -15,6 +15,7 @@ namespace rgb_matrix {
             String_Exception();
 
             std::string string_;
+            std::string prefix_;
     };
 }
 #endif

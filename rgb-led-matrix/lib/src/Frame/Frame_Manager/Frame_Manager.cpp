@@ -7,10 +7,10 @@
 namespace rgb_matrix {
     Frame_Manager::Frame_Manager(uint16_t framerate, bool isAsync) {
         if (framerate >= 1000)
-            throw Illegal("Framerate");
+            throw Illegal("Frame Manager: Framerate must be less than 1000.");
 
         if (isAsync)
-            Logger::get_logger()->write(Logger::Level::WARN, "Frame Manager is configured to allow async, which is generally discouraged. Use/proceed with caution!");
+            Logger::get_logger()->write(Logger::Level::WARN, "Frame Manager: Frame Manager is configured to allow async, which is generally discouraged. Use/proceed with caution!");
 
         isAsync_ = isAsync;
         framerate_ = framerate;
@@ -26,7 +26,7 @@ namespace rgb_matrix {
 
     void Frame_Manager::push_frame(Frame *frame) {
         if (frame == nullptr)
-            throw Null_Pointer("Frame");
+            throw Null_Pointer("Frame Manager: Cannot push null frame.");
 
         lock_.lock();
         frame->isFree_ = false;
@@ -47,7 +47,7 @@ namespace rgb_matrix {
                     time += range;
 
                     try {
-                        Logger::get_logger()->write(Logger::Level::WARN, "Frame was dropped due to timing violation.");
+                        Logger::get_logger()->write(Logger::Level::WARN, "Frame Manager: Frame was dropped due to timing violation.");
                     }
                     catch (const String_Exception &e) {
                         // We tried

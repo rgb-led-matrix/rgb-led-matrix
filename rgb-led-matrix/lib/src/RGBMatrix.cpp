@@ -2,6 +2,7 @@
 #include <Panel/Panel_Internal.h>
 #include <Panel/MultiPanel_Internal.h>
 #include <Exception/Unknown_Type.h>
+#include <Exception/Null_Pointer.h>
 #include <Panel/RGB/RGB24.h>
 #include <Panel/RGB/RGB48.h>
 #include <Panel/RGB/RGB_555.h>
@@ -9,6 +10,9 @@
 
 namespace rgb_matrix {
     Panel *RGBMatrix::Create_Panel(CFG *cfg) {
+        if (cfg == nullptr)
+            throw Null_Pointer("RGBMatrix: Cannot create panel without configuration.");
+
         switch (cfg->get_data_format()) {
             case Data_Format_ID::RGB48_ID:
                 return new Panel_Internal<RGB48>(cfg);
@@ -19,7 +23,7 @@ namespace rgb_matrix {
             case Data_Format_ID::RGB_555_ID:
                 return new Panel_Internal<RGB_555>(cfg);
             default:
-                throw Unknown_Type("Data_Format_ID");
+                throw Unknown_Type("RGBMatrix: Data Format ID is not defined");
                 break;
         }
     }
