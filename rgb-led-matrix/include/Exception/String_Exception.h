@@ -7,7 +7,7 @@
 namespace rgb_matrix {
     class String_Exception : public std::exception {
         public:
-            String_Exception(const char *str);
+            String_Exception(const char *str, bool log = true);
 
             virtual const char *what() const throw();
 
