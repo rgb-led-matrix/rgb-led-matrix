@@ -15,12 +15,12 @@
 namespace rgb_matrix {
     // Do not use this!    
     template <typename T> Panel_Internal<T>::Panel_Internal() {
-        throw Illegal("Panel Internal");
+        throw Illegal("Panel Internal: Attempted to use forbidden constructor.");
     }
 
     template <typename T> Panel_Internal<T>::Panel_Internal(CFG *cfg) {
         if (cfg == nullptr)
-            throw Null_Pointer("CFG");
+            throw Null_Pointer("Panel Internal: Cannot create panel without configuration.");
 
         brightness_ = 99;
         cfg_ = cfg;
