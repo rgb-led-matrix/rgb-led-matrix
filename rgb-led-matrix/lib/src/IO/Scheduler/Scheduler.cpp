@@ -29,10 +29,10 @@ namespace rgb_matrix {
                         Logger::get_logger()->write(Logger::Level::WARN, "Scheduler: Panel send failed to complete.");
                         Logger::get_logger()->write(Logger::Level::INFO, "Scheduler: Attempting timeout to reset node.");
 
-                        Logger::get_logger()->write(Logger::Level::WARN, "Scheduler: Exceeded number resend attempts.");
+                        Logger::get_logger()->write(Logger::Level::WARN, "Scheduler: Exceeded number of resend attempts.");
                         Logger::get_logger()->write(Logger::Level::INFO, "Scheduler: Attempting bootloader to reset node.");
 
-                        Logger::get_logger()->write(Logger::Level::WARN, "Scheduler: Exceeded number boot attempts.");
+                        Logger::get_logger()->write(Logger::Level::WARN, "Scheduler: Exceeded number of boot attempts.");
                         Logger::get_logger()->write(Logger::Level::INFO, "Scheduler: Crashing out.");
                         lock_.unlock();
                         throw String_Exception("Scheduler: We have communication failure with Panel.");
