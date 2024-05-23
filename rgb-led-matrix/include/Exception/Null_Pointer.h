@@ -6,7 +6,7 @@
 namespace rgb_matrix {
     class Null_Pointer : public String_Exception {
         public:
-            Null_Pointer(const char *str);
+            Null_Pointer(const char *str, bool log = true);
 
         protected:
             Null_Pointer();

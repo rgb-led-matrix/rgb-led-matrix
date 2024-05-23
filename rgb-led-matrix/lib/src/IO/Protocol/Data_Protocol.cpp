@@ -24,7 +24,7 @@ namespace rgb_matrix {
         node_->free();
     }
 
-    void Data_Protocol::send(uint8_t *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format) {
+    void Data_Protocol::send(void *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, Data_Format_ID format) {
         if (buf == nullptr)
             throw Null_Pointer("Buffer");
         

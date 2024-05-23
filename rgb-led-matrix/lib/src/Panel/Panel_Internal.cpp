@@ -15,12 +15,12 @@
 namespace rgb_matrix {
     // Do not use this!    
     template <typename T> Panel_Internal<T>::Panel_Internal() {
-        throw Illegal("Panel Internal");
+        throw Illegal("Panel Internal: Attempted to use forbidden constructor.");
     }
 
     template <typename T> Panel_Internal<T>::Panel_Internal(CFG *cfg) {
         if (cfg == nullptr)
-            throw Null_Pointer("CFG");
+            throw Null_Pointer("Panel Internal: Cannot create panel without configuration.");
 
         brightness_ = 99;
         cfg_ = cfg;
@@ -180,11 +180,11 @@ namespace rgb_matrix {
 
         lock_.lock();
         if (!schedule)
-            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, sizeof(T), scan_, width_, RGB::translate_id(cfg_->get_data_format()));
+            protocol->send((void *) buffer_, sizeof(T) * width_ * height_, sizeof(T), scan_, width_, cfg_->get_data_format());
         else {
             Scheduler *scheduler = new Scheduler();
             scheduler->add_protocol(protocol);
-            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, sizeof(T), scan_, width_, RGB::translate_id(cfg_->get_data_format()));
+            protocol->send((void *) buffer_, sizeof(T) * width_ * height_, sizeof(T), scan_, width_, cfg_->get_data_format());
             scheduler->start(control);
             delete scheduler;
         }

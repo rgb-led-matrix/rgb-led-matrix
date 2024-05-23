@@ -6,7 +6,7 @@ namespace rgb_matrix {
 
     Logger *Logger::get_logger() {
         if (logger_ == nullptr)
-            throw Null_Pointer("No logger");
+            throw Null_Pointer("No logger", false);
         return logger_;
     }
 }

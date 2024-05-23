@@ -17,7 +17,7 @@ namespace rgb_matrix {
 
     void ThreadPool::submit(Runnable *t) {
         if (t == nullptr)
-            throw Null_Pointer("Runnable");
+            throw Null_Pointer("ThreadPool: Cannot submit null runnable.");
 
         lock_.lock();
         work_queue_.push(t);
@@ -48,7 +48,7 @@ namespace rgb_matrix {
                 result = &pool_[1];
                 break;
             default:
-                throw Unknown_Type("Pool_ID");
+                throw Unknown_Type("ThreadPool: Pool ID is not defined.");
                 break;
         }
 

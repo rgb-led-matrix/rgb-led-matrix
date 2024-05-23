@@ -12,7 +12,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
             Data(Node *node, uint8_t magic);
             ~Data();
 
-            Data_Protocol::Status send_data(uint8_t *buf, uint32_t len, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format);
+            Data_Protocol::Status send_data(void *buf, uint32_t len, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, Data_Format_ID format);
             void clear_errors();
         
         protected:
