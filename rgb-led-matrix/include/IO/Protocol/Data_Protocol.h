@@ -3,6 +3,7 @@
 
 #include <mutex>
 #include <IO/Node/Node.h>
+#include <CFG/Types/types.h>
 
 // Required construct for OSI Layer 2 and above
 // 
@@ -26,7 +27,7 @@ namespace rgb_matrix {
             };
 
             // For Panel
-            void send(uint8_t *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, uint8_t format);
+            void send(void *buf, uint32_t size, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, Data_Format_ID format);
 
             // For Scheduler
             Status get_protocol_status();
@@ -40,12 +41,12 @@ namespace rgb_matrix {
             void release();
 
             Node *node_;
-            uint8_t *buf_;
+            void *buf_;
             uint32_t size_;
             uint8_t sizeof_t_;
             uint8_t multiplex_;
             uint8_t columns_;
-            uint8_t format_;
+            Data_Format_ID format_;
             std::mutex lock_;
             bool claim_;
     };

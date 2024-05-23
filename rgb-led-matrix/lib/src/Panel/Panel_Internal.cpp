@@ -180,11 +180,11 @@ namespace rgb_matrix {
 
         lock_.lock();
         if (!schedule)
-            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, sizeof(T), scan_, width_, RGB::translate_id(cfg_->get_data_format()));
+            protocol->send((void *) buffer_, sizeof(T) * width_ * height_, sizeof(T), scan_, width_, cfg_->get_data_format());
         else {
             Scheduler *scheduler = new Scheduler();
             scheduler->add_protocol(protocol);
-            protocol->send((uint8_t *) buffer_, sizeof(T) * width_ * height_, sizeof(T), scan_, width_, RGB::translate_id(cfg_->get_data_format()));
+            protocol->send((void *) buffer_, sizeof(T) * width_ * height_, sizeof(T), scan_, width_, cfg_->get_data_format());
             scheduler->start(control);
             delete scheduler;
         }
