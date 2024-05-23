@@ -63,6 +63,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         if (current != Status::STATUS::IDLE_0 && current != Status::STATUS::IDLE_1)
             status = Data_Protocol::Status::ERROR;
 
+        // PREAMBLE_CMD_LEN_T_MULTIPLEX_COLUMNS
         checksum = internal::checksum_chunk(checksum, header, 32);
         node->write(header);
         checksum = internal::checksum_chunk(checksum, len, 16);
@@ -79,6 +80,10 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         node->write(columns);
         checksum = internal::checksum_chunk(checksum, format, 8);
         node->write(format);
+
+        while (!status_msg_->get_status(current, Status::STATUS::ACTIVE_0)) {
+            // TODO: Check for timeout
+        }
 
         // TODO:
         throw String_Exception("NOT FINISHED");
