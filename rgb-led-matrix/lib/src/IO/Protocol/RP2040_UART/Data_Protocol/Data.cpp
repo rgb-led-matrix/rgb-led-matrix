@@ -1,5 +1,7 @@
 #include <IO/Protocol/RP2040_UART/Data_Protocol/Data.h>
+#include <IO/Protocol/RP2040_UART/internal.h>
 #include <Exception/Illegal.h>
+#include <IO/machine.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
     // Do not use this!
@@ -51,9 +53,32 @@ namespace rgb_matrix::Protocol::RP2040_UART {
     }
 
     void Data::Worker::run() {
+        uint32_t checksum = 0xFFFFFFFF;
+        uint32_t header = htonl(internal::generate_header(magic));
+        uint8_t cmd[2] = {'d', 'd'};
+        uint16_t len = htons(length);
+
         Status::STATUS current = status_msg_->get_status();
+
         if (current != Status::STATUS::IDLE_0 && current != Status::STATUS::IDLE_1)
             status = Data_Protocol::Status::ERROR;
+
+        checksum = internal::checksum_chunk(checksum, header, 32);
+        node->write(header);
+        checksum = internal::checksum_chunk(checksum, len, 16);
+        node->write(len);
+        checksum = internal::checksum_chunk(checksum, cmd[0], 8);
+        node->write(cmd[0]);
+        checksum = internal::checksum_chunk(checksum, cmd[1], 8);
+        node->write(cmd[1]);
+        checksum = internal::checksum_chunk(checksum, sizeof_t, 8);
+        node->write(sizeof_t);
+        checksum = internal::checksum_chunk(checksum, multiplex, 8);
+        node->write(multiplex);
+        checksum = internal::checksum_chunk(checksum, columns, 8);
+        node->write(columns);
+        checksum = internal::checksum_chunk(checksum, format, 8);
+        node->write(format);
 
         // TODO:
         throw String_Exception("NOT FINISHED");
