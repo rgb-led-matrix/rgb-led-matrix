@@ -5,6 +5,7 @@
 #include <ThreadPool/ThreadPool.h>
 #include <IO/Protocol/Data_Protocol.h>
 #include <IO/Protocol/RP2040_UART/Data_Protocol/Status.h>
+#include <IO/Protocol/RP2040_UART/Data_Protocol/Query_Worker.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
     class Query {
@@ -15,23 +16,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         protected:
             Query();
 
-            class Worker : public Runnable {
-                public:
-                    Worker(uint8_t magic);
-                    ~Worker();
-
-                    void run();
-
-                    Node *node;
-                    Data_Protocol::Status status;
-                    uint8_t magic;
-                
-                private:
-                    Status *status_msg_;
-
-            };
-
-            Worker *runnable_;
+            Query_Worker *runnable_;
     };
 }
 #endif
