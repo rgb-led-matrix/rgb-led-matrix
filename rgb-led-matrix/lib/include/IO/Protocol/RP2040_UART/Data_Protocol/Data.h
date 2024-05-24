@@ -36,6 +36,8 @@ namespace rgb_matrix::Protocol::RP2040_UART {
                     uint8_t magic;
                 
                 private:
+                    bool wait(Status::STATUS current, Status::STATUS expected, uint32_t timeout_us);
+
                     Status *status_msg_;
 
             };

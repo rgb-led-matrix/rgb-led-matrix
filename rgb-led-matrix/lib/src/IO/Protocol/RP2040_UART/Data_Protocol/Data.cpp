@@ -86,6 +86,14 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         delete status_msg_;
     }
 
+    bool Data::Worker::wait(Status::STATUS current, Status::STATUS expected, uint32_t timeout_us) {
+        while (!status_msg_->get_status(current, expected)) {
+            // TODO: Check for timeout
+        }
+
+        return true;
+    }
+
     void Data::Worker::run() {
         uint32_t checksum = 0xFFFFFFFF;
         uint32_t header = htonl(internal::generate_header(magic));
@@ -114,9 +122,10 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         node->write(columns);
         checksum = internal::checksum_chunk(checksum, format, 8);
         node->write(format);
-
-        while (!status_msg_->get_status(current, Status::STATUS::ACTIVE_0)) {
-            // TODO: Check for timeout
+        
+        if (!wait(current, Status::STATUS::ACTIVE_0, 100)) {
+            status = Data_Protocol::Status::ERROR;
+            return;
         }
 
         // PAYLOAD
@@ -124,9 +133,9 @@ namespace rgb_matrix::Protocol::RP2040_UART {
             checksum = internal::checksum_chunk(checksum, buffer[i], 8);
         node->write(buffer, length);
 
-        current = status_msg_->get_status();
-        while (!status_msg_->get_status(current, Status::STATUS::ACTIVE_1)) {
-            // TODO: Check for timeout
+        if (!wait(current, Status::STATUS::ACTIVE_1, 100)) {
+            status = Data_Protocol::Status::ERROR;
+            return;
         }
 
         // TODO:
