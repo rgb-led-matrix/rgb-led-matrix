@@ -25,18 +25,6 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         protected:
             Status();
 
-            struct msg {
-                uint32_t header;
-                uint8_t cmd;
-                uint16_t len;
-                uint32_t status;
-                uint32_t checksum;
-                uint32_t delimiter;
-
-                bool valid(uint8_t magic);
-                uint32_t compute_checksum();
-            };
-
             static void worker(Status *obj);
             STATUS translate_id(uint32_t id);
 

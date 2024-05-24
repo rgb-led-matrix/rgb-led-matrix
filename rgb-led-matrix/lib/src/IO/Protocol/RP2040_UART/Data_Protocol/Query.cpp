@@ -4,7 +4,7 @@
 namespace rgb_matrix::Protocol::RP2040_UART {
     // Do not use this!
     Query::Query() {
-        throw Illegal("Status");
+        throw Illegal("Query");
     }
 
     Query::Query(Node *node, uint8_t magic) {
