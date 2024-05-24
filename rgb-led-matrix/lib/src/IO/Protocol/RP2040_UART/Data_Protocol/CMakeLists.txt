@@ -4,6 +4,7 @@ target_sources(RP2040_UART_Data_Protocol INTERFACE
     Data.cpp
     Data_Worker.cpp
     Query.cpp
+    Query_Worker.cpp
     Status.cpp
     Status_msg.cpp
     RP2040_UART_Data.cpp)
