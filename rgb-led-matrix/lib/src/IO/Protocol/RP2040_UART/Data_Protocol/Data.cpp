@@ -101,7 +101,6 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         uint16_t len = htons(length);
 
         Status::STATUS current = status_msg_->get_status();
-
         if (current != Status::STATUS::IDLE_0 && current != Status::STATUS::IDLE_1)
             status = Data_Protocol::Status::ERROR;
 
@@ -133,7 +132,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
             checksum = internal::checksum_chunk(checksum, buffer[i], 8);
         node->write(buffer, length);
 
-        if (!wait(current, Status::STATUS::ACTIVE_1, 100)) {
+        if (!wait(status_msg_->get_status(), Status::STATUS::ACTIVE_1, 100)) {
             status = Data_Protocol::Status::ERROR;
             return;
         }
