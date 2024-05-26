@@ -27,8 +27,10 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         uint16_t len = htons(length);
 
         Status::STATUS current = status_msg_->get_status();
-        if (current != Status::STATUS::IDLE_0 && current != Status::STATUS::IDLE_1)
+        if (current != Status::STATUS::IDLE_0 && current != Status::STATUS::IDLE_1) {
             status = Data_Protocol::Status::ERROR;
+            return;
+        }
 
         // PREAMBLE_CMD_LEN_T_MULTIPLEX_COLUMNS
         checksum = internal::checksum_chunk(checksum, header, 32);
@@ -58,7 +60,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
             checksum = internal::checksum_chunk(checksum, buffer[i], 8);
         node->write(buffer, length);
 
-        if (!wait(status_msg_->get_status(), Status::STATUS::ACTIVE_1, 100)) {
+        if (!wait(Status::STATUS::ACTIVE_0, Status::STATUS::ACTIVE_1, 100)) {
             status = Data_Protocol::Status::ERROR;
             return;
         }
