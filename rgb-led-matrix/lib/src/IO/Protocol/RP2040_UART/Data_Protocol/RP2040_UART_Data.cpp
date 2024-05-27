@@ -23,8 +23,9 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         Data_Protocol::Status result = data_->send_data(buf_, size_, sizeof_t_, multiplex_, columns_, format_);
 
         // Block automatic restart!
-        if (result == Data_Protocol::Status::NOT_FINISHED)
+        if (result == Data_Protocol::Status::NOT_FINISHED) {
             buf_ = nullptr;
+        }
 
         if (clear_errors && result == Data_Protocol::Status::ERROR) {
             data_->clear_errors();
@@ -35,7 +36,9 @@ namespace rgb_matrix::Protocol::RP2040_UART {
     }
 
     float RP2040_UART_Data::get_temperature(Control_Protocol *protocol) {
+        claim();
         // TODO: Query temperature
+        release();
         return 0.0;
     }
 }
