@@ -2,7 +2,7 @@
 
 namespace rgb_matrix {
     // Do not use this!
-    Null_Pointer::Null_Pointer() : String_Exception("Null Pointer: Attempted to use forbidden constructor.") {
+    Null_Pointer::Null_Pointer() : String_Exception() {
         prefix_ = "Null Pointer: ";
     }
 

@@ -2,9 +2,8 @@
 #include <Exception/Illegal.h>
 
 namespace rgb_matrix {
-    // Do not use this!
     DOTCorrect::DOTCorrect() {
-        throw Illegal("DotCorrect: Attempted to use forbidden constructor.");
+        // Do not use this! 
     }
 
     DOTCorrect::DOTCorrect(uint16_t r, uint16_t c) : rows(r), cols(c) {

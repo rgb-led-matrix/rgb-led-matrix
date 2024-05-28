@@ -5,9 +5,8 @@
 #include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
-    // Do not use this!
     Control::Control() {
-        throw Illegal("Control");
+        // Do not use this! 
     }
 
     Control::Control(Node *node, uint8_t magic) {

@@ -2,7 +2,7 @@
 
 namespace rgb_matrix {
     // Do not use this!
-    Illegal::Illegal() : String_Exception("Illegal: Attempted to use forbidden constructor.") {
+    Illegal::Illegal() : String_Exception() {
         prefix_ = "Illegal: ";
     }
 

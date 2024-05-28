@@ -1,11 +1,9 @@
 #include <IO/Protocol/RP2040_UART/Control_Protocol/RP2040_UART_Control.h>
 #include <IO/Protocol/RP2040_UART/Control_Protocol/Control.h>
-#include <Exception/Illegal.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
-    // Do not use this!
     RP2040_UART_Control::RP2040_UART_Control() {
-        throw Illegal("RP2040_UART Control");
+        // Do not use this! 
     }
 
     RP2040_UART_Control::RP2040_UART_Control(Node *node, uint8_t magic) : Control_Protocol(node) {

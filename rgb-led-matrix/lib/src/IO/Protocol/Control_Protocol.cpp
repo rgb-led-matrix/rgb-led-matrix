@@ -3,9 +3,8 @@
 #include <Exception/Illegal.h>
 
 namespace rgb_matrix {
-    // Do not use this!
     Control_Protocol::Control_Protocol() {
-        Illegal("Control Protocol");
+        // Do not use this! 
     }
 
     Control_Protocol::Control_Protocol(Node *node) {

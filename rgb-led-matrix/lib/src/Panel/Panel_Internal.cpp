@@ -13,9 +13,8 @@
 #include <IO/Scheduler/Scheduler.h>
 
 namespace rgb_matrix {
-    // Do not use this!    
     template <typename T> Panel_Internal<T>::Panel_Internal() {
-        throw Illegal("Panel Internal: Attempted to use forbidden constructor.");
+        // Do not use this! 
     }
 
     template <typename T> Panel_Internal<T>::Panel_Internal(CFG *cfg) {

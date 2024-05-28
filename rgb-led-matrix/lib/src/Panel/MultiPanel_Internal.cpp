@@ -4,9 +4,8 @@
 #include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
-    // Do not use this!
     MultiPanel_Internal::MultiPanel_Internal() {
-        throw Illegal("MultiPanel_Internal Panel");
+        // Do not use this! 
     }
 
     MultiPanel_Internal::MultiPanel_Internal(uint16_t width, uint16_t height) : width_(width), height_(height) {

@@ -1,6 +1,5 @@
 #include <IO/Protocol/RP2040_UART/Data_Protocol/Data.h>
 #include <IO/Protocol/RP2040_UART/internal.h>
-#include <Exception/Illegal.h>
 #include <Exception/Unknown_Type.h>
 #include <IO/machine.h>
 #include <Panel/RGB/RGB.h>

@@ -3,9 +3,8 @@
 #include <Exception/Illegal.h>
 
 namespace rgb_matrix {
-    // Do not use this!
     Data_Protocol::Data_Protocol() {
-        Illegal("Data Protocol");
+        // Do not use this! 
     }
 
     Data_Protocol::Data_Protocol(Node *node) {

@@ -3,9 +3,8 @@
 #include <Exception/Null_Pointer.h>
 
 namespace rgb_matrix {
-    // Do not use this!    
     Frame::Frame() {
-        throw Illegal("Frame");
+        // Do not use this! 
     }
 
     Frame::Frame(Panel *panel, Data_Protocol *protocol, Control_Protocol *control) {
