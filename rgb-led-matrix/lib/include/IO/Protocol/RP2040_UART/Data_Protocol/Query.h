@@ -5,9 +5,17 @@
 #include <ThreadPool/ThreadPool.h>
 #include <IO/Protocol/Data_Protocol.h>
 #include <IO/Protocol/RP2040_UART/Data_Protocol/Status.h>
-#include <IO/Protocol/RP2040_UART/Data_Protocol/Query_Worker.h>
+#include <IO/Protocol/RP2040_UART/Data_Protocol/Query_Request/Query_Request.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
+    /*class Query_Request {
+        public:
+            // Input and Output are serialized data (byte stream)
+            //  Implementation must be capable of deserializing frame in byte stream
+            //  Implementation is responsible for ensuring network order
+            virtual void *query(void *buf, uint32_t len) = 0;
+    };*/
+
     class Query {
         public:
             Query(Node *node, uint8_t magic);
@@ -16,7 +24,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         protected:
             Query();
 
-            Query_Worker *runnable_;
+            Query_Request *runnable_;
     };
 }
 #endif

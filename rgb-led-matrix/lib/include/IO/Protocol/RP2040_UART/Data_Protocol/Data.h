@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <IO/Protocol/Data_Protocol.h>
 #include <IO/Protocol/RP2040_UART/Data_Protocol/Status.h>
-#include <IO/Protocol/RP2040_UART/Data_Protocol/Data_Worker.h>
+#include <IO/Protocol/RP2040_UART/Data_Protocol/Data_Operation/Data_Command.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
     class Data {
@@ -18,7 +18,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         protected:
             Data();
 
-            Data_Worker *runnable_;
+            Data_Command *runnable_;
     };
 }
 #endif

@@ -1,18 +1,20 @@
-#include <IO/Protocol/RP2040_UART/Data_Protocol/Data_Worker.h>
+#include <IO/Protocol/RP2040_UART/Data_Protocol/Data_Operation/Data_Command.h>
 #include <IO/Protocol/RP2040_UART/internal.h>
 #include <Exception/String_Exception.h>
 #include <IO/machine.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
-    Data_Worker::Data_Worker(uint8_t magic) {
+    Data_Command::Data_Command(uint8_t magic, bool checksum) {
         status_msg_ = new Status(node, magic);
+        magic = magic;
+        checksum = checksum;
     }
 
-    Data_Worker::~Data_Worker() {
+    Data_Command::~Data_Command() {
         delete status_msg_;
     }
 
-    bool Data_Worker::wait(Status::STATUS current, Status::STATUS expected, uint32_t timeout_us) {
+    bool Data_Command::wait(Status::STATUS current, Status::STATUS expected, uint32_t timeout_us) {
         while (!status_msg_->get_status(current, expected)) {
             // TODO: Check for timeout
         }
@@ -20,7 +22,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         return true;
     }
 
-    void Data_Worker::run() {
+    void Data_Command::run() {
         uint32_t checksum = 0xFFFFFFFF;
         uint32_t header = htonl(internal::generate_header(magic));
         uint8_t cmd[2] = {'d', 'd'};

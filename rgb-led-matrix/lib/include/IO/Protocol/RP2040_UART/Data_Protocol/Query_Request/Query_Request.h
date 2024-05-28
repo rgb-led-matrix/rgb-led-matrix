@@ -1,5 +1,5 @@
-#ifndef RP2040_UART_DATA_PROTOCOL_QUERY_WORKER_H
-#define RP2040_UART_DATA_PROTOCOL_QUERY_WORKER_H
+#ifndef RP2040_UART_DATA_PROTOCOL_QUERY_REQUEST_H
+#define RP2040_UART_DATA_PROTOCOL_QUERY_REQUEST_H
 
 #include <stdint.h>
 #include <ThreadPool/ThreadPool.h>
@@ -7,10 +7,10 @@
 #include <IO/Protocol/RP2040_UART/Data_Protocol/Status.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
-    class Query_Worker : public Runnable {
+    class Query_Request : public Runnable {
         public:
-            Query_Worker(uint8_t magic);
-            ~Query_Worker();
+            Query_Request(uint8_t magic);
+            ~Query_Request();
 
             void run();
 
