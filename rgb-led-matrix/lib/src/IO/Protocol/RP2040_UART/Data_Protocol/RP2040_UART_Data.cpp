@@ -17,7 +17,9 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         delete query_;
     }
 
+    // TODO: Refactor this
     Data_Protocol::Status RP2040_UART_Data::internal_state_machine(bool clear_errors) {
+        // Claim/release is already done
         Data_Protocol::Status result = data_->send_data(buf_, size_, sizeof_t_, multiplex_, columns_, format_);
 
         // Block automatic restart!

@@ -13,7 +13,8 @@ namespace rgb_matrix::Protocol::RP2040_UART {
     }
 
     Status::Status(Node *node, uint8_t magic) {
-        // Find way to avoid so many threads?
+        // Find way to avoid so many threads? (One per protocol instance and each lasts forever!)
+        //  We could switch to half duplex and inline the status processing into the data and query logic
         node_ = node;
         shutdown_ = false;
         status_ = STATUS::IDLE_0;
