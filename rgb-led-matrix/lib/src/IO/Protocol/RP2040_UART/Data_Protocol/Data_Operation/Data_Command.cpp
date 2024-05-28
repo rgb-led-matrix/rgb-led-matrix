@@ -37,21 +37,24 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         }
 
         // PREAMBLE_CMD_LEN_T_MULTIPLEX_COLUMNS
-        checksum = internal::checksum_chunk(checksum, header, 32);
+        if (checksum_) {
+            checksum = internal::checksum_chunk(checksum, header, 32);
+            checksum = internal::checksum_chunk(checksum, len, 16);
+            checksum = internal::checksum_chunk(checksum, cmd[0], 8);
+            checksum = internal::checksum_chunk(checksum, cmd[1], 8);
+            checksum = internal::checksum_chunk(checksum, sizeof_t, 8);
+            checksum = internal::checksum_chunk(checksum, multiplex, 8);
+            checksum = internal::checksum_chunk(checksum, columns, 8);
+            checksum = internal::checksum_chunk(checksum, format, 8);
+        }
+
         node_->write(header);
-        checksum = internal::checksum_chunk(checksum, len, 16);
         node_->write(len);
-        checksum = internal::checksum_chunk(checksum, cmd[0], 8);
         node_->write(cmd[0]);
-        checksum = internal::checksum_chunk(checksum, cmd[1], 8);
         node_->write(cmd[1]);
-        checksum = internal::checksum_chunk(checksum, sizeof_t, 8);
         node_->write(sizeof_t);
-        checksum = internal::checksum_chunk(checksum, multiplex, 8);
         node_->write(multiplex);
-        checksum = internal::checksum_chunk(checksum, columns, 8);
         node_->write(columns);
-        checksum = internal::checksum_chunk(checksum, format, 8);
         node_->write(format);
         
         if (!wait(current, Status::STATUS::ACTIVE_0, 100)) {
@@ -62,8 +65,11 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         }
 
         // PAYLOAD
-        for (uint32_t i = 0; i < length; i++)
-            checksum = internal::checksum_chunk(checksum, buffer[i], 8);
+        if (checksum_) {
+            for (uint32_t i = 0; i < length; i++) {
+                checksum = internal::checksum_chunk(checksum, buffer[i], 8);
+            }
+        }
         node_->write(buffer, length);
 
         if (!wait(Status::STATUS::ACTIVE_0, Status::STATUS::ACTIVE_1, 100)) {
