@@ -5,7 +5,7 @@
 
 namespace rgb_matrix::Protocol::RP2040_UART {
     Data_Command::Data_Command(Node *node, uint8_t magic, bool checksum) {
-        status_msg_ = new Status(node, magic);
+        status_msg_ = Status::get_status(node, magic);
         magic_ = magic;
         checksum_ = checksum;
         node_ = node;

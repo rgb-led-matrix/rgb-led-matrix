@@ -4,9 +4,8 @@
 #include <Exception/Illegal.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
-    // Do not use this!
     RP2040_UART_Data::RP2040_UART_Data() {
-        throw Illegal("RP2040_UART Data");
+        // Do not use this!
     }
 
     RP2040_UART_Data::RP2040_UART_Data(Node *node, uint8_t magic) : Data_Protocol(node) {

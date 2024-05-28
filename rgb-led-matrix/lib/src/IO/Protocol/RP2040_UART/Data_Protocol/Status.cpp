@@ -6,9 +6,10 @@
 #include <Exception/Illegal.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
-    // Do not use this!
+    Status *Status::status_ptr_ = nullptr;
+
     Status::Status() {
-        throw Illegal("Status");
+        // Do not use this!
     }
 
     Status::Status(Node *node, uint8_t magic) {
@@ -24,6 +25,14 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         shutdown_ = true;
         thread_->join();
         delete thread_;
+    }
+
+    Status *Status::get_status(Node *node, uint8_t magic) {
+        if (status_ptr_ == nullptr) {
+            status_ptr_ = new Status(node, magic);
+        }
+
+        return status_ptr_;
     }
 
     bool Status::get_status(STATUS current, STATUS expected) {

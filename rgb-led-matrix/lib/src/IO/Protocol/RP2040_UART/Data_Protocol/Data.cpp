@@ -8,9 +8,8 @@
 #include <Panel/RGB/RGB_555.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
-    // Do not use this!
     Data::Data() {
-        throw Illegal("Data");
+        // Do not use this!
     }
 
     Data::Data(Node *node, uint8_t magic) {

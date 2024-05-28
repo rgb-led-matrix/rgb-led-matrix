@@ -5,7 +5,6 @@
 #include <ThreadPool/ThreadPool.h>
 #include <IO/Protocol/Data_Protocol.h>
 #include <IO/Protocol/RP2040_UART/Data_Protocol/Status.h>
-#include <IO/Protocol/RP2040_UART/Data_Protocol/Query_Request/Query_Request.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
     /*class Query_Request {
@@ -24,7 +23,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         protected:
             Query();
 
-            Query_Request *runnable_;
+            Runnable *runnable_;
     };
 }
 #endif

@@ -2,19 +2,18 @@
 #include <Exception/Illegal.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
-    // Do not use this!
     Query::Query() {
-        throw Illegal("Query");
+        // Do not use this!
     }
 
     Query::Query(Node *node, uint8_t magic) {
-        runnable_ = new Query_Request(node, magic);
-        runnable_->status = Data_Protocol::Status::FINISHED;
+        //runnable_ = new Query_Request(node, magic);
+        //runnable_->status = Data_Protocol::Status::FINISHED;
     }
 
     Query::~Query() {
         // Figure out better solution?
-        while (runnable_->status == Data_Protocol::Status::NOT_FINISHED);
+        //while (runnable_->status == Data_Protocol::Status::NOT_FINISHED);
         delete runnable_;
     }
 }

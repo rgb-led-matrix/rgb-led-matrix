@@ -8,8 +8,9 @@
 namespace rgb_matrix::Protocol::RP2040_UART {
     class Status {
         public:
-            Status(Node *node, uint8_t magic);
             ~Status();
+
+            static Status *get_status(Node *node, uint8_t magic);
 
             enum class STATUS {
                 IDLE_0,
@@ -24,9 +25,12 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         
         protected:
             Status();
+            Status(Node *node, uint8_t magic);
 
             static void worker(Status *obj);
             STATUS translate_id(uint32_t id);
+
+            static Status *status_ptr_;
 
             STATUS status_;
             std::thread *thread_;
