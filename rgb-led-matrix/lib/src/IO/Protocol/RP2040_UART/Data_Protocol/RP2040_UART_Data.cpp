@@ -38,6 +38,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
     float RP2040_UART_Data::get_temperature(Control_Protocol *protocol) {
         claim();
         // TODO: Query temperature
+        //  API still work in progress here
         release();
         return 0.0;
     }

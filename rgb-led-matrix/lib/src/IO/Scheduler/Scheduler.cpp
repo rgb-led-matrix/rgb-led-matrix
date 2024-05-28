@@ -47,6 +47,7 @@ namespace rgb_matrix {
         control->signal(Control_Protocol::Commands::Trigger);
 
         // TODO: Verify Control Protocol
+        //  Need API on Data Protocol for this
         Logger::get_logger()->write(Logger::Level::WARN, "Scheduler: Panel signal failed to complete.");
         Logger::get_logger()->write(Logger::Level::INFO, "Scheduler: Possible issue with Control Protocol.");
         Logger::get_logger()->write(Logger::Level::INFO, "Scheduler: Dropping frame instead of attempting to signal panel individually.");
