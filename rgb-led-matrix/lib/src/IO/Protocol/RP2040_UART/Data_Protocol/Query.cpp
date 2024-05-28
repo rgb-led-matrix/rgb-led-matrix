@@ -8,10 +8,8 @@ namespace rgb_matrix::Protocol::RP2040_UART {
     }
 
     Query::Query(Node *node, uint8_t magic) {
-        runnable_ = new Query_Request(magic);
+        runnable_ = new Query_Request(node, magic);
         runnable_->status = Data_Protocol::Status::FINISHED;
-        runnable_->node = node;
-        runnable_->magic = magic;
     }
 
     Query::~Query() {

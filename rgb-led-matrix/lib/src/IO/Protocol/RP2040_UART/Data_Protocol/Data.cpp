@@ -14,9 +14,8 @@ namespace rgb_matrix::Protocol::RP2040_UART {
     }
 
     Data::Data(Node *node, uint8_t magic) {
-        runnable_ = new Data_Command(magic);
+        runnable_ = new Data_Command(node, magic);
         runnable_->status = Data_Protocol::Status::FINISHED;
-        runnable_->node = node;
     }
 
     Data::~Data() {

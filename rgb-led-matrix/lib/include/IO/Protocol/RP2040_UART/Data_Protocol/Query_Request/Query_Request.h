@@ -9,17 +9,17 @@
 namespace rgb_matrix::Protocol::RP2040_UART {
     class Query_Request : public Runnable {
         public:
-            Query_Request(uint8_t magic);
+            Query_Request(Node *node, uint8_t magic);
             ~Query_Request();
 
             void run();
 
-            Node *node;
             Data_Protocol::Status status;
-            uint8_t magic;
         
         private:
+            Node *node_;
             Status *status_msg_;
+            uint8_t magic_;
 
     };
 }

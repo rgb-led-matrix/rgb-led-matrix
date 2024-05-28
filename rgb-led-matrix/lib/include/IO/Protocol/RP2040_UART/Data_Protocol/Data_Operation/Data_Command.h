@@ -9,7 +9,7 @@
 namespace rgb_matrix::Protocol::RP2040_UART {
     class Data_Command : public Runnable {
         public:
-            Data_Command(uint8_t magic, bool checksum = true);
+            Data_Command(Node *node, uint8_t magic, bool checksum = true);
             ~Data_Command();
 
             void run();
@@ -20,15 +20,15 @@ namespace rgb_matrix::Protocol::RP2040_UART {
             uint8_t multiplex;
             uint8_t columns;
             uint8_t format;
-            rgb_matrix::Node *node;
             rgb_matrix::Data_Protocol::Status status;
         
         private:
             bool wait(Status::STATUS current, Status::STATUS expected, uint32_t timeout_us);
 
+            rgb_matrix::Node *node_;
             Status *status_msg_;
-            uint8_t magic;
-            bool checksum;
+            uint8_t magic_;
+            bool checksum_;
     };
 
 }

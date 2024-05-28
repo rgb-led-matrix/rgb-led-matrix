@@ -2,8 +2,10 @@
 #include <Exception/String_Exception.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
-    Query_Request::Query_Request(uint8_t magic) {
+    Query_Request::Query_Request(Node *node, uint8_t magic) {
         status_msg_ = new Status(node, magic);
+        magic_ = magic;
+        node_ = node;
     }
 
     Query_Request::~Query_Request() {

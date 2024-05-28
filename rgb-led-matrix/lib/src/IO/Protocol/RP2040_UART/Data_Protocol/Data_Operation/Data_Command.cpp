@@ -4,10 +4,11 @@
 #include <IO/machine.h>
 
 namespace rgb_matrix::Protocol::RP2040_UART {
-    Data_Command::Data_Command(uint8_t magic, bool checksum) {
+    Data_Command::Data_Command(Node *node, uint8_t magic, bool checksum) {
         status_msg_ = new Status(node, magic);
-        magic = magic;
-        checksum = checksum;
+        magic_ = magic;
+        checksum_ = checksum;
+        node_ = node;
     }
 
     Data_Command::~Data_Command() {
@@ -24,7 +25,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
 
     void Data_Command::run() {
         uint32_t checksum = 0xFFFFFFFF;
-        uint32_t header = htonl(internal::generate_header(magic));
+        uint32_t header = htonl(internal::generate_header(magic_));
         uint8_t cmd[2] = {'d', 'd'};
         uint16_t len = htons(length);
 
@@ -36,21 +37,21 @@ namespace rgb_matrix::Protocol::RP2040_UART {
 
         // PREAMBLE_CMD_LEN_T_MULTIPLEX_COLUMNS
         checksum = internal::checksum_chunk(checksum, header, 32);
-        node->write(header);
+        node_->write(header);
         checksum = internal::checksum_chunk(checksum, len, 16);
-        node->write(len);
+        node_->write(len);
         checksum = internal::checksum_chunk(checksum, cmd[0], 8);
-        node->write(cmd[0]);
+        node_->write(cmd[0]);
         checksum = internal::checksum_chunk(checksum, cmd[1], 8);
-        node->write(cmd[1]);
+        node_->write(cmd[1]);
         checksum = internal::checksum_chunk(checksum, sizeof_t, 8);
-        node->write(sizeof_t);
+        node_->write(sizeof_t);
         checksum = internal::checksum_chunk(checksum, multiplex, 8);
-        node->write(multiplex);
+        node_->write(multiplex);
         checksum = internal::checksum_chunk(checksum, columns, 8);
-        node->write(columns);
+        node_->write(columns);
         checksum = internal::checksum_chunk(checksum, format, 8);
-        node->write(format);
+        node_->write(format);
         
         if (!wait(current, Status::STATUS::ACTIVE_0, 100)) {
             status = Data_Protocol::Status::ERROR;
@@ -60,7 +61,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         // PAYLOAD
         for (uint32_t i = 0; i < length; i++)
             checksum = internal::checksum_chunk(checksum, buffer[i], 8);
-        node->write(buffer, length);
+        node_->write(buffer, length);
 
         if (!wait(Status::STATUS::ACTIVE_0, Status::STATUS::ACTIVE_1, 100)) {
             status = Data_Protocol::Status::ERROR;
