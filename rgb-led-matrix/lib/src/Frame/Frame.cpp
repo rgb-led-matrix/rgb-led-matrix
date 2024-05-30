@@ -34,7 +34,6 @@ namespace rgb_matrix {
         control_ = control;
     }
 
-
     bool Frame::isFree() {
         return isFree_;
     }

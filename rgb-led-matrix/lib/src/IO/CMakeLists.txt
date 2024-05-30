@@ -12,4 +12,5 @@ add_library(IO INTERFACE)
 
 target_link_libraries(IO INTERFACE
     FTDI
+    Test_Node
     Scheduler)
