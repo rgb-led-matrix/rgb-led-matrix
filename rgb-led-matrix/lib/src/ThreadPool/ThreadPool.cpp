@@ -33,7 +33,12 @@ namespace rgb_matrix {
             object->work_queue_.pop();
             lk.unlock();
 
-            t->run();
+            try {
+                t->run();
+            }
+            catch (...) {
+                // TODO: Figure something out
+            }
         }
     }
 

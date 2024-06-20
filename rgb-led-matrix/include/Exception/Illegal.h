@@ -1,4 +1,4 @@
-#ifndef ILLEGAL_Hprotocols_
+#ifndef ILLEGAL_H
 #define ILLEGAL_H
 
 #include <Exception/String_Exception.h>
