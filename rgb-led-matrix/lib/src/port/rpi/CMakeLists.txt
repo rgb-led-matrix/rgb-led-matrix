@@ -26,6 +26,7 @@ target_link_libraries(rpi
     Panel
     Frame
     Logger
+    SIMD_ARM
     ftd2xx
     pthread)
 
