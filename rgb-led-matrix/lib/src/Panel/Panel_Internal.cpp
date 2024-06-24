@@ -259,9 +259,8 @@ namespace rgb_matrix {
         }
 
         {
-            rgb_matrix::SIMD::SIMD_SINGLE<float> test(val);
-            test = (test / max) * dot;
-            rgb_matrix::SIMD::round(test, &reg);
+            val = (val / max) * dot;
+            rgb_matrix::SIMD::round(val, &reg);
         }
 
         pixel->red = reg.v[0];                                                  // We do not optimize access intentionally
