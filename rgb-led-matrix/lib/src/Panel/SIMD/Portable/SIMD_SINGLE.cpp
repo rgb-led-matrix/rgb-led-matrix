@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <cmath>
-#include "Panel/SIMD/SIMD.h"
+#include "Panel/SIMD/SIMD_SINGLE.h"
 
 namespace rgb_matrix::SIMD {
     template <typename T> SIMD_SINGLE<T> SIMD_SINGLE<T>::operator*(SIMD_SINGLE<T> const& arg) {

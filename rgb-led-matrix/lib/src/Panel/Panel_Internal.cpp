@@ -11,7 +11,7 @@
 #include <Panel/RGB/RGB_222.h>
 #include <Panel/RGB/RGB.h>
 #include <IO/Scheduler/Scheduler.h>
-#include <Panel/SIMD/SIMD.h>
+#include <Panel/SIMD/SIMD_SINGLE.h>
 
 namespace rgb_matrix {
     template <typename T> Panel_Internal<T>::Panel_Internal() {
