@@ -243,7 +243,7 @@ namespace rgb_matrix {
         cfg_->get_dot().get(x, y, r, g, b, &dot.v[0], &dot.v[1], &dot.v[2]);    // We do not optimize access intentionally
 
         {
-            reg.v[0] = T::red_max;
+            reg.v[0] = T::red_max;                                              // Compiler may optimize
             reg.v[1] = T::green_max;
             reg.v[2] = T::blue_max;
             rgb_matrix::SIMD::SIMD<uint32_t, float> test(reg);
@@ -251,7 +251,7 @@ namespace rgb_matrix {
         }
 
         {
-            reg.v[0] = this->lut[bright][r].red;                                // Compiler may optimize
+            reg.v[0] = this->lut[bright][r].red;
             reg.v[1] = this->lut[bright][g].green;
             reg.v[2] = this->lut[bright][b].blue;
             rgb_matrix::SIMD::SIMD<uint32_t, float> test(reg);
