@@ -10,8 +10,6 @@ namespace rgb_matrix::SIMD {
         public:
             SIMD(SIMD_SINGLE<T> data);
 
-            SIMD<T, R> operator+(SIMD_SINGLE<T> const& arg);
-            SIMD<T, R> operator+(SIMD<T, R> const& arg);
             SIMD<T, R> operator*(SIMD_SINGLE<T> const& arg);
             SIMD<T, R> operator*(SIMD<T, R> const& arg);
             SIMD<T, R> operator/(SIMD_SINGLE<T> const& arg);
