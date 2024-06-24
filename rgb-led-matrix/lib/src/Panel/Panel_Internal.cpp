@@ -240,7 +240,7 @@ namespace rgb_matrix {
 
         lock_.lock();
         uint8_t bright =  this->brightness_;
-        cfg_->get_dot().get(x, y, r, g, b, &dot.v[0], &dot.v[1], &dot.v[2]);
+        cfg_->get_dot().get(x, y, r, g, b, &dot.v[0], &dot.v[1], &dot.v[2]);    // We do not optimize access intentionally
 
         {
             reg.v[0] = T::red_max;
@@ -251,7 +251,7 @@ namespace rgb_matrix {
         }
 
         {
-            reg.v[0] = this->lut[bright][r].red;
+            reg.v[0] = this->lut[bright][r].red;                                // Compiler may optimize
             reg.v[1] = this->lut[bright][g].green;
             reg.v[2] = this->lut[bright][b].blue;
             rgb_matrix::SIMD::SIMD<uint32_t, float> test(reg);
@@ -264,7 +264,7 @@ namespace rgb_matrix {
             reg = test.round();
         }
 
-        pixel->red = reg.v[0];
+        pixel->red = reg.v[0];                                                  // We do not optimize access intentionally
         pixel->green = reg.v[1];
         pixel->blue = reg.v[2];
         lock_.unlock();
