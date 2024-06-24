@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "arm_neon.h"
 #include "Panel/SIMD/SIMD.h"
 
 namespace rgb_matrix::SIMD {

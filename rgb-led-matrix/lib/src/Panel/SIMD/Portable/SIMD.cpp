@@ -7,10 +7,13 @@ namespace rgb_matrix::SIMD {
     }
 
     template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator*(SIMD_SINGLE<T> const& arg) {
-        // TODO:
-        SIMD_SINGLE<T> r = { 0, 0, 0, 0 };
-        SIMD<T, R> a(r);
-        return a;
+        SIMD_SINGLE<T> reg;
+
+        for (int i = 0; i < 4; i++)
+            reg.v[i] = this->data_.v[i] * arg.data_.v[i];
+
+        SIMD<T, R> result(reg);
+        return result;
     }
 
     template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator*(SIMD<T, R> const& arg) {
@@ -18,10 +21,13 @@ namespace rgb_matrix::SIMD {
     }
 
     template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator/(SIMD_SINGLE<T> const& arg) {
-        // TODO:
-        SIMD_SINGLE<T> r = { 0, 0, 0, 0 };
-        SIMD<T, R> a(r);
-        return a;
+        SIMD_SINGLE<T> reg;
+
+        for (int i = 0; i < 4; i++)
+            reg.v[i] = this->data_.v[i] / arg.data_.v[i];
+
+        SIMD<T, R> result(reg);
+        return result;
     }
 
     template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator/(SIMD<T, R> const& arg) {
@@ -33,15 +39,21 @@ namespace rgb_matrix::SIMD {
     }
 
     template <> SIMD_SINGLE<float> SIMD<uint32_t, float>::round() {
-        // TODO:
-        SIMD_SINGLE<float> r = { 0, 0, 0, 0 };
-        return r;
+        SIMD_SINGLE<float> result;
+
+        for (int i = 0; i < 4; i++)
+            result.v[i] = data_.v[i] * 1.0;
+
+        return result;
     }
 
     template <> SIMD_SINGLE<uint32_t> SIMD<float, uint32_t>::round() {
-        // TODO:
-        SIMD_SINGLE<uint32_t> r = { 0, 0, 0, 0 };
-        return r;
+        SIMD_SINGLE<uint32_t> result;
+
+        for (int i = 0; i < 4; i++)
+            result.v[i] = (uint32_t) round(data_.v[i]);
+
+        return result;
     }
 
     template class SIMD<float, uint32_t>;
