@@ -246,22 +246,22 @@ namespace rgb_matrix {
             reg.v[0] = T::red_max;                                              // Compiler may optimize
             reg.v[1] = T::green_max;
             reg.v[2] = T::blue_max;
-            rgb_matrix::SIMD::SIMD<uint32_t, float> test(reg);
-            max = test.round();
+            rgb_matrix::SIMD::SIMD_SINGLE<uint32_t> test(reg);
+            rgb_matrix::SIMD::round(test, &max);
         }
 
         {
             reg.v[0] = this->lut[bright][r].red;
             reg.v[1] = this->lut[bright][g].green;
             reg.v[2] = this->lut[bright][b].blue;
-            rgb_matrix::SIMD::SIMD<uint32_t, float> test(reg);
-            val = test.round();
+            rgb_matrix::SIMD::SIMD_SINGLE<uint32_t> test(reg);
+            rgb_matrix::SIMD::round(test, &val);
         }
 
         {
-            rgb_matrix::SIMD::SIMD<float, uint32_t> test(val);
+            rgb_matrix::SIMD::SIMD_SINGLE<float> test(val);
             test = (test / max) * dot;
-            reg = test.round();
+            rgb_matrix::SIMD::round(test, &reg);
         }
 
         pixel->red = reg.v[0];                                                  // We do not optimize access intentionally

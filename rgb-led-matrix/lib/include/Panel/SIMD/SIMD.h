@@ -2,24 +2,15 @@
 #define SIMD_H
 
 namespace rgb_matrix::SIMD {
-    template <typename T> struct SIMD_SINGLE {
-        T v[4];
-    };
-
-    template <typename T, typename R> class SIMD {
+    template <typename T> class SIMD_SINGLE {
         public:
-            SIMD(SIMD_SINGLE<T> data);
+            SIMD_SINGLE<T> operator*(SIMD_SINGLE<T> const& arg);
+            SIMD_SINGLE<T> operator/(SIMD_SINGLE<T> const& arg);
 
-            SIMD<T, R> operator*(SIMD_SINGLE<T> const& arg);
-            SIMD<T, R> operator*(SIMD<T, R> const& arg);
-            SIMD<T, R> operator/(SIMD_SINGLE<T> const& arg);
-            SIMD<T, R> operator/(SIMD<T, R> const& arg);
-            SIMD_SINGLE<R> round();
-            SIMD_SINGLE<T> get();
-
-        private:
-            SIMD_SINGLE<T> data_;
+            T v[4];
     };
+
+    template<typename T, typename R> void round(SIMD_SINGLE<T> arg, SIMD_SINGLE<R> *result);
 }
 
 #endif

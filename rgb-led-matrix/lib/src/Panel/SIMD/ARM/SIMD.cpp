@@ -3,48 +3,58 @@
 #include "Panel/SIMD/SIMD.h"
 
 namespace rgb_matrix::SIMD {
-    template <typename T, typename R> SIMD<T, R>::SIMD(SIMD_SINGLE<T> data) {
-        data_ = data;
+    static inline uint32x4_t load(SIMD_SINGLE<uint32_t> arg) {
+        return vld1q_u32(arg.v);
     }
 
-    template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator*(SIMD_SINGLE<T> const& arg) {
+    static inline float32x4_t load(SIMD_SINGLE<float> arg) {
+        return vld1q_f32(arg.v);
+    }
+
+    static inline SIMD_SINGLE<uint32_t> store(uint32x4_t arg) {
+        SIMD_SINGLE<uint32_t> result;
+        vst1q_u32(result.v, arg);
+        return result;
+    }
+
+    static inline SIMD_SINGLE<float> store(float32x4_t arg) {
+        SIMD_SINGLE<float> result;
+        vst1q_f32(result.v, arg);
+        return result;
+    }
+
+    template <> SIMD_SINGLE<uint32_t> SIMD_SINGLE<uint32_t>::operator*(SIMD_SINGLE<uint32_t> const& arg) {
+        return store(vmulq_u32(load(*this), load(arg)));
+    }
+
+    template <> SIMD_SINGLE<float> SIMD_SINGLE<float>::operator*(SIMD_SINGLE<float> const& arg) {
+        return store(vmulq_f32(load(*this), load(arg)));
+    }
+
+    // ARM does not support this?
+    template <> SIMD_SINGLE<uint32_t> SIMD_SINGLE<uint32_t>::operator/(SIMD_SINGLE<uint32_t> const& arg) {
+        SIMD_SINGLE<uint32_t> result;
+
+        for (int i = 0; i < 4; i++)
+            result.v[i] = this->v[i] / arg.v[i];
+
+        return result;
+    }
+
+    template <> SIMD_SINGLE<float> SIMD_SINGLE<float>::operator/(SIMD_SINGLE<float> const& arg) {
+        return store(vdivq_f32(load(*this), load(arg)));
+    }
+
+    template <> void round(SIMD_SINGLE<uint32_t> arg, SIMD_SINGLE<float> *result) {
         // TODO:
-        SIMD_SINGLE<T> r = { 0, 0, 0, 0 };
-        SIMD<T, R> a(r);
-        return a;
+        //vcvtq_f32_u32;
     }
 
-    template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator*(SIMD<T, R> const& arg) {
-        return *this * arg.data_;
-    }
-
-    template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator/(SIMD_SINGLE<T> const& arg) {
+    template <> void round(SIMD_SINGLE<float> arg, SIMD_SINGLE<uint32_t> *result) {
         // TODO:
-        SIMD_SINGLE<T> r = { 0, 0, 0, 0 };
-        SIMD<T, R> a(r);
-        return a;
+        //vcvtaq_u32_f32;
     }
 
-    template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator/(SIMD<T, R> const& arg) {
-        return *this / arg.data_;
-    }
-
-    template <typename T, typename R> SIMD_SINGLE<T> SIMD<T, R>::get() {
-        return data_;
-    }
-
-    template <> SIMD_SINGLE<float> SIMD<uint32_t, float>::round() {
-        // TODO:
-        SIMD_SINGLE<float> r = { 0, 0, 0, 0 };
-        return r;
-    }
-
-    template <> SIMD_SINGLE<uint32_t> SIMD<float, uint32_t>::round() {
-        // TODO:
-        SIMD_SINGLE<uint32_t> r = { 0, 0, 0, 0 };
-        return r;
-    }
-
-    template class SIMD<float, uint32_t>;
-    template class SIMD<uint32_t, float>;
+    template class SIMD_SINGLE<float>;
+    template class SIMD_SINGLE<uint32_t>;
 }
