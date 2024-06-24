@@ -12,7 +12,6 @@
 #include <Panel/RGB/RGB.h>
 #include <IO/Scheduler/Scheduler.h>
 #include <Panel/SIMD/SIMD.h>
-using namespace rgb_matrix::SIMD;
 
 namespace rgb_matrix {
     template <typename T> Panel_Internal<T>::Panel_Internal() {
@@ -233,8 +232,8 @@ namespace rgb_matrix {
 
     // Handles dot correction
     template <typename T> inline void Panel_Internal<T>::MapColors(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
-        SIMD_SINGLE<float> dot, max, val;
-        SIMD_SINGLE<uint32_t> reg;
+        rgb_matrix::SIMD::SIMD_SINGLE<float> dot, max, val;
+        rgb_matrix::SIMD::SIMD_SINGLE<uint32_t> reg;
 
         if (pixel == nullptr)
             throw Null_Pointer("Pixel");
@@ -264,7 +263,7 @@ namespace rgb_matrix {
             test = (test / max) * dot;
             reg = test.round();
         }
-        
+
         pixel->red = reg.v[0];
         pixel->green = reg.v[1];
         pixel->blue = reg.v[2];
