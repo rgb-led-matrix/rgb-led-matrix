@@ -244,7 +244,7 @@ namespace rgb_matrix {
 
         {
             reg.v[0] = T::red_max;
-            reg.v[1] = T::red_max;
+            reg.v[1] = T::green_max;
             reg.v[2] = T::blue_max;
             rgb_matrix::SIMD::SIMD<uint32_t, float> test(reg);
             max = test.round();
