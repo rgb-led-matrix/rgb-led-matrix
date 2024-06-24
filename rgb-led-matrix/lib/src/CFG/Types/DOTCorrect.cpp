@@ -12,9 +12,9 @@ namespace rgb_matrix {
         for (uint16_t i = 0; i < 256; i++) {
             for (uint16_t y = 0; y < rows; ++y) {
                 for (uint16_t x = 0; x < cols; ++x) {
-                table_[(3 * rows * cols * i) + (3 * ((y * cols) + x))] = 1.0;
-                table_[(3 * rows * cols * i) + (3 * ((y * cols) + x)) + 1] = 1.0;
-                table_[(3 * rows * cols * i) + (3 * ((y * cols) + x)) + 2] = 1.0;
+                    table_[(3 * rows * cols * i) + (3 * ((y * cols) + x))] = 1.0;
+                    table_[(3 * rows * cols * i) + (3 * ((y * cols) + x)) + 1] = 1.0;
+                    table_[(3 * rows * cols * i) + (3 * ((y * cols) + x)) + 2] = 1.0;
                 }
             }
         }

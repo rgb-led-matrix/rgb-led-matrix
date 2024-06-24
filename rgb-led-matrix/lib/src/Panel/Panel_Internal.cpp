@@ -11,6 +11,8 @@
 #include <Panel/RGB/RGB_222.h>
 #include <Panel/RGB/RGB.h>
 #include <IO/Scheduler/Scheduler.h>
+#include <Panel/SIMD/SIMD.h>
+using namespace rgb_matrix::SIMD;
 
 namespace rgb_matrix {
     template <typename T> Panel_Internal<T>::Panel_Internal() {
@@ -231,18 +233,41 @@ namespace rgb_matrix {
 
     // Handles dot correction
     template <typename T> inline void Panel_Internal<T>::MapColors(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
-        float fr, fg, fb;
+        SIMD_SINGLE<float> dot, max, val;
+        SIMD_SINGLE<uint32_t> reg;
 
         if (pixel == nullptr)
             throw Null_Pointer("Pixel");
 
         lock_.lock();
         uint8_t bright =  this->brightness_;
+        cfg_->get_dot().get(x, y, r, g, b, &dot.v[0], &dot.v[1], &dot.v[2]);
 
-        cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
-        pixel->red = (uint16_t) round(this->lut[bright][r].red / T::red_max * fr);
-        pixel->green = (uint16_t) round(this->lut[bright][g].green / T::green_max * fg);
-        pixel->blue = (uint16_t) round(this->lut[bright][b].blue / T::blue_max * fb);
+        {
+            reg.v[0] = T::red_max;
+            reg.v[1] = T::red_max;
+            reg.v[2] = T::blue_max;
+            rgb_matrix::SIMD::SIMD<uint32_t, float> test(reg);
+            max = test.round();
+        }
+
+        {
+            reg.v[0] = this->lut[bright][r].red;
+            reg.v[1] = this->lut[bright][g].green;
+            reg.v[2] = this->lut[bright][b].blue;
+            rgb_matrix::SIMD::SIMD<uint32_t, float> test(reg);
+            val = test.round();
+        }
+
+        {
+            rgb_matrix::SIMD::SIMD<float, uint32_t> test(val);
+            test = (test / max) * dot;
+            reg = test.round();
+        }
+        
+        pixel->red = reg.v[0];
+        pixel->green = reg.v[1];
+        pixel->blue = reg.v[2];
         lock_.unlock();
     }
 
