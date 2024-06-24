@@ -13,6 +13,10 @@ namespace rgb_matrix::SIMD {
         return a;
     }
 
+    template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator+(SIMD<T, R> const& arg) {
+        return *this + arg.data_;
+    }
+
     template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator*(SIMD_SINGLE<T> const& arg) {
         // TODO:
         SIMD_SINGLE<T> r = { 0, 0, 0, 0 };
@@ -20,11 +24,19 @@ namespace rgb_matrix::SIMD {
         return a;
     }
 
+    template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator*(SIMD<T, R> const& arg) {
+        return *this * arg.data_;
+    }
+
     template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator/(SIMD_SINGLE<T> const& arg) {
         // TODO:
         SIMD_SINGLE<T> r = { 0, 0, 0, 0 };
         SIMD<T, R> a(r);
         return a;
+    }
+
+    template <typename T, typename R> SIMD<T, R> SIMD<T, R>::operator/(SIMD<T, R> const& arg) {
+        return *this / arg.data_;
     }
 
     template <> SIMD_SINGLE<float> SIMD<uint32_t, float>::round() {
