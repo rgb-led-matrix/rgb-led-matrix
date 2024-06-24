@@ -15,6 +15,7 @@ namespace rgb_matrix::SIMD {
             SIMD<T, R> operator/(SIMD_SINGLE<T> const& arg);
             SIMD<T, R> operator/(SIMD<T, R> const& arg);
             SIMD_SINGLE<R> round();
+            SIMD_SINGLE<T> get();
 
         private:
             SIMD_SINGLE<T> data_;

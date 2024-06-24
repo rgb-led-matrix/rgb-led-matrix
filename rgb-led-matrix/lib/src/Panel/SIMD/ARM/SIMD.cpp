@@ -28,6 +28,10 @@ namespace rgb_matrix::SIMD {
         return *this / arg.data_;
     }
 
+    template <typename T, typename R> SIMD_SINGLE<T> SIMD<T, R>::get() {
+        return data_;
+    }
+
     template <> SIMD_SINGLE<float> SIMD<uint32_t, float>::round() {
         // TODO:
         SIMD_SINGLE<float> r = { 0, 0, 0, 0 };

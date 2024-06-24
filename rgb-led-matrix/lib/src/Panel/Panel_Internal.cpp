@@ -239,7 +239,7 @@ namespace rgb_matrix {
             throw Null_Pointer("Pixel");
 
         lock_.lock();
-        uint8_t bright =  this->brightness_;
+        uint8_t bright = this->brightness_;
         cfg_->get_dot().get(x, y, r, g, b, &dot.v[0], &dot.v[1], &dot.v[2]);    // We do not optimize access intentionally
 
         {
