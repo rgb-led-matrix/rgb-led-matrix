@@ -102,7 +102,7 @@ namespace rgb_matrix {
             bool *r = &results.front()->result;
             while(*r == false) {
                 // Well hopefully the OS does something
-                // std::this_thread::sleep_for(std::chrono::milliseconds(2));
+                std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
             delete results.front();
             results.pop();
@@ -133,7 +133,7 @@ namespace rgb_matrix {
             bool *r = &results.front()->result;
             while(*r == false) {
                 // Well hopefully the OS does something
-                // std::this_thread::sleep_for(std::chrono::milliseconds(2));
+                std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
             delete results.front();
             results.pop();
@@ -162,7 +162,7 @@ namespace rgb_matrix {
             bool *r = &results.front()->result;
             while(*r == false) {
                 // Well hopefully the OS does something
-                // std::this_thread::sleep_for(std::chrono::milliseconds(2));
+                std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
             delete results.front();
             results.pop();
