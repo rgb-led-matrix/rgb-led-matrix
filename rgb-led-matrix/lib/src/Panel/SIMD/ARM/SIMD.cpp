@@ -46,13 +46,11 @@ namespace rgb_matrix::SIMD {
     }
 
     template <> void round(SIMD_SINGLE<uint32_t> arg, SIMD_SINGLE<float> *result) {
-        // TODO:
-        //vcvtq_f32_u32;
+        *result = store(vcvtq_f32_u32(load(arg)));
     }
 
     template <> void round(SIMD_SINGLE<float> arg, SIMD_SINGLE<uint32_t> *result) {
-        // TODO:
-        //vcvtaq_u32_f32;
+        *result = store(vcvtaq_u32_f32(load(arg)));
     }
 
     template class SIMD_SINGLE<float>;
