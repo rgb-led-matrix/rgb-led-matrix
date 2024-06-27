@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
         // Setup IO
         Node *data_node = new FTDI_UART("000", 0);
         Node *control_node = new FTDI_UART("001", 0);
-        RP2040_UART_Data *data_protocol = new RP2040_UART_Data(data_node);
+        RP2040_UART_Data *data_protocol = new RP2040_UART_Data(data_node, 0);
         Control_Protocol *control_protocol = new RP2040_UART_Control(control_node);
 
         // Setup config

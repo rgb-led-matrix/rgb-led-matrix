@@ -7,7 +7,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         // Do not use this!
     }
 
-    RP2040_UART_Data::RP2040_UART_Data(Node *node, uint8_t magic) : Data_Protocol(node) {
+    RP2040_UART_Data::RP2040_UART_Data(Node *node, uint8_t id, uint8_t magic) : Data_Protocol(node, id) {
         data_ = new Data(node, magic);
         query_ = new Query(node, magic);
     }

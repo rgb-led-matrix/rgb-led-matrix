@@ -11,7 +11,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
     
     class RP2040_UART_Data : public Data_Protocol {
         public:
-            RP2040_UART_Data(Node *node, uint8_t magic = 0xAE);
+            RP2040_UART_Data(Node *node, uint8_t id, uint8_t magic = 0xAE);
             ~RP2040_UART_Data();
 
             float get_temperature(Control_Protocol *protocol);

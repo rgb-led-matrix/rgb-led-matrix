@@ -41,10 +41,10 @@ namespace rgb_matrix {
         while (!object->shutdown_) {
             if (object->isAsync_) {
                 if ((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - time) > range) {
-                    lock_.lock();
+                    object->lock_.lock();
                     if (!object->frames_.empty())
                         object->frames_.pop();
-                    lock_.unlock();
+                    object->lock_.unlock();
 
                     time += range;
 

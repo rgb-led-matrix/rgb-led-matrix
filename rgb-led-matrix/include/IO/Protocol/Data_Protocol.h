@@ -17,7 +17,7 @@ namespace rgb_matrix {
     // Note these are client implementations for an internal Mediator Pattern
     class Data_Protocol {
         public:
-            Data_Protocol(Node *node);
+            Data_Protocol(Node *node, uint8_t id);
             virtual ~Data_Protocol();
 
             enum Status {
@@ -49,6 +49,7 @@ namespace rgb_matrix {
             Data_Format_ID format_;
             std::mutex lock_;
             bool claim_;
+            uint8_t id_;
     };
 }
 #endif
