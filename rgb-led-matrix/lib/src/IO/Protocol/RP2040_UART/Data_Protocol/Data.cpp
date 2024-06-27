@@ -24,27 +24,31 @@ namespace rgb_matrix::Protocol::RP2040_UART {
 
     Data_Protocol::Status Data::send_data(void *buf, uint32_t length, uint8_t sizeof_t, uint8_t multiplex, uint8_t columns, Data_Format_ID format) {
         uint32_t i;
-
-        // TODO: Fix this
-        RGB48 *rgb_long = (RGB48 *) buf;
-        uint16_t *rgb_short = (uint16_t *) buf;
-
+        
         // Start if ready (No error handling required here)
         if (runnable_->status == Data_Protocol::Status::FINISHED && buf != nullptr) {
             runnable_->status = Data_Protocol::Status::NOT_FINISHED;
 
-            // TODO: Fix this
+            // TODO: Verify/Fix this
             switch (format) {
                 case Data_Format_ID::RGB48_ID:
-                    for (i = 0; i < length / 6; i++) {
-                        rgb_long[i].red = htons(rgb_long[i].red);
-                        rgb_long[i].green = htons(rgb_long[i].green);
-                        rgb_long[i].blue = htons(rgb_long[i].blue);
+                    {
+                        RGB48 *rgb_long = (RGB48 *) buf;
+
+                        for (i = 0; i < length / 6; i++) {
+                            rgb_long[i].red = htons(rgb_long[i].red);
+                            rgb_long[i].green = htons(rgb_long[i].green);
+                            rgb_long[i].blue = htons(rgb_long[i].blue);
+                        }
                     }
                     break;
                 case Data_Format_ID::RGB_555_ID:
-                    for (i = 0; i < length / 2; i++)
-                        rgb_short[i] = htons(rgb_short[i]);
+                    {
+                        uint16_t *rgb_short = (uint16_t *) buf;
+
+                        for (i = 0; i < length / 2; i++)
+                            rgb_short[i] = htons(rgb_short[i]);
+                    }
                     break;
                 case Data_Format_ID::RGB24_ID:
                 case Data_Format_ID::RGB_222_ID:
