@@ -1,7 +1,5 @@
-#include <thread>
 #include <algorithm>
 #include <ThreadPool/ThreadPool.h>
-#include <Panel/MultiPanel_Internal.h>
 #include <Exception/Null_Pointer.h>
 #include <Exception/Unknown_Type.h>
 

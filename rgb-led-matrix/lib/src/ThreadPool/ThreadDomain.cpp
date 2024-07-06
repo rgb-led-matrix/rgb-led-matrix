@@ -1,10 +1,6 @@
-#include <thread>
-#include <algorithm>
 #include <ThreadPool/ThreadPool.h>
 #include <ThreadPool/ThreadDomain.h>
-#include <Panel/MultiPanel_Internal.h>
 #include <Exception/Null_Pointer.h>
-#include <Exception/Unknown_Type.h>
 
 namespace rgb_matrix {
     ThreadDomain::ThreadDomain(uint8_t num) {
@@ -15,7 +11,7 @@ namespace rgb_matrix {
 
     void ThreadDomain::submit(Runnable *t) {
         if (t == nullptr)
-            throw Null_Pointer("ThreadPool: Cannot submit null runnable.");
+            throw Null_Pointer("ThreadDomain: Cannot submit null runnable.");
 
         lock_.lock();
         work_queue_.push(t);
