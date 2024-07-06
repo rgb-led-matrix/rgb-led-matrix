@@ -5,7 +5,7 @@
 #include <thread>
 #include <queue>
 #include <mutex>
-#include <condition_variable>
+#include <ThreadPool/ThreadDomain.h>
 
 namespace rgb_matrix {
     class Runnable {
@@ -29,11 +29,8 @@ namespace rgb_matrix {
         private:
             ThreadPool();
 
-            static void ThreadLoop(ThreadPool *object);
-
             std::mutex lock_;
-            std::condition_variable conditional_;
-            std::vector<std::thread> threads_;
+            std::vector<ThreadDomain *> threads_;
             std::queue<Runnable *> work_queue_;
             static ThreadPool *pool_[2];
     };

@@ -11,35 +11,34 @@ namespace rgb_matrix {
     ThreadPool::ThreadPool() {
         uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
 
-        for (uint8_t i = 0; i < count; i++)
-            threads_.emplace_back(std::thread(&ThreadPool::ThreadLoop, this));
+        for (uint8_t i = 0; i < count; i += 2) {
+            if ((count - 1) > 0)
+                threads_.emplace_back(new ThreadDomain(2));
+            else
+                threads_.emplace_back(new ThreadDomain(1));
+        }
     }
 
     void ThreadPool::submit(Runnable *t) {
+        uint8_t num = 1;
+        bool run = true;
+
         if (t == nullptr)
             throw Null_Pointer("ThreadPool: Cannot submit null runnable.");
 
         lock_.lock();
-        work_queue_.push(t);
-        conditional_.notify_one();
-        lock_.unlock();
-    }
-
-    void ThreadPool::ThreadLoop(ThreadPool *object) {
-        while(true) {
-            std::unique_lock<std::mutex> lk(object->lock_);
-            object->conditional_.wait(lk, [object]{ return !object->work_queue_.empty(); });
-            Runnable *t = object->work_queue_.front();
-            object->work_queue_.pop();
-            lk.unlock();
-
-            try {
-                t->run();
+        while (run) {
+            for (size_t i = 0; i < threads_.size(); i++) {
+                if (threads_.at(i)->pending_num() < num) {
+                    threads_.at(i)->submit(t);
+                    run = false;
+                    break;
+                }
             }
-            catch (...) {
-                // TODO: Figure something out
-            }
+
+            ++num;
         }
+        lock_.unlock();
     }
 
     ThreadPool *ThreadPool::get_threadpool(Pool_ID id) {
