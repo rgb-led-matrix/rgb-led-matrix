@@ -17,7 +17,11 @@ namespace rgb_matrix {
                 Standard
             };
 
-            ThreadDomain(uint8_t thread_count = 2, ThreadType type = ThreadType::Standard, uint8_t priority = 0, int8_t pool_num = -1);
+            enum class ThreadPolicy {
+                FIFO
+            };
+
+            ThreadDomain(uint8_t thread_count = 2, ThreadType type = ThreadType::Standard, uint8_t priority = 0, ThreadPolicy policy = ThreadPolicy::FIFO, int8_t pool_num = -1);
             
             void submit(Runnable *t);
             uint8_t pending_num();

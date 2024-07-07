@@ -3,7 +3,7 @@
 #include <Exception/Null_Pointer.h>
 
 namespace rgb_matrix {
-    ThreadDomain::ThreadDomain(uint8_t thread_count, ThreadType type, uint8_t priority, int8_t pool_num) {
+    ThreadDomain::ThreadDomain(uint8_t thread_count, ThreadType type, uint8_t priority, ThreadPolicy policy, int8_t pool_num) {
         // Future: Pin to specific cores or domains?
         for (uint8_t i = 0; i < thread_count; i++)
             threads_.emplace_back(std::thread(&ThreadDomain::ThreadLoop, this));
