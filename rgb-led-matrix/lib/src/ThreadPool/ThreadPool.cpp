@@ -6,15 +6,15 @@
 namespace rgb_matrix {
     ThreadPool *ThreadPool::pool_[2] = { nullptr };
 
-    ThreadPool::ThreadPool(ThreadDomain::ThreadType type) {
+    ThreadPool::ThreadPool(ThreadDomain::ThreadType type, uint8_t priority) {
         uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
 
         // Most processors are limited to two by hyperthreading.
         for (uint8_t i = 0; i < count; i += 2) {
             if ((count - 1) > 0)
-                threads_.emplace_back(new ThreadDomain(2, type));
+                threads_.emplace_back(new ThreadDomain(2, type, priority));
             else
-                threads_.emplace_back(new ThreadDomain(1, type));   // Future: Schedule a dummy thread beside it?
+                threads_.emplace_back(new ThreadDomain(1, type, priority));   // Future: Schedule a dummy thread beside it?
         }
     }
 
@@ -42,6 +42,7 @@ namespace rgb_matrix {
 
     ThreadPool *ThreadPool::get_threadpool(Pool_ID id) {
         ThreadPool **result;
+        uint8_t priority = 0;
         ThreadDomain::ThreadType type = ThreadDomain::ThreadType::Standard;
 
         switch (id) {
@@ -50,6 +51,7 @@ namespace rgb_matrix {
                 type = ThreadDomain::ThreadType::Compute;
                 break;
             case Pool_ID::IO:
+                priority = 250;
                 result = &pool_[1];
                 break;
             default:
@@ -58,7 +60,7 @@ namespace rgb_matrix {
         }
 
         if (*result == nullptr)
-            *result = new ThreadPool(type);
+            *result = new ThreadPool(type, priority);
 
         return *result;
     }
