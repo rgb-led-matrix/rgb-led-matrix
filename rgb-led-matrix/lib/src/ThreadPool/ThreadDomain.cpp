@@ -3,6 +3,7 @@
 #include <Exception/Null_Pointer.h>
 
 namespace rgb_matrix {
+    // Note: This may need to change for SMT under Intel Rentable units of ARM SMT!
     ThreadDomain::ThreadDomain(uint8_t thread_count, ThreadType type, uint8_t priority, ThreadPolicy policy, int8_t pool_num) {
         // Future: Pin to specific cores or domains?
         for (uint8_t i = 0; i < thread_count; i++)
