@@ -6,6 +6,8 @@
 namespace rgb_matrix {
     ThreadPool *ThreadPool::pool_[2] = { nullptr };
 
+    // Note: Threads are scheduled using FIFO (batch policy)
+    //  Time share may exist in a premptive manner based on pool priority (thread priority)
     ThreadPool::ThreadPool(ThreadDomain::ThreadType type, uint8_t priority) {
         uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
 

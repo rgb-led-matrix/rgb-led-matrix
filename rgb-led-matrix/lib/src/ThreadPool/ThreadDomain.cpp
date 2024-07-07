@@ -4,7 +4,7 @@
 
 namespace rgb_matrix {
     ThreadDomain::ThreadDomain(uint8_t thread_count, ThreadType type, uint8_t priority, int8_t pool_num) {
-        // Future pin to specific cores or domains?
+        // Future: Pin to specific cores or domains?
         for (uint8_t i = 0; i < thread_count; i++)
             threads_.emplace_back(std::thread(&ThreadDomain::ThreadLoop, this));
     }
