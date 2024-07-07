@@ -12,7 +12,12 @@ namespace rgb_matrix {
 
     class ThreadDomain {
         public:
-            ThreadDomain(uint8_t num = 2);
+            enum class ThreadType {
+                Compute,
+                Standard
+            };
+
+            ThreadDomain(uint8_t thread_count = 2, ThreadType type = ThreadType::Standard, int8_t pool_num = -1);
             
             void submit(Runnable *t);
             uint8_t pending_num();

@@ -6,14 +6,14 @@
 namespace rgb_matrix {
     ThreadPool *ThreadPool::pool_[2] = { nullptr };
 
-    ThreadPool::ThreadPool() {
+    ThreadPool::ThreadPool(ThreadDomain::ThreadType type) {
         uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
 
         for (uint8_t i = 0; i < count; i += 2) {
             if ((count - 1) > 0)
-                threads_.emplace_back(new ThreadDomain(2));
+                threads_.emplace_back(new ThreadDomain(2, type));
             else
-                threads_.emplace_back(new ThreadDomain(1));
+                threads_.emplace_back(new ThreadDomain(1, type));
         }
     }
 
@@ -41,10 +41,12 @@ namespace rgb_matrix {
 
     ThreadPool *ThreadPool::get_threadpool(Pool_ID id) {
         ThreadPool **result;
+        ThreadDomain::ThreadType type = ThreadDomain::ThreadType::Standard;
 
         switch (id) {
             case Pool_ID::Drawer:
                 result = &pool_[0];
+                type = ThreadDomain::ThreadType::Compute;
                 break;
             case Pool_ID::IO:
                 result = &pool_[1];
@@ -55,7 +57,7 @@ namespace rgb_matrix {
         }
 
         if (*result == nullptr)
-            *result = new ThreadPool();
+            *result = new ThreadPool(type);
 
         return *result;
     }
