@@ -9,11 +9,12 @@ namespace rgb_matrix {
     ThreadPool::ThreadPool(ThreadDomain::ThreadType type) {
         uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
 
+        // Most processors are limited to two by hyperthreading.
         for (uint8_t i = 0; i < count; i += 2) {
             if ((count - 1) > 0)
                 threads_.emplace_back(new ThreadDomain(2, type));
             else
-                threads_.emplace_back(new ThreadDomain(1, type));
+                threads_.emplace_back(new ThreadDomain(1, type));   // Future: Schedule a dummy thread beside it?
         }
     }
 
