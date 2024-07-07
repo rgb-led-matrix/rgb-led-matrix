@@ -3,7 +3,10 @@
 #include <Exception/Null_Pointer.h>
 
 namespace rgb_matrix {
-    // Note: This may need to change for SMT under Intel Rentable units of ARM SMT!
+    // Note: This may need to change for SMT under Intel Rentable units or ARM SMT!
+    //  The usage of a compute thread with IO thread inside a single domain is not expected by this interface
+    //  I expect Intel's rentable units to fail, and ARM to implement two or four threads per cluster of uniform type
+    //  I also expect the OS to take over pinning at that point due to the number of cores, but this interface should play nice
     ThreadDomain::ThreadDomain(uint8_t thread_count, ThreadType type, uint8_t priority, ThreadPolicy policy, int8_t pool_num) {
         // Future: Pin to specific cores or domains?
         for (uint8_t i = 0; i < thread_count; i++)
