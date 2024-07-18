@@ -1,5 +1,5 @@
-#ifndef SIMD_H
-#define SIMD_H
+#ifndef SIMD_SINGLE_H
+#define SIMD_SINGLE_H
 
 namespace rgb_matrix::SIMD {
     template <typename T> class SIMD_SINGLE {   // Single is 128-bit SIMD
@@ -8,7 +8,7 @@ namespace rgb_matrix::SIMD {
             SIMD_SINGLE<T> operator/(SIMD_SINGLE<T> const& arg);
 
             union {
-                T v[4];
+                T v[128 / (sizeof(T) * 8)];
                 uint8_t  b[16];
                 uint16_t s[8];
                 uint32_t l[4];
