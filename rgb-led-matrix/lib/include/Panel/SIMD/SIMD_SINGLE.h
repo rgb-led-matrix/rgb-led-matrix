@@ -14,6 +14,8 @@ namespace rgb_matrix::SIMD {
                 uint32_t l[4];
                 uint64_t ll[2];
                 //uint128_t lll;  // Compiler does not support?
+                float f[4];     // Assume IEC 60559
+                double d[2];    // Assume IEC 60559
             };
     };
 
