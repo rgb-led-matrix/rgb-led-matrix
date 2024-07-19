@@ -12,7 +12,7 @@ namespace rgb_matrix::SIMD {
             }
 
             union {
-                T v[SIMD_SINGLE::size()];
+                T v[SIMD_SINGLE<T>::size()];
                 uint8_t  b[16];
                 uint16_t s[8];
                 uint32_t l[4];
