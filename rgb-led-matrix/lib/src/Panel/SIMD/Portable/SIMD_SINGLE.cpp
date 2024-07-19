@@ -6,7 +6,7 @@ namespace rgb_matrix::SIMD {
     template <typename T> SIMD_SINGLE<T> SIMD_SINGLE<T>::operator*(SIMD_SINGLE<T> const& arg) {
         SIMD_SINGLE<T> result;
 
-        for (int i = 0; i < 4; i++)
+        for (uint32_t i = 0; i < SIMD_SINGLE<T>::size(); i++)
             result.v[i] = this->v[i] * arg.v[i];
 
         return result;
@@ -15,7 +15,7 @@ namespace rgb_matrix::SIMD {
     template <typename T> SIMD_SINGLE<T> SIMD_SINGLE<T>::operator/(SIMD_SINGLE<T> const& arg) {
         SIMD_SINGLE<T> result;
 
-        for (int i = 0; i < 4; i++)
+        for (uint32_t i = 0; i < SIMD_SINGLE<T>::size(); i++)
             result.v[i] = this->v[i] / arg.v[i];
 
         return result;

@@ -7,6 +7,10 @@ namespace rgb_matrix::SIMD {
             SIMD_SINGLE<T> operator*(SIMD_SINGLE<T> const& arg);
             SIMD_SINGLE<T> operator/(SIMD_SINGLE<T> const& arg);
 
+            constexpr static uint32_t size() {
+                return 128 / (8 * sizeof(T));
+            }
+
             union {
                 T v[128 / (sizeof(T) * 8)];
                 uint8_t  b[16];
