@@ -8,9 +8,7 @@ namespace rgb_matrix {
 
     // Note: Threads are scheduled using FIFO (batch policy)
     //  Time share may exist in a premptive manner based on pool priority (thread priority)
-    ThreadPool::ThreadPool(ThreadDomain::ThreadType type, uint8_t priority) {
-        uint8_t count = std::max(std::thread::hardware_concurrency() / 2, (unsigned int) 1);
-
+    ThreadPool::ThreadPool(ThreadDomain::ThreadType type, uint8_t count, uint8_t priority) {
         if (count == 1) {
             threads_.emplace_back(new ThreadDomain(1, type, priority));   // Future: Schedule a dummy thread beside it?
         }
@@ -56,6 +54,7 @@ namespace rgb_matrix {
     ThreadPool *ThreadPool::get_threadpool(Pool_ID id) {
         ThreadPool **result;
         uint8_t priority = 0;
+        uint8_t count = 2;
         ThreadDomain::ThreadType type = ThreadDomain::ThreadType::Standard;
 
         switch (id) {
@@ -74,7 +73,7 @@ namespace rgb_matrix {
         }
 
         if (*result == nullptr)
-            *result = new ThreadPool(type, priority);
+            *result = new ThreadPool(type, count, priority);
 
         return *result;
     }

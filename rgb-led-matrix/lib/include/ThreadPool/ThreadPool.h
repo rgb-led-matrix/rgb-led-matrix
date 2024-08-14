@@ -27,7 +27,7 @@ namespace rgb_matrix {
             void submit(Runnable *t);
 
         private:
-            ThreadPool(ThreadDomain::ThreadType type = ThreadDomain::ThreadType::Standard, uint8_t priority = 0);
+            ThreadPool(ThreadDomain::ThreadType type = ThreadDomain::ThreadType::Standard, uint8_t count = 2, uint8_t priority = 0);
 
             std::mutex lock_;
             std::vector<ThreadDomain *> threads_;
