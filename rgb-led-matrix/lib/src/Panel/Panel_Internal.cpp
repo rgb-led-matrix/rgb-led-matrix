@@ -224,6 +224,7 @@ namespace rgb_matrix {
     // Handles brightness and gamma
     template <typename T> void Panel_Internal<T>::build_table() {
         for (uint32_t i = 0; i < 256; i++) {
+            // TODO: Fix the math here
             map_wavelength(i, Color::Red, i * 65536 / 256);
             map_wavelength(i, Color::Green, i * 65536 / 256);
             map_wavelength(i, Color::Blue, i * 65536 / 256);

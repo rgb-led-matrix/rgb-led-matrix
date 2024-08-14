@@ -56,7 +56,7 @@ namespace rgb_matrix {
     ThreadPool *ThreadPool::get_threadpool(Pool_ID id) {
         ThreadPool **result;
         uint8_t priority = 0;
-        uint8_t count = 2;
+        uint8_t count = 1;
         ThreadDomain::ThreadType type = ThreadDomain::ThreadType::Standard;
 
         switch (id) {
