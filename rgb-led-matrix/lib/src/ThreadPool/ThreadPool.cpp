@@ -66,6 +66,7 @@ namespace rgb_matrix {
             case Pool_ID::IO:
                 priority = 250;
                 result = &pool_[1];
+                type = ThreadDomain::ThreadType::IO;
                 break;
             default:
                 throw Unknown_Type("ThreadPool: Pool ID is not defined.");
