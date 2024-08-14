@@ -14,6 +14,7 @@ namespace rgb_matrix {
         public:
             enum class ThreadType {
                 Compute,
+                IO,
                 Standard
             };
 
