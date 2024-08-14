@@ -13,7 +13,9 @@ namespace rgb_matrix {
             threads_.emplace_back(new ThreadDomain(1, type, priority));   // Future: Schedule a dummy thread beside it?
         }
         else {
-            // Most processors are limited to two by hyperthreading.
+            // Allow SMT domains for Compute Threads, SMP domains for everything else.
+            //  Most processors are limited to two by hyperthreading.
+            //  We do not attempt to throttle against system load.
             for (uint8_t i = 0; i < count; i += 2) {
                 switch (type) {
                     case ThreadDomain::ThreadType::Compute:
