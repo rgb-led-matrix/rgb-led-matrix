@@ -15,16 +15,20 @@ namespace rgb_matrix {
         else {
             // Allow SMT domains for Compute Threads, SMP domains for everything else.
             //  Most processors are limited to two by hyperthreading.
+            //      Some ARM processors allow up to 4 or 8 threads per domain.
             //  We do not attempt to throttle against system load.
-            for (uint8_t i = 0; i < count; i += 2) {
+            //      We use priority and trust the OS instead.
+            for (uint8_t i = 0; i < count;) {
                 switch (type) {
-                    case ThreadDomain::ThreadType::Compute:
+                    case ThreadDomain::ThreadType::Compute:         // Compute Bound
                         threads_.emplace_back(new ThreadDomain(2, type, priority));
+                        i += 2;
                         break;
-                    case ThreadDomain::ThreadType::Standard:
-                    case ThreadDomain::ThreadType::IO:
+                    case ThreadDomain::ThreadType::Standard:        // Memory Bound
+                    case ThreadDomain::ThreadType::IO:              // IO Bound
                     default:
                         threads_.emplace_back(new ThreadDomain(1, type, priority));
+                        i += 1;
                         break;
                 }   
             }
