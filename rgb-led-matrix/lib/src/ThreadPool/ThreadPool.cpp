@@ -66,7 +66,8 @@ namespace rgb_matrix {
         switch (id) {
             case Pool_ID::Drawer:
                 result = &pool_[0];
-                type = ThreadDomain::ThreadType::Compute;
+                type = ThreadDomain::ThreadType::Standard;
+                count = 2;
                 break;
             case Pool_ID::IO:
                 priority = 250;
