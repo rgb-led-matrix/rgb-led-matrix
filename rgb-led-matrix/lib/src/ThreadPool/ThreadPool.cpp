@@ -9,29 +9,29 @@ namespace rgb_matrix {
     // Note: Threads are scheduled using FIFO (batch policy)
     //  Time share may exist in a premptive manner based on pool priority (thread priority)
     ThreadPool::ThreadPool(ThreadDomain::ThreadType type, uint8_t count, uint8_t priority) {
-        if (count == 1) {
-            threads_.emplace_back(new ThreadDomain(1, type, priority));   // Future: Schedule a dummy thread beside it?
+        uint8_t step;
+
+        // Allow SMT domains for Compute Threads, SMP domains for everything else.
+        //  Most processors are limited to two by hyperthreading.
+        //      Some ARM processors allow up to 4 or 8 threads per domain.
+        switch (type) {
+            case ThreadDomain::ThreadType::Compute:         // Compute Bound
+                step = 2;
+                break;
+            case ThreadDomain::ThreadType::Standard:        // Memory Bound
+            case ThreadDomain::ThreadType::IO:              // IO Bound
+            default:
+                step = 1;
+                break;
         }
-        else {
-            // Allow SMT domains for Compute Threads, SMP domains for everything else.
-            //  Most processors are limited to two by hyperthreading.
-            //      Some ARM processors allow up to 4 or 8 threads per domain.
-            //  We do not attempt to throttle against system load.
-            //      We use priority and trust the OS instead.
-            for (uint8_t i = 0; i < count;) {
-                switch (type) {
-                    case ThreadDomain::ThreadType::Compute:         // Compute Bound
-                        threads_.emplace_back(new ThreadDomain(2, type, priority));
-                        i += 2;
-                        break;
-                    case ThreadDomain::ThreadType::Standard:        // Memory Bound
-                    case ThreadDomain::ThreadType::IO:              // IO Bound
-                    default:
-                        threads_.emplace_back(new ThreadDomain(1, type, priority));
-                        i += 1;
-                        break;
-                }   
-            }
+
+        //  We do not attempt to throttle against system load.
+        //      We use priority and trust the OS instead.
+        for (uint8_t i = 0; i < count; i += step) {
+            if ((count - i) > step)
+                threads_.emplace_back(new ThreadDomain(step, type, priority));
+            else
+                threads_.emplace_back(new ThreadDomain(count - i, type, priority));     // Future: Schedule a dummy thread beside it?
         }
     }
 
