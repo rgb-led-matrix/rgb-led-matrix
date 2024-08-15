@@ -15,11 +15,13 @@ namespace rgb_matrix {
         //  Most processors are limited to two by hyperthreading.
         //      Some ARM processors allow up to 4 or 8 threads per domain.
         switch (type) {
-            case ThreadDomain::ThreadType::Compute:         // Compute Bound
+            case ThreadDomain::ThreadType::Compute:         // Compute Bound (Few load/stores)
+                // Future: Support SMT-4?
                 step = 2;
                 break;
-            case ThreadDomain::ThreadType::Standard:        // Memory Bound
-            case ThreadDomain::ThreadType::IO:              // IO Bound
+            case ThreadDomain::ThreadType::Standard:        // Memory Bound (Capacity drives load/stores, either data or instruction)
+                // Future: Support HyperThreading?
+            case ThreadDomain::ThreadType::IO:              // IO Bound (Purely load/stores)
             default:
                 step = 1;
                 break;
