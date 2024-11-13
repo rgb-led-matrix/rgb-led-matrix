@@ -2,7 +2,7 @@
 #define FRAMEBUFFER_RGB_H
 
 #include <stdint.h>
-#include <CFG/Types/types.h>
+#include "CFG/Types/types.h"
 
 namespace rgb_matrix {
     class RGB {

@@ -1,12 +1,12 @@
-#ifndef ILLEGAL_Hprotocols_
+#ifndef ILLEGAL_H
 #define ILLEGAL_H
 
-#include <Exception/String_Exception.h>
+#include "Exception/String_Exception.h"
 
 namespace rgb_matrix {
     class Illegal : public String_Exception {
         public:
-            Illegal(const char *str);
+            Illegal(const char *str, bool log = true);
 
         protected:
             Illegal();

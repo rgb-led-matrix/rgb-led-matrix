@@ -1,10 +1,10 @@
 #ifndef CFG_H
 #define CFG_H
 
-#include <CFG/Types/types.h>
-#include <CFG/Types/GAMMA.h>
-#include <CFG/Types/DOTCorrect.h>
-#include <Mapper/Mapper.h>
+#include "CFG/Types/types.h"
+#include "CFG/Types/GAMMA.h"
+#include "CFG/Types/DOTCorrect.h"
+#include "Mapper/Mapper.h"
 
 namespace rgb_matrix {
     class CFG {

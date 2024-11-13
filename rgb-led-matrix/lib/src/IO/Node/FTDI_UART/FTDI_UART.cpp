@@ -1,14 +1,14 @@
 #include <chrono>
+#include <cstring>
 #include <stdio.h>
-#include <ftd2xx.h>
-#include <Exception/Null_Pointer.h>
-#include <Exception/Illegal.h>
-#include <IO/Node/FTDI_UART/FTDI_UART.h>
+#include "ftd2xx.h"
+#include "Exception/Null_Pointer.h"
+#include "IO/Node/FTDI_UART/FTDI_UART.h"
+#include "Logger/Logger.h"
 
 namespace rgb_matrix::FTDI {
-    // Do not use this!
     FTDI_UART::FTDI_UART() {
-        throw Illegal("FTDI_UART");
+        // Do not use this! 
     }
 
     FTDI_UART::FTDI_UART(const char *serial_number, uint8_t chan_num) {
@@ -28,6 +28,8 @@ namespace rgb_matrix::FTDI {
             FT_SetLatencyTimer(handle, 2);
             FT_Close(handle);
         }
+
+        Logger::get_logger()->write(Logger::Level::INFO, "FTDI UART: Hardware flow control is not enabled/used.");
 
         // Future: Enable Hardware Flow control
     }
@@ -85,8 +87,10 @@ namespace rgb_matrix::FTDI {
                     buf += written;
                     *len -= written;
                     
-                    if (std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() < timeout_us)
+                    if (std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() < timeout_us) {
+                        Logger::get_logger()->write(Logger::Level::INFO, "FTDI UART: Timed out.");
                         break;
+                    }
 
                     if (*len > 0)
                         continue;
@@ -121,6 +125,10 @@ namespace rgb_matrix::FTDI {
 
     void FTDI_UART::set_baud(uint32_t baud) {
         FT_HANDLE handle;
+        char str[100];
+
+        snprintf(str, sizeof(str), "FTDI UART: Baud Rate set to %d.", baud);
+        Logger::get_logger()->write(Logger::Level::INFO, str);
 
         if (FT_OpenEx((PVOID) serial_number_.c_str(), FT_OPEN_BY_SERIAL_NUMBER, &handle) == FT_OK) {
             FT_SetBaudRate(handle, baud);

@@ -1,9 +1,9 @@
 #ifndef PANEL_H
 #define PANEL_H
 
-#include <Drawer/Drawer.h>
-#include <IO/Protocol/Data_Protocol.h>
-#include <IO/Protocol/Control_Protocol.h>
+#include "Drawer/Drawer.h"
+#include "IO/Protocol/Data_Protocol.h"
+#include "IO/Protocol/Control_Protocol.h"
 
 namespace rgb_matrix {
     // Pure interface for Panel

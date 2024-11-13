@@ -9,9 +9,12 @@ namespace rgb_matrix {
     class Node {
         public:
             // For Protocol
-            //  TODO: Refactor to buffered streams using packets
+            //  TODO: Refactor to buffered streams using packets (Worth it?)
             //      There is an issue with CPU usage due to this
             virtual void write(uint8_t *buf, uint32_t len) = 0;
+            void write(uint32_t val);
+            void write(uint16_t val);
+            void write(uint8_t val);
             virtual void read(uint8_t *buf, uint32_t *len, uint32_t timeout_us) = 0;
 
         protected:
@@ -21,6 +24,9 @@ namespace rgb_matrix {
 
             friend class Data_Protocol;
             friend class Control_Protocol;
+
+        private:
+            template <typename T> void write_internal(T val);
     };
 }
 #endif

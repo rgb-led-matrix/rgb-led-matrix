@@ -1,5 +1,5 @@
-#include <Panel/RGB/RGB.h>
-#include <Exception/Unknown_Type.h>
+#include "Panel/RGB/RGB.h"
+#include "Exception/Unknown_Type.h"
 
 namespace rgb_matrix {
     uint8_t RGB::translate_id(Data_Format_ID id) {

@@ -1,3 +1,5 @@
+add_subdirectory(SIMD)
+
 add_library(Panel INTERFACE)
 
 target_sources(Panel INTERFACE

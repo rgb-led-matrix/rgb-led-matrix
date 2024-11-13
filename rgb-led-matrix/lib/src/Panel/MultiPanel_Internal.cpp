@@ -1,12 +1,11 @@
-#include <Panel/MultiPanel_Internal.h>
-#include <Exception/Illegal.h>
-#include <Exception/Null_Pointer.h>
-#include <Exception/Unknown_Type.h>
+#include "Panel/MultiPanel_Internal.h"
+#include "Exception/Illegal.h"
+#include "Exception/Null_Pointer.h"
+#include "Exception/Unknown_Type.h"
 
 namespace rgb_matrix {
-    // Do not use this!
     MultiPanel_Internal::MultiPanel_Internal() {
-        throw Illegal("MultiPanel_Internal Panel");
+        // Do not use this! 
     }
 
     MultiPanel_Internal::MultiPanel_Internal(uint16_t width, uint16_t height) : width_(width), height_(height) {
@@ -103,7 +102,7 @@ namespace rgb_matrix {
             bool *r = &results.front()->result;
             while(*r == false) {
                 // Well hopefully the OS does something
-                // std::this_thread::sleep_for(std::chrono::milliseconds(2));
+                std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
             delete results.front();
             results.pop();
@@ -134,7 +133,7 @@ namespace rgb_matrix {
             bool *r = &results.front()->result;
             while(*r == false) {
                 // Well hopefully the OS does something
-                // std::this_thread::sleep_for(std::chrono::milliseconds(2));
+                std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
             delete results.front();
             results.pop();
@@ -163,7 +162,7 @@ namespace rgb_matrix {
             bool *r = &results.front()->result;
             while(*r == false) {
                 // Well hopefully the OS does something
-                // std::this_thread::sleep_for(std::chrono::milliseconds(2));
+                std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
             delete results.front();
             results.pop();

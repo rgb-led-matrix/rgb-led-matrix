@@ -2,8 +2,8 @@
 #define PANEL_INTERNAL_H
 
 #include <mutex>
-#include <CFG/CFG.h>
-#include <Panel/Panel.h>
+#include "CFG/CFG.h"
+#include "Panel/Panel.h"
 
 namespace rgb_matrix {
     template <typename T> class Panel_Internal : public Panel {

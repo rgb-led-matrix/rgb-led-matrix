@@ -24,6 +24,7 @@ target_link_libraries(linux_x64
     Panel
     Frame
     Logger
+    SIMD_PORTABLE
     ftd2xx
     pthread)
 
