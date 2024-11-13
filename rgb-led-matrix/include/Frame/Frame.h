@@ -1,9 +1,10 @@
 #ifndef FRAME_H
 #define FRAME_H
 
-#include <Panel/MultiPanel.h>
-#include <IO/Protocol/Control_Protocol.h>
-#include <IO/Protocol/Data_Protocol.h>
+#include <mutex>
+#include "Panel/MultiPanel.h"
+#include "IO/Protocol/Control_Protocol.h"
+#include "IO/Protocol/Data_Protocol.h"
 
 namespace rgb_matrix {
     class Frame : public Drawer {
@@ -12,7 +13,7 @@ namespace rgb_matrix {
             Frame(MultiPanel *panel, Control_Protocol *control);
 
             bool isFree();
-
+            void show(uint64_t key);
             void SetPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue);
             cord_t get_size();
             void set_brightness(uint8_t brightness);
@@ -25,10 +26,9 @@ namespace rgb_matrix {
             MultiPanel *multi_;
             Data_Protocol *protocol_;
             Control_Protocol *control_;
+            std::mutex lock_;
             bool isMulti_;
             bool isFree_;
-
-            friend class Frame_Manager;
     };
 }
 #endif
