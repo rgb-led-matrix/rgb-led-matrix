@@ -1,5 +1,5 @@
-#include <Logger/Logger.h>
-#include <Exception/Null_Pointer.h>
+#include "Logger/Logger.h"
+#include "Exception/Null_Pointer.h"
 
 namespace rgb_matrix {
     Logger *Logger::logger_ = nullptr;

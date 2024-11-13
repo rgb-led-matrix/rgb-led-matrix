@@ -1,4 +1,4 @@
-#include <Mapper/Outdoor/Outdoor.h>
+#include "Mapper/Outdoor/Outdoor.h"
 
 namespace rgb_matrix::Mappers {
     cord_t Outdoor::map_location(uint16_t x, uint16_t y, cord_t size, uint8_t scan) {

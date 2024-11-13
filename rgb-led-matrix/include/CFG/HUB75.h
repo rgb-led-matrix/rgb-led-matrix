@@ -1,7 +1,7 @@
 #ifndef HUB75_H
 #define HUB75_H
 
-#include <CFG/CFG.h>
+#include "CFG/CFG.h"
 
 namespace rgb_matrix {
     class HUB75 : public CFG {

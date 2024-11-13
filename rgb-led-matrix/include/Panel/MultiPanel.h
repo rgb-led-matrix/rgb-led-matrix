@@ -1,7 +1,7 @@
 #ifndef MULTIPANEL_H
 #define MULTIPANEL_H
 
-#include <Panel/Panel.h>
+#include "Panel/Panel.h"
 
 namespace rgb_matrix {
     // Pure interface for creating large panel from multiple panels
@@ -15,7 +15,6 @@ namespace rgb_matrix {
                 Up = 3
             };
 
-            // TODO: All Protocols must share the same Control Node!
             virtual bool map_panel(uint16_t x, uint16_t y, Direction direction, Panel *panel, Data_Protocol *protocol) = 0;
             virtual void show(Control_Protocol *control) = 0;
     };

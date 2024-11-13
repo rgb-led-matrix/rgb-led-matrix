@@ -1,8 +1,8 @@
 #ifndef RGBMATRIX_H
 #define RGBMATRIX_H
 
-#include <Panel/MultiPanel.h>
-#include <CFG/CFG.h>
+#include "Panel/MultiPanel.h"
+#include "CFG/CFG.h"
 
 namespace rgb_matrix {
     // Factory for creating individual panels from configuration

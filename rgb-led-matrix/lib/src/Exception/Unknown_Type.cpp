@@ -1,8 +1,8 @@
-#include <Exception/Unknown_Type.h>
+#include "Exception/Unknown_Type.h"
 
 namespace rgb_matrix {
     // Do not use this!
-    Unknown_Type::Unknown_Type() : String_Exception("Unknown Type: Attempted to use forbidden constructor.") {
+    Unknown_Type::Unknown_Type() : String_Exception() {
         prefix_ = "Unknown Type: ";
     }
 

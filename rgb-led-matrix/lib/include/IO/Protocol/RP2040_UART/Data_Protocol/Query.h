@@ -2,11 +2,19 @@
 #define RP2040_UART_DATA_PROTOCOL_QUERY_H
 
 #include <stdint.h>
-#include <ThreadPool/ThreadPool.h>
-#include <IO/Protocol/Data_Protocol.h>
-#include <IO/Protocol/RP2040_UART/Data_Protocol/Status.h>
+#include "ThreadPool/ThreadPool.h"
+#include "IO/Protocol/Data_Protocol.h"
+#include "IO/Protocol/RP2040_UART/Data_Protocol/Status.h"
 
 namespace rgb_matrix::Protocol::RP2040_UART {
+    /*class Query_Request {
+        public:
+            // Input and Output are serialized data (byte stream)
+            //  Implementation must be capable of deserializing frame in byte stream
+            //  Implementation is responsible for ensuring network order
+            virtual void *query(void *buf, uint32_t len) = 0;
+    };*/
+
     class Query {
         public:
             Query(Node *node, uint8_t magic);
@@ -15,23 +23,7 @@ namespace rgb_matrix::Protocol::RP2040_UART {
         protected:
             Query();
 
-            class Worker : public Runnable {
-                public:
-                    Worker(uint8_t magic);
-                    ~Worker();
-
-                    void run();
-
-                    Node *node;
-                    Data_Protocol::Status status;
-                    uint8_t magic;
-                
-                private:
-                    Status *status_msg_;
-
-            };
-
-            Worker *runnable_;
+            Runnable *runnable_;
     };
 }
 #endif

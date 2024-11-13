@@ -1,14 +1,13 @@
-#include <IO/Protocol/Data_Protocol.h>
-#include <Exception/Null_Pointer.h>
-#include <Exception/Illegal.h>
+#include "IO/Protocol/Data_Protocol.h"
+#include "Exception/Null_Pointer.h"
+#include "Exception/Illegal.h"
 
 namespace rgb_matrix {
-    // Do not use this!
     Data_Protocol::Data_Protocol() {
-        Illegal("Data Protocol");
+        // Do not use this! 
     }
 
-    Data_Protocol::Data_Protocol(Node *node) {
+    Data_Protocol::Data_Protocol(Node *node, uint8_t id) {
         if (node == nullptr)
             throw Null_Pointer("Node");
         
@@ -18,6 +17,7 @@ namespace rgb_matrix {
         node_ = node;
         buf_ = nullptr;
         claim_ = false;
+        id_ = id;
     }
 
     Data_Protocol::~Data_Protocol() {

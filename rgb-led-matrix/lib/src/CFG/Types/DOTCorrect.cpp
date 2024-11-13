@@ -1,10 +1,9 @@
-#include <CFG/CFG.h>
-#include <Exception/Illegal.h>
+#include "CFG/CFG.h"
+#include "Exception/Illegal.h"
 
 namespace rgb_matrix {
-    // Do not use this!
     DOTCorrect::DOTCorrect() {
-        throw Illegal("DotCorrect: Attempted to use forbidden constructor.");
+        // Do not use this! 
     }
 
     DOTCorrect::DOTCorrect(uint16_t r, uint16_t c) : rows(r), cols(c) {
@@ -13,9 +12,9 @@ namespace rgb_matrix {
         for (uint16_t i = 0; i < 256; i++) {
             for (uint16_t y = 0; y < rows; ++y) {
                 for (uint16_t x = 0; x < cols; ++x) {
-                table_[(3 * rows * cols * i) + (3 * ((y * cols) + x))] = 1.0;
-                table_[(3 * rows * cols * i) + (3 * ((y * cols) + x)) + 1] = 1.0;
-                table_[(3 * rows * cols * i) + (3 * ((y * cols) + x)) + 2] = 1.0;
+                    table_[(3 * rows * cols * i) + (3 * ((y * cols) + x))] = 1.0;
+                    table_[(3 * rows * cols * i) + (3 * ((y * cols) + x)) + 1] = 1.0;
+                    table_[(3 * rows * cols * i) + (3 * ((y * cols) + x)) + 2] = 1.0;
                 }
             }
         }

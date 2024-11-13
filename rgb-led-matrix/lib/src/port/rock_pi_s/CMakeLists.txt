@@ -27,6 +27,7 @@ target_link_libraries(rock_pi_s
     Panel
     Frame
     Logger
+    SIMD_ARM
     ftd2xx
     pthread)
 

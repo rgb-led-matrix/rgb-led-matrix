@@ -1,10 +1,8 @@
-#include <CFG/CFG.h>
-#include <Exception/Illegal.h>
+#include "CFG/CFG.h"
 
 namespace rgb_matrix {
-    // Do not use this!
     CFG::CFG() : dot_(8, 8) {
-        throw Illegal("CFG: Attempted to use forbidden constructor.");
+        // Do not use this! 
     }
 
     CFG::CFG(uint16_t rows, uint16_t cols, Data_Format_ID data_format, uint8_t scan, GAMMA gamma, Mapper *mapper) : dot_(rows, cols) {

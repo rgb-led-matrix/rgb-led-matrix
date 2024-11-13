@@ -1,8 +1,8 @@
 #include <thread>
-#include <IO/Scheduler/Scheduler.h>
-#include <Exception/Null_Pointer.h>
-#include <Exception/Unknown_Type.h>
-#include <Logger/Logger.h>
+#include "IO/Scheduler/Scheduler.h"
+#include "Exception/Null_Pointer.h"
+#include "Exception/Unknown_Type.h"
+#include "Logger/Logger.h"
 
 namespace rgb_matrix {
     void Scheduler::start(Control_Protocol *control) {
@@ -33,7 +33,7 @@ namespace rgb_matrix {
                         Logger::get_logger()->write(Logger::Level::INFO, "Scheduler: Attempting bootloader to reset node.");
 
                         Logger::get_logger()->write(Logger::Level::WARN, "Scheduler: Exceeded number of boot attempts.");
-                        Logger::get_logger()->write(Logger::Level::INFO, "Scheduler: Crashing out.");
+                        Logger::get_logger()->write(Logger::Level::ERROR, "Scheduler: Crashing out at this point we likely have a hardware failure.");
                         lock_.unlock();
                         throw String_Exception("Scheduler: We have communication failure with Panel.");
                         break;
@@ -45,6 +45,13 @@ namespace rgb_matrix {
             }
         }
         control->signal(Control_Protocol::Commands::Trigger);
+
+        // TODO: Verify Control Protocol
+        //  Need API on Data Protocol for this
+        Logger::get_logger()->write(Logger::Level::WARN, "Scheduler: Panel signal failed to complete.");
+        Logger::get_logger()->write(Logger::Level::INFO, "Scheduler: Possible issue with Control Protocol.");
+        Logger::get_logger()->write(Logger::Level::INFO, "Scheduler: Dropping frame instead of attempting to signal panel individually.");
+
         lock_.unlock();
     }
 

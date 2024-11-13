@@ -1,7 +1,7 @@
 #ifndef OUTDOOR_H
 #define OUTDOOR_H
 
-#include <Mapper/Mapper.h>
+#include "Mapper/Mapper.h"
 
 namespace rgb_matrix::Mappers {
     class Outdoor : public Mapper {

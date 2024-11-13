@@ -9,7 +9,7 @@ namespace rgb_matrix {
     class Node {
         public:
             // For Protocol
-            //  TODO: Refactor to buffered streams using packets
+            //  TODO: Refactor to buffered streams using packets (Worth it?)
             //      There is an issue with CPU usage due to this
             virtual void write(uint8_t *buf, uint32_t len) = 0;
             void write(uint32_t val);

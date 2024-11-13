@@ -1,21 +1,21 @@
 #include <algorithm>
 #include <map>
 #include <math.h>
-#include <Panel/Panel_Internal.h>
-#include <Exception/Null_Pointer.h>
-#include <Exception/Illegal.h>
-#include <Exception/Unknown_Type.h>
-#include <Panel/RGB/RGB24.h>
-#include <Panel/RGB/RGB48.h>
-#include <Panel/RGB/RGB_555.h>
-#include <Panel/RGB/RGB_222.h>
-#include <Panel/RGB/RGB.h>
-#include <IO/Scheduler/Scheduler.h>
+#include "Panel/Panel_Internal.h"
+#include "Exception/Null_Pointer.h"
+#include "Exception/Illegal.h"
+#include "Exception/Unknown_Type.h"
+#include "Panel/RGB/RGB24.h"
+#include "Panel/RGB/RGB48.h"
+#include "Panel/RGB/RGB_555.h"
+#include "Panel/RGB/RGB_222.h"
+#include "Panel/RGB/RGB.h"
+#include "IO/Scheduler/Scheduler.h"
+#include "Panel/SIMD/SIMD_SINGLE.h"
 
 namespace rgb_matrix {
-    // Do not use this!    
     template <typename T> Panel_Internal<T>::Panel_Internal() {
-        throw Illegal("Panel Internal: Attempted to use forbidden constructor.");
+        // Do not use this! 
     }
 
     template <typename T> Panel_Internal<T>::Panel_Internal(CFG *cfg) {
@@ -224,6 +224,7 @@ namespace rgb_matrix {
     // Handles brightness and gamma
     template <typename T> void Panel_Internal<T>::build_table() {
         for (uint32_t i = 0; i < 256; i++) {
+            // TODO: Fix the math here
             map_wavelength(i, Color::Red, i * 65536 / 256);
             map_wavelength(i, Color::Green, i * 65536 / 256);
             map_wavelength(i, Color::Blue, i * 65536 / 256);
@@ -232,18 +233,31 @@ namespace rgb_matrix {
 
     // Handles dot correction
     template <typename T> inline void Panel_Internal<T>::MapColors(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, T *pixel) {
-        float fr, fg, fb;
+        rgb_matrix::SIMD::SIMD_SINGLE<float> dot, max, val;
+        rgb_matrix::SIMD::SIMD_SINGLE<uint32_t> reg;
 
         if (pixel == nullptr)
             throw Null_Pointer("Pixel");
 
         lock_.lock();
-        uint8_t bright =  this->brightness_;
+        cfg_->get_dot().get(x, y, r, g, b, &dot.v[0], &dot.v[1], &dot.v[2]);    // We do not optimize access intentionally
 
-        cfg_->get_dot().get(x, y, r, g, b, &fr, &fg, &fb);
-        pixel->red = (uint16_t) round(this->lut[bright][r].red / T::red_max * fr);
-        pixel->green = (uint16_t) round(this->lut[bright][g].green / T::green_max * fg);
-        pixel->blue = (uint16_t) round(this->lut[bright][b].blue / T::blue_max * fb);
+        reg.v[0] = T::red_max;                                                  // Compiler may optimize
+        reg.v[1] = T::green_max;
+        reg.v[2] = T::blue_max;
+        rgb_matrix::SIMD::round(reg, &max);
+
+        reg.v[0] = lut[brightness_][r].red;
+        reg.v[1] = lut[brightness_][g].green;
+        reg.v[2] = lut[brightness_][b].blue;
+        rgb_matrix::SIMD::round(reg, &val);
+
+        val = (val / max) * dot;
+        rgb_matrix::SIMD::round(val, &reg);
+
+        pixel->red = reg.v[0];                                                  // We do not optimize access intentionally
+        pixel->green = reg.v[1];
+        pixel->blue = reg.v[2];
         lock_.unlock();
     }
 
