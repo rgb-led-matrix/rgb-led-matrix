@@ -1,10 +1,10 @@
 #include <chrono>
 #include <cstring>
 #include <stdio.h>
-#include <ftd2xx.h>
-#include <Exception/Null_Pointer.h>
-#include <IO/Node/FTDI_UART/FTDI_UART.h>
-#include <Logger/Logger.h>
+#include "ftd2xx.h"
+#include "Exception/Null_Pointer.h"
+#include "IO/Node/FTDI_UART/FTDI_UART.h"
+#include "Logger/Logger.h"
 
 namespace rgb_matrix::FTDI {
     FTDI_UART::FTDI_UART() {

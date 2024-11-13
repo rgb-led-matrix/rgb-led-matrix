@@ -1,8 +1,8 @@
 #ifndef RP2040_UART_DATA_H
 #define RP2040_UART_DATA_H
 
-#include <IO/Protocol/Data_Protocol.h>
-#include <IO/Protocol/Control_Protocol.h>
+#include "IO/Protocol/Data_Protocol.h"
+#include "IO/Protocol/Control_Protocol.h"
 
 namespace rgb_matrix::Protocol::RP2040_UART {
     class Data;

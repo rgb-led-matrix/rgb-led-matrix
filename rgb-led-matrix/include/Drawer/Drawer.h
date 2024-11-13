@@ -2,7 +2,7 @@
 #define DRAWER_H
 
 #include <stdint.h>
-#include <CFG/Types/types.h>
+#include "CFG/Types/types.h"
 
 namespace rgb_matrix {
     // Pure interface for drawing

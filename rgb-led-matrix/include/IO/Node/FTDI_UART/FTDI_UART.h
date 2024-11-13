@@ -3,7 +3,7 @@
 
 #include <string>
 #include <mutex>
-#include <IO/Node/Node.h>
+#include "IO/Node/Node.h"
 
 namespace rgb_matrix::FTDI {
     class FTDI_UART : public Node {

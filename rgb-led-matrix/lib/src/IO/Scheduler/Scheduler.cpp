@@ -1,8 +1,8 @@
 #include <thread>
-#include <IO/Scheduler/Scheduler.h>
-#include <Exception/Null_Pointer.h>
-#include <Exception/Unknown_Type.h>
-#include <Logger/Logger.h>
+#include "IO/Scheduler/Scheduler.h"
+#include "Exception/Null_Pointer.h"
+#include "Exception/Unknown_Type.h"
+#include "Logger/Logger.h"
 
 namespace rgb_matrix {
     void Scheduler::start(Control_Protocol *control) {

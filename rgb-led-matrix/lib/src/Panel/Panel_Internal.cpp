@@ -1,17 +1,17 @@
 #include <algorithm>
 #include <map>
 #include <math.h>
-#include <Panel/Panel_Internal.h>
-#include <Exception/Null_Pointer.h>
-#include <Exception/Illegal.h>
-#include <Exception/Unknown_Type.h>
-#include <Panel/RGB/RGB24.h>
-#include <Panel/RGB/RGB48.h>
-#include <Panel/RGB/RGB_555.h>
-#include <Panel/RGB/RGB_222.h>
-#include <Panel/RGB/RGB.h>
-#include <IO/Scheduler/Scheduler.h>
-#include <Panel/SIMD/SIMD_SINGLE.h>
+#include "Panel/Panel_Internal.h"
+#include "Exception/Null_Pointer.h"
+#include "Exception/Illegal.h"
+#include "Exception/Unknown_Type.h"
+#include "Panel/RGB/RGB24.h"
+#include "Panel/RGB/RGB48.h"
+#include "Panel/RGB/RGB_555.h"
+#include "Panel/RGB/RGB_222.h"
+#include "Panel/RGB/RGB.h"
+#include "IO/Scheduler/Scheduler.h"
+#include "Panel/SIMD/SIMD_SINGLE.h"
 
 namespace rgb_matrix {
     template <typename T> Panel_Internal<T>::Panel_Internal() {

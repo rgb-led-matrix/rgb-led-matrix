@@ -2,8 +2,8 @@
 #define DATA_PROTOCOL_H
 
 #include <mutex>
-#include <IO/Node/Node.h>
-#include <CFG/Types/types.h>
+#include "IO/Node/Node.h"
+#include "CFG/Types/types.h"
 
 // Required construct for OSI Layer 2 and above
 // 

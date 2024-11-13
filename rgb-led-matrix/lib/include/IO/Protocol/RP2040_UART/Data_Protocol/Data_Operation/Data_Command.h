@@ -2,9 +2,9 @@
 #define RP2040_UART_DATA_PROTOCOL_DATA_COMMAND_H
 
 #include <stdint.h>
-#include <ThreadPool/ThreadPool.h>
-#include <IO/Protocol/Data_Protocol.h>
-#include <IO/Protocol/RP2040_UART/Data_Protocol/Status.h>
+#include "ThreadPool/ThreadPool.h"
+#include "IO/Protocol/Data_Protocol.h"
+#include "IO/Protocol/RP2040_UART/Data_Protocol/Status.h"
 
 namespace rgb_matrix::Protocol::RP2040_UART {
     class Data_Command : public Runnable {

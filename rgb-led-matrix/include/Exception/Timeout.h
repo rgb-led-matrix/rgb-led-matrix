@@ -1,7 +1,7 @@
 #ifndef TIMEOUT_H
 #define TIMEOUT_H
 
-#include <Exception/String_Exception.h>
+#include "Exception/String_Exception.h"
 
 namespace rgb_matrix {
     class Timeout : public String_Exception {

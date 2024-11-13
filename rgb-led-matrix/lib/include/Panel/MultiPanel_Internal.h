@@ -3,9 +3,9 @@
 
 #include <mutex>
 #include <list>
-#include <Panel/MultiPanel.h>
-#include <IO/Scheduler/Scheduler.h>
-#include <ThreadPool/ThreadPool.h>
+#include "Panel/MultiPanel.h"
+#include "IO/Scheduler/Scheduler.h"
+#include "ThreadPool/ThreadPool.h"
 
 namespace rgb_matrix {
     class MultiPanel_Internal : public MultiPanel {

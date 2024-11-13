@@ -1,4 +1,4 @@
-#include <CFG/CFG.h>
+#include "CFG/CFG.h"
 
 namespace rgb_matrix {
     CFG::CFG() : dot_(8, 8) {

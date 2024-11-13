@@ -1,6 +1,6 @@
-#include <IO/Protocol/Data_Protocol.h>
-#include <Exception/Null_Pointer.h>
-#include <Exception/Illegal.h>
+#include "IO/Protocol/Data_Protocol.h"
+#include "Exception/Null_Pointer.h"
+#include "Exception/Illegal.h"
 
 namespace rgb_matrix {
     Data_Protocol::Data_Protocol() {

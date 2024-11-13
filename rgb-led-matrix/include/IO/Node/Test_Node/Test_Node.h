@@ -3,7 +3,7 @@
 
 #include <string>
 #include <mutex>
-#include <IO/Node/Node.h>
+#include "IO/Node/Node.h"
 
 namespace rgb_matrix::Test_Node {
     class Test_Node : public Node {

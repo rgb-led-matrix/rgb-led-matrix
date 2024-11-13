@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <thread>
-#include <IO/Node/Node.h>
+#include "IO/Node/Node.h"
 
 namespace rgb_matrix::Protocol::RP2040_UART {
     class Status {

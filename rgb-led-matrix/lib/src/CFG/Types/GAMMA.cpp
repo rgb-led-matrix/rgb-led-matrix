@@ -1,4 +1,4 @@
-#include <CFG/Types/GAMMA.h>
+#include "CFG/Types/GAMMA.h"
 
 namespace rgb_matrix {
     GAMMA::GAMMA(float red, float green, float blue) : red_(red), green_(green), blue_(blue) {

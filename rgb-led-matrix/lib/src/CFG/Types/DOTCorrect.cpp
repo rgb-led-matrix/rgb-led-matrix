@@ -1,5 +1,5 @@
-#include <CFG/CFG.h>
-#include <Exception/Illegal.h>
+#include "CFG/CFG.h"
+#include "Exception/Illegal.h"
 
 namespace rgb_matrix {
     DOTCorrect::DOTCorrect() {

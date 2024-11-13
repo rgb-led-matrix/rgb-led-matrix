@@ -1,7 +1,7 @@
 #include <algorithm>
-#include <ThreadPool/ThreadPool.h>
-#include <Exception/Null_Pointer.h>
-#include <Exception/Unknown_Type.h>
+#include "ThreadPool/ThreadPool.h"
+#include "Exception/Null_Pointer.h"
+#include "Exception/Unknown_Type.h"
 
 namespace rgb_matrix {
     ThreadPool *ThreadPool::pool_[2] = { nullptr };

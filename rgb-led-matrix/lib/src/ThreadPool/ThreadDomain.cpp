@@ -1,6 +1,6 @@
-#include <ThreadPool/ThreadPool.h>
-#include <ThreadPool/ThreadDomain.h>
-#include <Exception/Null_Pointer.h>
+#include "ThreadPool/ThreadPool.h"
+#include "ThreadPool/ThreadDomain.h"
+#include "Exception/Null_Pointer.h"
 
 namespace rgb_matrix {
     // Note: This may need to change for SMT under Intel Rentable units or ARM SMT!

@@ -1,4 +1,4 @@
-#include <Exception/Timeout.h>
+#include "Exception/Timeout.h"
 
 namespace rgb_matrix {
     // Do not use this!

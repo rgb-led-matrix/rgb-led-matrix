@@ -5,7 +5,7 @@
 #include <thread>
 #include <queue>
 #include <mutex>
-#include <ThreadPool/ThreadDomain.h>
+#include "ThreadPool/ThreadDomain.h"
 
 namespace rgb_matrix {
     class Runnable {

@@ -1,7 +1,7 @@
-#include <Panel/MultiPanel_Internal.h>
-#include <Exception/Illegal.h>
-#include <Exception/Null_Pointer.h>
-#include <Exception/Unknown_Type.h>
+#include "Panel/MultiPanel_Internal.h"
+#include "Exception/Illegal.h"
+#include "Exception/Null_Pointer.h"
+#include "Exception/Unknown_Type.h"
 
 namespace rgb_matrix {
     MultiPanel_Internal::MultiPanel_Internal() {

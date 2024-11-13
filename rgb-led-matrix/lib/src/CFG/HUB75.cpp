@@ -1,4 +1,4 @@
-#include <CFG/HUB75.h>
+#include "CFG/HUB75.h"
 
 namespace rgb_matrix {
     HUB75::HUB75() {

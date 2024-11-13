@@ -1,4 +1,4 @@
-#include <IO/Node/Node.h>
+#include "IO/Node/Node.h"
 
 namespace rgb_matrix {
     template <typename T> void Node::write_internal(T val) {

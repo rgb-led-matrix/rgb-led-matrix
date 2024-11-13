@@ -1,5 +1,5 @@
-#include <IO/Protocol/RP2040_UART/Control_Protocol/RP2040_UART_Control.h>
-#include <IO/Protocol/RP2040_UART/Control_Protocol/Control.h>
+#include "IO/Protocol/RP2040_UART/Control_Protocol/RP2040_UART_Control.h"
+#include "IO/Protocol/RP2040_UART/Control_Protocol/Control.h"
 
 namespace rgb_matrix::Protocol::RP2040_UART {
     RP2040_UART_Control::RP2040_UART_Control() {

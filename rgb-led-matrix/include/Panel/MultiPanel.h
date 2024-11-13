@@ -1,7 +1,7 @@
 #ifndef MULTIPANEL_H
 #define MULTIPANEL_H
 
-#include <Panel/Panel.h>
+#include "Panel/Panel.h"
 
 namespace rgb_matrix {
     // Pure interface for creating large panel from multiple panels

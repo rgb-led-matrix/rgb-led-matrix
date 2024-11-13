@@ -1,5 +1,5 @@
-#include <IO/Protocol/RP2040_UART/Data_Protocol/Query_Request/Query_Temperature.h>
-#include <Exception/String_Exception.h>
+#include "IO/Protocol/RP2040_UART/Data_Protocol/Query_Request/Query_Temperature.h"
+#include "Exception/String_Exception.h"
 
 namespace rgb_matrix::Protocol::RP2040_UART {
     Query_Temperature::Query_Temperature(Node *node, uint8_t magic) {

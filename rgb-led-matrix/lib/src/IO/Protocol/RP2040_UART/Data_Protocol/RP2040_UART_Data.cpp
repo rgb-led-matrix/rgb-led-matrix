@@ -1,6 +1,6 @@
-#include <IO/Protocol/RP2040_UART/Data_Protocol/RP2040_UART_Data.h>
-#include <IO/Protocol/RP2040_UART/Data_Protocol/Data.h>
-#include <IO/Protocol/RP2040_UART/Data_Protocol/Query.h>
+#include "IO/Protocol/RP2040_UART/Data_Protocol/RP2040_UART_Data.h"
+#include "IO/Protocol/RP2040_UART/Data_Protocol/Data.h"
+#include "IO/Protocol/RP2040_UART/Data_Protocol/Query.h"
 
 namespace rgb_matrix::Protocol::RP2040_UART {
     RP2040_UART_Data::RP2040_UART_Data() {
